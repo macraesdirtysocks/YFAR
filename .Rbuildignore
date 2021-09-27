@@ -1,0 +1,5 @@
+^.*\.Rproj$
+^.*\.csv$
+^\.Rproj\.user$
+^\.httr-oauth$
+^LICENSE\.md$
