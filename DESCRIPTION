@@ -18,3 +18,5 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     httr
+URL: https://github.com/macraesdirtysocks/YFAR
+BugReports: https://github.com/macraesdirtysocks/YFAR/issues
