@@ -17,6 +17,12 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-    httr
+    jsonlite,
+    httr,
+    dplyr,
+    purrr,
+    stringr,
+    janitor,
+    tidyr
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues

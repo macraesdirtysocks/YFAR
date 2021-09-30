@@ -18,5 +18,5 @@ Token2.0 object.
 }
 \description{
 Creates an Oauth2.0 token object used to access the Yahoo Fantasy API
-See httr::Token2.0 for details.
+See httr::Token2.0 for details and functionality.
 }

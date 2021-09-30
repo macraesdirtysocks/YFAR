@@ -53,3 +53,12 @@ You can also embed plots, for example:
 
 In that case, don’t forget to commit and push the resulting figure
 files, so they display on GitHub and CRAN.
+
+Known limitations, issues and future work
+
+Incompatible data types when binding rows. For whatever reason a number
+one can be integer but another element number two is character. Right
+now the easiest was to solve this problem is to convert all columns to
+data type character. It would be nice to keep proper data types.
+
+Error: “Can’t combine <integer> and <character>.”

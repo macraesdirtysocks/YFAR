@@ -1,7 +1,7 @@
 #' Create an Oauth2.0 token
 #'
 #' Creates an Oauth2.0 token object used to access the Yahoo Fantasy API
-#' See httr::Token2.0 for details.
+#' See httr::Token2.0 for details and functionality.
 #'
 #' @param my_key a string provided my registering an application with Yahoo Developer Network
 #' @param my_secret a string provided my registering an application with Yahoo Developer Network
@@ -11,6 +11,19 @@
 #' @export
 
 y_create_token <-function(my_key = NULL, my_secret = NULL, app_name = NULL) {
+
+    token_check <-
+        purrr::map(.x = ls(name = .GlobalEnv), .f = get) %>%
+        purrr::map_chr(.f = janitor::describe_class) %>%
+        stringr::str_detect(pattern = "Token") %>%
+        sum()
+
+    if (token_check == 1){
+        warning(message("Token object already exists in the global environment.
+        Use token$refresh()"))
+    }
+
+    stop
 
     stopifnot(!is.null(my_key) && is.character(my_key))
     stopifnot(!is.null(my_secret) && is.character(my_secret))

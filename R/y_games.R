@@ -1,30 +1,24 @@
-y_games <- function() {
+#' Get all Yahoo! Fantasy hockey meta data.
+#'
+#' Returns a tibble containing all the meta data for all fantasy hockey
+#' games and leagues participated in by the logged in user including those which
+#' are currently active.
+#'
+#' @return tibble
+#' @export
+y_games <- function(token_name = NULL) {
 
-    games_link <- "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json"
+    api_token <- token_name
+    uri <- "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json"
 
-    token_check <-
-        purrr::map(.x = ls(name = .GlobalEnv), .f = get) %>%
-        purrr::map_chr(.f = janitor::describe_class) %>%
-        stringr::str_detect(pattern = "Token") %>%
-        sum()
+    stopifnot(!is.null(token_name) & janitor::describe_class(api_token) == "Token2.0, Token, R6")
+    stopifnot(token_check() == 1)
 
-    stopifnot(token_check == 1)
+    r <- y_get_response(uri, api_token)
 
-    r <-
-        httr::GET(
-            url = games_link,
-            httr::add_headers(
-                Authorization = stringr::str_c(
-                    "Bearer", yahoo_token$credentials$access_token, sep = " ")
-                ))
+    httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
 
-    httr::stop_for_status(r)
-
-    r_parsed <-
-        jsonlite::fromJSON(
-            httr::content(r, as = "text", encoding = "utf-8"),
-            simplifyVector = FALSE) %>%
-        purrr::pluck("fantasy_content", "users", "0", "user", 2, "games")
+    r_parsed <- y_parse_response(r)
 
     df <-
         r_parsed %>%
