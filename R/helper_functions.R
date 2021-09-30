@@ -14,6 +14,17 @@ token_check <- function(){
 ########################################################################################################################
 ########################################################################################################################
 
+# Verify structure of league_id argument
+
+#' @export
+league_id_check <- function(x){
+    stopifnot(!is.null(x))
+    stopifnot(is.character(x))
+    stopifnot(stringr::str_detect(x, pattern = "[:digit:]*\\.l\\.[:digit:]*"))
+}
+########################################################################################################################
+########################################################################################################################
+
 # Get response object from Yahoo! API
 
 #' @export
@@ -38,8 +49,7 @@ y_get_response <- function(x, y) {
 y_parse_response <- function(x){
     jsonlite::fromJSON(
         httr::content(x, as = "text", encoding = "utf-8"), simplifyVector = FALSE) %>%
-        purrr::pluck("fantasy_content", "league") %>%
-        purrr::keep(purrr::is_list)
+        purrr::pluck("fantasy_content")
 }
 
 ########################################################################################################################
@@ -54,7 +64,7 @@ category_league_settings <- function(r_parsed){
         r_parsed %>%
         purrr::pluck(1) %>%
         dplyr::bind_rows() %>%
-        dplyr::add_column(info = "league_meta", .before = 1) %>%
+        tibble::add_column(info = "league_meta", .before = 1) %>%
         tidyr::nest(data = !info)
 
     league_settings <-
@@ -62,7 +72,7 @@ category_league_settings <- function(r_parsed){
         purrr::pluck(2, "settings", 1) %>%
         purrr::keep(purrr::negate(purrr::is_list)) %>%
         dplyr::bind_rows() %>%
-        dplyr::add_column(info = "league_settings", .before = 1) %>%
+        tibble::add_column(info = "league_settings", .before = 1) %>%
         tidyr::nest(data = !info)
 
     roster_positions <-
@@ -70,7 +80,7 @@ category_league_settings <- function(r_parsed){
         purrr::pluck(2, "settings", 1, "roster_positions") %>%
         purrr::map(purrr::flatten) %>%
         purrr::map_df(., ~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
-        dplyr::add_column(info = "roster_positions", .before = 1) %>%
+        tibble::add_column(info = "roster_positions", .before = 1) %>%
         tidyr::nest(data = !info)
 
     stat_categories <-
@@ -81,7 +91,7 @@ category_league_settings <- function(r_parsed){
         purrr::map_at("stat_position_types", purrr::map, purrr::pluck, 1, "stat_position_type", "position_type") %>%
         purrr::transpose() %>%
         purrr::map_df(dplyr::bind_rows) %>%
-        dplyr::add_column(info = "stat_categories", .before = 1) %>%
+        tibble::add_column(info = "stat_categories", .before = 1) %>%
         tidyr::nest(data = !info)
 
     divisions <-
@@ -89,10 +99,16 @@ category_league_settings <- function(r_parsed){
         purrr::pluck(2, "settings", 1, "divisions") %>%
         purrr::map(purrr::pluck, "division") %>%
         purrr::map_df(dplyr::bind_rows) %>%
-        dplyr::add_column(info = "divisons", .before = 1) %>%
+        tibble::add_column(info = "divisons", .before = 1) %>%
         tidyr::nest(data = !info)
 
-    df <- dplyr::bind_rows(league_meta, league_settings, roster_positions, stat_categories, divisions)
+    df <-
+        dplyr::bind_rows(
+            league_meta,
+            league_settings,
+            roster_positions,
+            stat_categories,
+            divisions)
 
     return(df)
 }
@@ -109,7 +125,7 @@ point_league_settings <- function(r_parsed) {
         r_parsed %>%
         purrr::pluck(1) %>%
         dplyr::bind_rows() %>%
-        dplyr::add_column(info = "league_meta", .before = 1) %>%
+        tibble::add_column(info = "league_meta", .before = 1) %>%
         tidyr::nest(data = !info)
 
     league_settings <-
@@ -117,7 +133,7 @@ point_league_settings <- function(r_parsed) {
         purrr::pluck(2, "settings", 1) %>%
         purrr::keep(purrr::negate(purrr::is_list)) %>%
         dplyr::bind_rows() %>%
-        dplyr::add_column(info = "league_settings", .before = 1) %>%
+        tibble::add_column(info = "league_settings", .before = 1) %>%
         tidyr::nest(data = !info)
 
     roster_positions <-
@@ -125,7 +141,7 @@ point_league_settings <- function(r_parsed) {
         purrr::pluck(2, "settings", 1, "roster_positions") %>%
         purrr::map(purrr::flatten) %>%
         purrr::map_df(., ~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
-        dplyr::add_column(info = "roster_positions", .before = 1) %>%
+        tibble::add_column(info = "roster_positions", .before = 1) %>%
         tidyr::nest(data = !info)
 
     stat_categories <-
@@ -145,11 +161,16 @@ point_league_settings <- function(r_parsed) {
 
     stats <-
         dplyr::left_join(stat_categories, stat_modifiers, by = "stat_id") %>%
-        dplyr::add_column(info = "stat_modifiers", .before = 1) %>%
+        tibble::add_column(info = "stat_modifiers", .before = 1) %>%
         dplyr::rename(modifier_value = value) %>%
         tidyr::nest(data = !info)
 
-    df <- dplyr::bind_rows(league_meta, league_settings, roster_positions, stats)
+    df <-
+        dplyr::bind_rows(
+            league_meta,
+            league_settings,
+            roster_positions,
+            stats)
 
     return(df)
 }

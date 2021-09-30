@@ -4,11 +4,14 @@
 #' games and leagues participated in by the logged in user including those which
 #' are currently active.
 #'
+#' @param token_name Assigned object name used when creating token with y_create_token().
+#'
 #' @return tibble
 #' @export
 y_games <- function(token_name = NULL) {
 
     api_token <- token_name
+
     uri <- "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json"
 
     stopifnot(!is.null(token_name) & janitor::describe_class(api_token) == "Token2.0, Token, R6")
@@ -18,7 +21,8 @@ y_games <- function(token_name = NULL) {
 
     httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
 
-    r_parsed <- y_parse_response(r)
+    r_parsed <- y_parse_response(r) %>%
+        purrr::pluck("users", "0", "user", 2, "games")
 
     df <-
         r_parsed %>%

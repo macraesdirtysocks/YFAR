@@ -23,6 +23,7 @@ Imports:
     purrr,
     stringr,
     janitor,
-    tidyr
+    tidyr,
+    tibble
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues

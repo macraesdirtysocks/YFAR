@@ -4,7 +4,10 @@
 \alias{y_games}
 \title{Get all Yahoo! Fantasy hockey meta data.}
 \usage{
-y_games()
+y_games(token_name = NULL)
+}
+\arguments{
+\item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
 tibble
