@@ -174,3 +174,112 @@ point_league_settings <- function(r_parsed) {
 
     return(df)
 }
+
+########################################################################################################################
+########################################################################################################################
+
+# Parse team meta data in standings response.
+
+#' @export
+team_meta_func <- function(x) {
+
+        team_info <-
+            x %>%
+            purrr::pluck(1) %>%
+            purrr::compact() %>%
+            purrr::flatten() %>%
+            purrr:: discard(purrr::is_list) %>%
+            purrr::modify(as.character) %>%
+            dplyr::bind_rows() %>%
+            tidyr::nest(team_info = -c(team_key, team_id, name))
+
+        team_logo <-
+            x %>%
+            purrr::pluck(1) %>%
+            purrr::compact() %>%
+            purrr::flatten() %>%
+            purrr::pluck("team_logos") %>%
+            rlang::squash() %>%
+            dplyr::bind_rows() %>%
+            tidyr::nest(team_logo = dplyr::everything())
+
+        roster_adds <-
+            x %>%
+            purrr::pluck(1) %>%
+            purrr::compact() %>%
+            purrr::flatten() %>%
+            purrr::pluck("roster_adds") %>%
+            rlang::squash() %>%
+            dplyr::bind_rows() %>%
+            tidyr::nest(roster_adds = dplyr::everything())
+
+        managers <-
+            x %>%
+            purrr::pluck(1) %>%
+            purrr::compact() %>%
+            purrr::flatten() %>%
+            purrr::pluck("managers", 1, "manager") %>%
+            rlang::squash() %>%
+            dplyr::bind_rows() %>%
+            tidyr::nest(manager_info = dplyr::everything())
+
+        df <- dplyr::bind_cols(team_info, team_logo, roster_adds, managers)
+
+    return(df)
+}
+
+########################################################################################################################
+########################################################################################################################
+
+# Parse team stats from standings response
+
+#' @export
+stats_data_func <- function(x) {
+
+    stats_count <-
+        x %>%
+        purrr::pluck(2, "team_stats", "stats") %>%
+        purrr::flatten() %>%
+        purrr::modify_depth(2, as.character) %>%
+        purrr::map_df(purrr::flatten_df) %>%
+        tidyr::nest(stat_count = everything())
+
+    team_points <-
+        x %>%
+        purrr::pluck(2, "team_points") %>%
+        purrr::modify_depth(1, as.character) %>%
+        purrr::flatten_df()
+
+    team_standings <-
+        x %>%
+        purrr::pluck(3, "team_standings") %>%
+        purrr::discard(purrr::is_list) %>%
+        purrr::modify_depth(1, as.character) %>%
+        purrr::flatten_df()
+
+    outcome_totals <-
+        x %>%
+        purrr::pluck(3, "team_standings", "outcome_totals") %>%
+        purrr::modify_depth(1, as.character) %>%
+        purrr::flatten_df() %>%
+        tidyr::nest(outcome_totals = dplyr::everything())
+
+    divison_outcome_totals <-
+        x %>%
+        purrr::pluck(3, "team_standings", "divisional_outcome_totals") %>%
+        purrr::modify_depth(1, as.character) %>%
+        purrr::flatten_df() %>%
+        tidyr::nest(divisonal_outcome_totals = dplyr::everything())
+
+    df <-
+        dplyr::bind_cols(
+            stats_count,
+            team_points,
+            team_standings,
+            outcome_totals,
+            divison_outcome_totals
+        )
+
+    return(df)
+
+}

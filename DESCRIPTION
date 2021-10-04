@@ -24,6 +24,7 @@ Imports:
     stringr,
     janitor,
     tidyr,
-    tibble
+    tibble,
+    rlang
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
