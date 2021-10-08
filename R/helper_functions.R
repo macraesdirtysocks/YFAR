@@ -1,7 +1,18 @@
-########################################################################################################################
-########################################################################################################################
 
-# Check for token class in .GLobalEnv
+# ARTofR::xxx_title1("Token Check Function")
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                            TOKEN CHECK FUNCTION                          ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Check for token class in .GLobalEnv")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Check for token class in .GLobalEnv  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 token_check <- function(){
@@ -11,10 +22,21 @@ token_check <- function(){
         sum()
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("League ID Check")
 
-# Verify structure of league_id argument
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                              LEAGUE ID CHECK                             ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Verify structure of league_id argument")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Verify structure of league_id argument  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 league_id_check <- function(x){
@@ -22,10 +44,22 @@ league_id_check <- function(x){
     stopifnot(is.character(x))
     stopifnot(stringr::str_detect(x, pattern = "[:digit:]*\\.l\\.[:digit:]*"))
 }
-########################################################################################################################
-########################################################################################################################
 
-# Get response object from Yahoo! API
+# ARTofR::xxx_title1("y_get_response function")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                          Y_GET_RESPONSE FUNCTION                         ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Get response object from Yahoo! API")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Get response object from Yahoo! API  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 y_get_response <- function(x, y) {
@@ -40,10 +74,21 @@ y_get_response <- function(x, y) {
         )
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("Y_PARSE_RESPONSE FUNCTION")
 
-# Parse response object from Yahoo! API
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                          Y_PARSE_RESPONSE FUNCTION                       ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse response object from Yahoo! API")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse response object from Yahoo! API  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 y_parse_response <- function(x, ...){
@@ -53,10 +98,21 @@ y_parse_response <- function(x, ...){
         purrr::keep(purrr::is_list)
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("CATEGORY LEAGUE SETTINGS FUNCTION")
 
-# Parse settings from a Yahoo! Fantasy Category League.
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                      CATEGORY LEAGUE SETTINGS FUNCTION                   ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse settings from a Yahoo! Fantasy Category League.")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse settings from a Yahoo! Fantasy Category League.  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 category_league_settings <- function(r_parsed){
@@ -114,10 +170,21 @@ category_league_settings <- function(r_parsed){
     return(df)
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("POINT LEAGUE SETTINGS FUNCTION")
 
-# Parse settings from a Yahoo! Fantasy Point League.
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                       POINT LEAGUE SETTINGS FUNCTION                     ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse settings from a Yahoo! Fantasy Point League.")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse settings from a Yahoo! Fantasy Point League.  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 point_league_settings <- function(r_parsed) {
@@ -176,10 +243,21 @@ point_league_settings <- function(r_parsed) {
     return(df)
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("TEAM META DATA FUNCTION")
 
-# Parse team meta data in standings response.
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                          TEAM META DATA FUNCTION                         ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse team meta data in standings response.")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse team meta data in standings response.  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 team_meta_func <- function(x, ...) {
@@ -229,10 +307,21 @@ team_meta_func <- function(x, ...) {
     return(df)
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("STATS DATA FUNCTION")
 
-# Parse team stats from standings response
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                            STATS DATA FUNCTION                           ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse team stats from standings response")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse team stats from standings response  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 stats_data_func <- function(x) {
@@ -285,10 +374,21 @@ stats_data_func <- function(x) {
 
 }
 
-########################################################################################################################
-########################################################################################################################
+# ARTofR::xxx_title1("TEAM STATS FUNCTION")
 
-# Parse team stats
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                            TEAM STATS FUNCTION                           ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse team stats")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse team stats  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @export
 team_stats_func <- function(x) {
@@ -314,3 +414,154 @@ team_stats_func <- function(x) {
 
 }
 
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                               YAHOO MATCHUPS                             ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# xxx_title3("Parse YAHOO! Matchups Response")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ Parse YAHOO! Matchups Response  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#.........................Team Info Func.........................
+
+#' @export
+team_info_func <- function(x) {
+    df <- tibble::tibble(
+        purrr::map_dfr(x, purrr::pluck, "team", 1, 1),
+        purrr::map_dfr(x, purrr::pluck, "team", 1, 2),
+        purrr::map_dfr(x, purrr::pluck, "team", 1, 3)
+    ) %>%
+        dplyr::rename(team = name)
+}
+
+# ARTofR::xxx_divider1("Week Info Function")
+
+#.........................Week Info Function.........................
+
+#' @export
+week_info_func <- function(x) {
+
+    df <-
+        x %>%
+        purrr::set_names(nm = purrr::map_chr(., purrr::pluck, "team", 1, 3, 1)) %>%
+        purrr::map(purrr::pluck, "team", 2, "matchups") %>%
+        purrr::map(purrr::keep, purrr::is_list) %>%
+        purrr::map(purrr::map_depth, 2, purrr::keep, purrr::negate(purrr::is_list)) %>%
+        purrr::map(purrr::map_depth, 1, purrr::flatten) %>%
+        purrr::map(purrr::map_depth, 2, as.character) %>%
+        purrr::map(dplyr::bind_rows) %>%
+        dplyr::bind_rows(.id = "team") %>%
+        dplyr::nest_by(team, .key = "week_info")
+
+    return(df)
+}
+
+# ARTofR::xxx_divider1("Stat Winner Function")
+
+#......................Stat Winner Function......................
+
+#' @export
+stat_winner_func <- function(x) {
+
+    df <-
+        x %>%
+        purrr::set_names(nm = purrr::map_chr(., purrr::pluck, "team", 1, 3, 1)) %>%
+        purrr::map(purrr::pluck, "team", 2, "matchups") %>%
+        purrr::map(purrr::keep, purrr::is_list) %>%
+        purrr::map(., ~ purrr::set_names(., nm = seq_along(.))) %>%
+        purrr::map(purrr::map_depth, 2, purrr::pluck, "stat_winners") %>%
+        purrr::map_depth(4, purrr::flatten) %>%
+        purrr::map_depth(2, purrr::flatten_df) %>%
+        purrr::map_depth(3, as.character) %>%
+        purrr::map(dplyr::bind_rows, .id = "week") %>%
+        dplyr::bind_rows(.id = "team") %>%
+        dplyr::nest_by(team, .key = "stat_winner")
+
+    return(df)
+}
+
+# ARTofR::xxx_divider1("Week Stats Function")
+
+#......................Week Stats Function.......................
+
+#' @export
+week_stats_func <- function(x) {
+
+    data <-
+        x %>%
+        purrr::set_names(nm = purrr::map_chr(., purrr::pluck, "team", 1, 3, 1)) %>%
+        purrr::map(purrr::pluck, "team", 2, "matchups") %>%
+        purrr::map(purrr::keep, purrr::is_list) %>%
+        purrr::map_depth(3, purrr::pluck, "0", "teams") %>%
+        purrr::map(., ~ purrr::set_names(., nm = seq_along(.))) %>%
+        purrr::map(purrr::map_depth, 4, purrr::map_at, 1, magrittr::extract, c(1:3)) %>%
+        purrr::map(purrr::map_depth, 2, purrr::map_at, "1", purrr::pluck, "team", 1) %>%
+        purrr::map(purrr::map_depth, 2, magrittr::extract, c(1:2))
+
+    opponent <-
+        data %>%
+        purrr::map_depth(2, purrr::pluck, "matchup", "1") %>%
+        purrr::map_depth(2, purrr::flatten) %>%
+        purrr::map_depth(3, as.character) %>%
+        purrr::map(dplyr::bind_rows, .id = "week") %>%
+        dplyr::bind_rows(.id = "team") %>%
+        dplyr::nest_by(team, .key = "opponent_info")
+
+    team_points <-
+        data %>%
+        purrr::map_depth(2, purrr::pluck, "matchup", "0", "team", 2, "team_points") %>%
+        purrr::map_depth(2, magrittr::extract, "total") %>%
+        purrr::map_depth(3, as.character) %>%
+        purrr::map_depth(2, dplyr::bind_rows) %>%
+        purrr::map(dplyr::bind_rows, .id = "week") %>%
+        dplyr::bind_rows(.id = "team") %>%
+        dplyr::nest_by(team, .key = "team_points")
+
+    remaining_games <-
+        data %>%
+        purrr::map_depth(2,
+                         purrr::pluck,
+                         "matchup",
+                         "0",
+                         "team",
+                         2,
+                         "team_remaining_games",
+                         "total") %>%
+        purrr::map_depth(3, as.character) %>%
+        purrr::map_depth(2, dplyr::bind_rows) %>%
+        purrr::map(dplyr::bind_rows, .id = "week") %>%
+        dplyr::bind_rows(.id = "team") %>%
+        dplyr::nest_by(team, .key = "remaining_games")
+
+    week_stats <-
+        data %>%
+        purrr::map_depth(2,
+                         purrr::pluck,
+                         "matchup",
+                         "0",
+                         "team",
+                         2,
+                         "team_stats",
+                         "stats") %>%
+        purrr::map_depth(3, purrr::pluck, "stat") %>%
+        purrr::modify_depth(4, as.integer) %>%
+        purrr::map_depth(3, dplyr::bind_rows) %>%
+        purrr::map_depth(2, dplyr::bind_rows) %>%
+        purrr::map(dplyr::bind_rows, .id = "week") %>%
+        dplyr::bind_rows(.id = "team") %>%
+        dplyr::nest_by(team, .key = "week_stats")
+
+    df <-
+        dplyr::full_join(opponent, team_points, by = "team") %>%
+        dplyr::full_join(remaining_games, by = "team") %>%
+        dplyr::full_join(week_stats, by = "team")
+
+    return(df)
+}

@@ -25,6 +25,7 @@ Imports:
     janitor,
     tidyr,
     tibble,
-    rlang
+    rlang,
+    magrittr
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
