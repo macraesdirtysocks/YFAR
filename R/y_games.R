@@ -21,8 +21,7 @@ y_games <- function(token_name = NULL) {
 
     httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
 
-    r_parsed <- y_parse_response(r) %>%
-        purrr::pluck("users", "0", "user", 2, "games")
+    r_parsed <- y_parse_response(r, "fantasy_content", "users", "0", "user", 2, "games")
 
     df <-
         r_parsed %>%

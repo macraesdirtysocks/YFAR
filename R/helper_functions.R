@@ -46,10 +46,11 @@ y_get_response <- function(x, y) {
 # Parse response object from Yahoo! API
 
 #' @export
-y_parse_response <- function(x){
+y_parse_response <- function(x, ...){
     jsonlite::fromJSON(
         httr::content(x, as = "text", encoding = "utf-8"), simplifyVector = FALSE) %>%
-        purrr::pluck("fantasy_content")
+        purrr::pluck(...) %>%
+        purrr::keep(purrr::is_list)
 }
 
 ########################################################################################################################
@@ -181,11 +182,11 @@ point_league_settings <- function(r_parsed) {
 # Parse team meta data in standings response.
 
 #' @export
-team_meta_func <- function(x) {
+team_meta_func <- function(x, ...) {
 
         team_info <-
             x %>%
-            purrr::pluck(1) %>%
+            purrr::pluck(...) %>%
             purrr::compact() %>%
             purrr::flatten() %>%
             purrr:: discard(purrr::is_list) %>%
@@ -195,7 +196,7 @@ team_meta_func <- function(x) {
 
         team_logo <-
             x %>%
-            purrr::pluck(1) %>%
+            purrr::pluck(...) %>%
             purrr::compact() %>%
             purrr::flatten() %>%
             purrr::pluck("team_logos") %>%
@@ -205,7 +206,7 @@ team_meta_func <- function(x) {
 
         roster_adds <-
             x %>%
-            purrr::pluck(1) %>%
+            purrr::pluck(...) %>%
             purrr::compact() %>%
             purrr::flatten() %>%
             purrr::pluck("roster_adds") %>%
@@ -215,7 +216,7 @@ team_meta_func <- function(x) {
 
         managers <-
             x %>%
-            purrr::pluck(1) %>%
+            purrr::pluck(...) %>%
             purrr::compact() %>%
             purrr::flatten() %>%
             purrr::pluck("managers", 1, "manager") %>%
@@ -242,7 +243,7 @@ stats_data_func <- function(x) {
         purrr::flatten() %>%
         purrr::modify_depth(2, as.character) %>%
         purrr::map_df(purrr::flatten_df) %>%
-        tidyr::nest(stat_count = everything())
+        tidyr::nest(stat_count = dplyr::everything())
 
     team_points <-
         x %>%
@@ -283,3 +284,33 @@ stats_data_func <- function(x) {
     return(df)
 
 }
+
+########################################################################################################################
+########################################################################################################################
+
+# Parse team stats
+
+#' @export
+team_stats_func <- function(x) {
+
+    team_stats <-
+        x %>%
+        purrr::pluck("team", 2, "team_stats", "stats") %>%
+        purrr::map_df(purrr::pluck, "stat") %>%
+        tidyr::pivot_wider(
+            names_from = stat_id,
+            values_from = value,
+            names_prefix = "stat_"
+        )
+
+    team_points <-
+        x %>%
+        purrr::pluck("team", 2, "team_points") %>%
+        dplyr::bind_rows()
+
+    df <- dplyr::bind_cols(team_points, team_stats)
+
+    return(df)
+
+}
+

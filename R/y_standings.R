@@ -27,12 +27,11 @@ y_standings <- function(league_id = NULL, token_name = NULL) {
 
     httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
 
-    r_parsed <- y_parse_response(r) %>%
-        purrr::pluck("league", 2, "standings", 1, "teams") %>%
+    r_parsed <- y_parse_response(r, "fantasy_content", "league", 2, "standings", 1, "teams") %>%
         purrr::map(purrr::pluck, "team") %>%
         purrr::compact()
 
-    team_meta <- purrr::map_df(r_parsed, team_meta_func)
+    team_meta <- purrr::map_df(r_parsed, team_meta_func, 1)
 
     stats <- purrr::map_df(r_parsed, stats_data_func)
 
