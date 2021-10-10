@@ -565,3 +565,54 @@ week_stats_func <- function(x) {
 
     return(df)
 }
+
+# ARTofR::xxx_title1("YAHOO! TRANSACTIONS FUNCTION")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                        YAHOO! TRANSACTIONS FUNCTION                      ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ARTofR::xxx_title3("PARSE TRANSACTIONS RESPONSE")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ PARSE TRANSACTIONS RESPONSE  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+transactions_func <- function(x){
+
+    # ARTofR::xxx_divider1("TRANSACTION META DATA")
+
+    #......................TRANSACTION META DATA.....................
+
+    transaction_meta <-
+        x %>%
+        purrr::pluck("transaction", 1) %>%
+        dplyr::bind_rows() %>%
+        dplyr::rename(transaction_type = type) # rename so there isn't a conflict when binding cols
+
+    # ARTofR::xxx_divider1("PLAYER INFO")
+
+    #..........................PLAYER INFO...........................
+
+    player_info <-
+        x %>%
+        purrr::pluck("transaction", 2, "players") %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::map(purrr::keep, purrr::is_list) %>% #function breaks without this
+        purrr::flatten() %>%
+        purrr::set_names(paste(names(.), seq_along(.), sep = "_")) %>% # set names to player_#
+        purrr::map_depth(2, purrr::map_at, 3, purrr::map_at, "name", purrr::pluck, 1) %>%
+        purrr::map(purrr::map_at, 2, purrr::map_at, "transaction_data", purrr::flatten) %>% #put player transaction data on the same level,
+        # for some reason player 2 is on a different level.
+        purrr::map_depth(2, purrr::flatten_df) %>%
+        purrr::map_df(dplyr::bind_cols)
+
+    df <- dplyr::bind_cols(transaction_meta, player_info)
+
+    return(df)
+
+}
