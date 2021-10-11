@@ -9,7 +9,9 @@ utils::globalVariables(
         "stat_id",
         "player_id",
         "league_id",
+        "organization_id",
         "league_key",
-        "value"
+        "value",
+        "n"
     )
 )

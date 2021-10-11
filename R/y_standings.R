@@ -12,6 +12,9 @@ y_standings <- function(league_id = NULL, token_name = NULL) {
 
     api_token <- token_name
 
+    .league_id_check(league_id)
+    .token_check(token_name, api_token, name = .GlobalEnv)
+
     uri <- stringr::str_c(
         "https://fantasysports.yahooapis.com/fantasy/v2",
         "league",
@@ -20,20 +23,17 @@ y_standings <- function(league_id = NULL, token_name = NULL) {
         sep = "/"
     )
 
-    league_id_check(league_id)
-    stopifnot(token_check() == 1)
-
-    r <- y_get_response(uri, api_token)
+    r <- .y_get_response(uri, api_token)
 
     httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
 
-    r_parsed <- y_parse_response(r, "fantasy_content", "league", 2, "standings", 1, "teams") %>%
+    r_parsed <- .y_parse_response(r, "fantasy_content", "league", 2, "standings", 1, "teams") %>%
         purrr::map(purrr::pluck, "team") %>%
         purrr::compact()
 
-    team_meta <- purrr::map_df(r_parsed, team_meta_func, 1)
+    team_meta <- purrr::map_df(r_parsed, .team_meta_func, 1)
 
-    stats <- purrr::map_df(r_parsed, stats_data_func)
+    stats <- purrr::map_df(r_parsed, .stats_data_func)
 
     df <- dplyr::bind_cols(team_meta, stats)
 

@@ -13,7 +13,7 @@
 y_create_token <-function(my_key = NULL, my_secret = NULL, app_name = NULL) {
 
 
-    if (token_check() >= 1){
+    if (.token_count(name = .GlobalEnv) >= 1){
 
         warning(message("Token object already exists in the global environment.
         Use token$refresh()"))
