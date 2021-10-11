@@ -1,5 +1,4 @@
 
-# ARTofR::xxx_title1("Token Check Function")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
@@ -8,25 +7,44 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# xxx_title3("Check for token class in .GLobalEnv")
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##  ~ Check for token class in .GLobalEnv  ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#..........................Token Check...........................
 
 #' Token Check
 #'
-#' Check Global environment for a Token2.0 class
+#' Checks supplied environment for a Token2.0 class.
+#' Checks token_name argument is supplied.
+#' Checks that the supplied token_name is class Token2.0.
+#'
+#' @param token_name assigned object name used when creating token with y_create_token().
+#' @param api_token assigned value of token name to standardize token names within functions.
+#' @param ... argument passed onto ls()
+#' @keywords internal
+.token_check <- function(token_name, api_token, ...) {
+
+    stopifnot(.token_count(...) == 1)
+    stopifnot(!is.null(token_name))
+    stopifnot(janitor::describe_class(api_token) == "Token2.0, Token, R6")
+}
+
+#......................Token Count Function......................
+
+#' Token Count
+#'
+#' Function called by .token_check
+#' Check environment for a Token2.0 class.
+#'
+#' @param ... environment name argument passed to ls()
 #'
 #' @keywords internal
-token_check <- function(){
-    purrr::map(.x = ls(name = .GlobalEnv), .f = get) %>%
+.token_count <- function(...) {
+
+    purrr::map(.x = ls(...), .f = get) %>%
         purrr::map_chr(.f = janitor::describe_class) %>%
         stringr::str_detect(pattern = "Token") %>%
         sum()
-}
 
-# ARTofR::xxx_title1("League ID Check")
+}
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,23 +54,29 @@ token_check <- function(){
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# xxx_title3("Verify structure of league_id argument")
-
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  ~ Verify structure of league_id argument  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' league_id check
 #'
-#' Checks given league_id for validity
+#' Checks for presence of supplied league_id and validity
 #'
-#' @param x league_id supplied to y function
+#' @param league_id league_id supplied to y_ function
 #'
 #' @keywords internal
-league_id_check <- function(x){
-    stopifnot(!is.null(x))
-    stopifnot(is.character(x))
-    stopifnot(stringr::str_detect(x, pattern = "[:digit:]*\\.l\\.[:digit:]*"))
+.league_id_check <- function(league_id){
+
+    if (is.null(league_id) == TRUE){
+        stop(message("league_id argument required but not supplied"))
+    } else if (is.character(league_id) == FALSE){
+        stop(message("league_id should be a character string"))
+    } else if (stringr::str_detect(league_id, pattern = "[:digit:]*\\.l\\.[:digit:]*") == FALSE){
+        stop(message("league_id syntax should be 000.l.0000"))
+    } else {
+        invisible(league_id)
+    }
+
 }
 
 # ARTofR::xxx_title1("y_get_response function")
@@ -79,7 +103,7 @@ league_id_check <- function(x){
 #' @param y api_token value assign by y_create_token()
 #'
 #' @keywords internal
-y_get_response <- function(x, y) {
+.y_get_response <- function(x, y) {
     httr::GET(
         url = x,
         httr::add_headers(
@@ -115,7 +139,7 @@ y_get_response <- function(x, y) {
 #' @param ... arguments passed onto purrr::pluck
 #'
 #' @keywords internal
-y_parse_response <- function(x, ...){
+.y_parse_response <- function(x, ...){
     jsonlite::fromJSON(
         httr::content(x, as = "text", encoding = "utf-8"), simplifyVector = FALSE) %>%
         purrr::pluck(...) %>%
@@ -145,7 +169,7 @@ y_parse_response <- function(x, ...){
 #' @param r_parsed variable created within y_league_settings by y_parse_response
 #'
 #' @keywords internal
-category_league_settings <- function(r_parsed){
+.category_league_settings <- function(r_parsed){
 
     league_meta <-
         r_parsed %>%
@@ -223,8 +247,7 @@ category_league_settings <- function(r_parsed){
 #' @param r_parsed variable created within y_league_settings by y_parse_response
 #'
 #' @keywords internal
-#' @export
-point_league_settings <- function(r_parsed) {
+.point_league_settings <- function(r_parsed) {
 
     league_meta <-
         r_parsed %>%
@@ -304,7 +327,7 @@ point_league_settings <- function(r_parsed) {
 #' @param ... arguments passed onto purrr::pluck
 #'
 #' @keywords internal
-team_meta_func <- function(x, ...) {
+.team_meta_func <- function(x, ...) {
 
         team_info <-
             x %>%
@@ -374,7 +397,7 @@ team_meta_func <- function(x, ...) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-stats_data_func <- function(x) {
+.stats_data_func <- function(x) {
 
     stats_count <-
         x %>%
@@ -447,7 +470,7 @@ stats_data_func <- function(x) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-team_stats_func <- function(x) {
+.team_stats_func <- function(x) {
 
     team_stats <-
         x %>%
@@ -494,7 +517,7 @@ team_stats_func <- function(x) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-team_info_func <- function(x) {
+.team_info_func <- function(x) {
     df <- tibble::tibble(
         purrr::map_dfr(x, purrr::pluck, "team", 1, 1),
         purrr::map_dfr(x, purrr::pluck, "team", 1, 2),
@@ -514,7 +537,7 @@ team_info_func <- function(x) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-week_info_func <- function(x) {
+.week_info_func <- function(x) {
 
     df <-
         x %>%
@@ -542,7 +565,7 @@ week_info_func <- function(x) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-stat_winner_func <- function(x) {
+.stat_winner_func <- function(x) {
 
     df <-
         x %>%
@@ -572,7 +595,7 @@ stat_winner_func <- function(x) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-week_stats_func <- function(x) {
+.week_stats_func <- function(x) {
 
     data <-
         x %>%
@@ -669,7 +692,7 @@ week_stats_func <- function(x) {
 #' @param x parsed content from response object
 #'
 #' @keywords internal
-transactions_func <- function(x){
+.transactions_func <- function(x){
 
     # ARTofR::xxx_divider1("TRANSACTION META DATA")
 
@@ -728,17 +751,17 @@ transactions_func <- function(x){
 #' @param ... arguments passed onto purrr::pluck
 #'
 #' @keywords internal
-player_slate_func <- function(x, ...){
+.player_slate_func <- function(x, ...){
 
     #......................GET RESPONSE.....................
 
     r <-
-        y_get_response(x, ...)
+        .y_get_response(x, ...)
 
     #......................PARSE RESPONSE.....................
 
     r_parsed <-
-        y_parse_response(r, "fantasy_content", "league", 2, "players")
+        .y_parse_response(r, "fantasy_content", "league", 2, "players")
 
     # ARTofR::xxx_divider1("PLAYER INFO")
 

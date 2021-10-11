@@ -13,8 +13,8 @@ y_matchups <- function(league_id = NULL, token_name = NULL) {
 
     api_token <- token_name
 
-    stopifnot(!is.null(league_id) & is.character(league_id))
-    stopifnot(!is.null(token_name) & janitor::describe_class(api_token) == "Token2.0, Token, R6")
+    .league_id_check(league_id)
+    .token_check(token_name, api_token, name = .GlobalEnv)
 
     uri <-  stringr::str_c(
         "https://fantasysports.yahooapis.com/fantasy/v2/league",
@@ -24,22 +24,20 @@ y_matchups <- function(league_id = NULL, token_name = NULL) {
         sep = "/"
     )
 
-    stopifnot(token_check() == 1)
-
-    r <- y_get_response(uri, api_token)
+    r <- .y_get_response(uri, api_token)
 
     httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
 
     r_parsed <-
-        y_parse_response(r, "fantasy_content", "league", 2, "teams")
+        .y_parse_response(r, "fantasy_content", "league", 2, "teams")
 
     team_info <-
-        team_info_func(r_parsed)
+        .team_info_func(r_parsed)
 
     df <-
-        dplyr::full_join(team_info, week_info_func(r_parsed), by = "team") %>%
-        dplyr::full_join(stat_winner_func(r_parsed), by = "team") %>%
-        dplyr::full_join(week_stats_func(r_parsed), by = "team")
+        dplyr::full_join(team_info, .week_info_func(r_parsed), by = "team") %>%
+        dplyr::full_join(.stat_winner_func(r_parsed), by = "team") %>%
+        dplyr::full_join(.week_stats_func(r_parsed), by = "team")
 
     return(df)
 

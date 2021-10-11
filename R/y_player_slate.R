@@ -15,17 +15,19 @@ y_player_slate <- function(league_id = NULL, token_name = NULL, start = 0, numbe
 
     api_token <- token_name
 
-    stopifnot(!is.null(league_id) & is.character(league_id))
-    stopifnot(!is.null(token_name) & janitor::describe_class(api_token) == "Token2.0, Token, R6")
-    stopifnot(is.numeric(start) & is.numeric(number_of_players))
-
-    stopifnot(token_check() == 1)
+    .league_id_check(league_id)
+    .token_check(token_name, api_token, name = .GlobalEnv)
 
     pages <- seq(from = start, to = (start+number_of_players)-25, by = 25)
 
-    uri <- paste0("https://fantasysports.yahooapis.com/fantasy/v2/league/", league_id, "/players;status=ALL;start=", pages, ";count=25;sort=AR?format=json")
+    uri <- stringr::str_c(
+        "https://fantasysports.yahooapis.com/fantasy/v2/league/",
+        league_id, "/players;status=ALL;start=",
+        pages,
+        ";count=25;sort=AR?format=json",
+        sep = "")
 
-    players <- purrr::map_df(uri, player_slate_func, y = api_token)
+    players <- purrr::map_df(uri, .player_slate_func, y = api_token)
 
     # REMOVE DUPLICATE PLAYERS
     df <- players %>%

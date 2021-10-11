@@ -14,14 +14,13 @@ y_games <- function(token_name = NULL) {
 
     uri <- "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json"
 
-    stopifnot(!is.null(token_name) & janitor::describe_class(api_token) == "Token2.0, Token, R6")
-    stopifnot(token_check() == 1)
+    .token_check(token_name, api_token, name = .GlobalEnv)
 
-    r <- y_get_response(uri, api_token)
+    r <- .y_get_response(uri, api_token)
 
     httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
 
-    r_parsed <- y_parse_response(r, "fantasy_content", "users", "0", "user", 2, "games")
+    r_parsed <- .y_parse_response(r, "fantasy_content", "users", "0", "user", 2, "games")
 
     df <-
         r_parsed %>%
