@@ -7,7 +7,6 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 #..........................Token Check...........................
 
 #' Token Check
@@ -30,8 +29,8 @@
 #......................Token Count Function......................
 
 #' Token Count
-#'
 #' Function called by .token_check and y_create_token()
+#' Function called by .token_check
 #' Check environment for a Token2.0 class.
 #'
 #' @param ... environment name argument passed to ls()
@@ -43,7 +42,6 @@
         purrr::map_chr(.f = janitor::describe_class) %>%
         stringr::str_detect(pattern = "Token") %>%
         sum()
-
 }
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,8 +76,6 @@
     }
 
 }
-
-# ARTofR::xxx_title1("y_get_response function")
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
