@@ -12,7 +12,7 @@ y_matchups(league_id = NULL, token_name = NULL)
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
-A tibble with nested columns
+a [tibble][tibble::tibble-package] with nested columns
 }
 \description{
 y_matchups() gets matchup stats and results for a given league.

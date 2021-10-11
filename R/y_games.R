@@ -6,7 +6,7 @@
 #'
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #'
-#' @return tibble
+#' @return a [tibble][tibble::tibble-package]
 #' @export
 y_games <- function(token_name = NULL) {
 

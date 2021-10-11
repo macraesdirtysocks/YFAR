@@ -12,7 +12,7 @@ y_standings(league_id = NULL, token_name = NULL)
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
-A tibble with nested columns
+a [tibble][tibble::tibble-package] with nested columns
 }
 \description{
 Get standings data, divison data playoff seed and team matchup results.

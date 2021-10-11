@@ -7,7 +7,7 @@
 #' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #'
-#' @return A tibble with nested columns
+#' @return a [tibble][tibble::tibble-package] with nested columns
 #' @export
 y_matchups <- function(league_id = NULL, token_name = NULL) {
 

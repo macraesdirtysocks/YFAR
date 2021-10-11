@@ -12,7 +12,7 @@ y_teams(league_id = NULL, token_name = NULL)
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
-A tibble with both nested and un-nested columns.
+a [tibble][tibble::tibble-package] with both nested and un-nested columns.
 }
 \description{
 Teams in a league make moves, have co-managers, have a waiver prioity etc.  This function

@@ -10,7 +10,7 @@ y_games(token_name = NULL)
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
-tibble
+a [tibble][tibble::tibble-package]
 }
 \description{
 Returns a tibble containing all the meta data for all fantasy hockey

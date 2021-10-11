@@ -14,7 +14,11 @@
 ##  ~ Check for token class in .GLobalEnv  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' Token Check
+#'
+#' Check Global environment for a Token2.0 class
+#'
+#' @keywords internal
 token_check <- function(){
     purrr::map(.x = ls(name = .GlobalEnv), .f = get) %>%
         purrr::map_chr(.f = janitor::describe_class) %>%
@@ -38,7 +42,13 @@ token_check <- function(){
 ##  ~ Verify structure of league_id argument  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' league_id check
+#'
+#' Checks given league_id for validity
+#'
+#' @param x league_id supplied to y function
+#'
+#' @keywords internal
 league_id_check <- function(x){
     stopifnot(!is.null(x))
     stopifnot(is.character(x))
@@ -61,7 +71,14 @@ league_id_check <- function(x){
 ##  ~ Get response object from Yahoo! API  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' y_get_response
+#'
+#' Send GET request to YAHOO! api
+#'
+#' @param x league_id supplied to y function
+#' @param y api_token value assign by y_create_token()
+#'
+#' @keywords internal
 y_get_response <- function(x, y) {
     httr::GET(
         url = x,
@@ -90,7 +107,14 @@ y_get_response <- function(x, y) {
 ##  ~ Parse response object from Yahoo! API  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' y_parse_response
+#'
+#' Parse response from y_get_response()
+#'
+#' @param x league_id supplied to y function
+#' @param ... arguments passed onto purrr::pluck
+#'
+#' @keywords internal
 y_parse_response <- function(x, ...){
     jsonlite::fromJSON(
         httr::content(x, as = "text", encoding = "utf-8"), simplifyVector = FALSE) %>%
@@ -114,31 +138,37 @@ y_parse_response <- function(x, ...){
 ##  ~ Parse settings from a Yahoo! Fantasy Category League.  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' category_league_settings
+#'
+#' helper function called by y_league_settings()
+#'
+#' @param r_parsed variable created within y_league_settings by y_parse_response
+#'
+#' @keywords internal
 category_league_settings <- function(r_parsed){
 
     league_meta <-
         r_parsed %>%
         purrr::pluck(1) %>%
         dplyr::bind_rows() %>%
-        tibble::add_column(info = "league_meta", .before = 1) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "league_meta", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     league_settings <-
         r_parsed %>%
         purrr::pluck(2, "settings", 1) %>%
         purrr::keep(purrr::negate(purrr::is_list)) %>%
         dplyr::bind_rows() %>%
-        tibble::add_column(info = "league_settings", .before = 1) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "league_settings", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     roster_positions <-
         r_parsed %>%
         purrr::pluck(2, "settings", 1, "roster_positions") %>%
         purrr::map(purrr::flatten) %>%
-        purrr::map_df(., ~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
-        tibble::add_column(info = "roster_positions", .before = 1) %>%
-        tidyr::nest(data = !info)
+        purrr::map_df(~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
+        tibble::add_column("info" = "roster_positions", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     stat_categories <-
         r_parsed %>%
@@ -148,16 +178,16 @@ category_league_settings <- function(r_parsed){
         purrr::map_at("stat_position_types", purrr::map, purrr::pluck, 1, "stat_position_type", "position_type") %>%
         purrr::transpose() %>%
         purrr::map_df(dplyr::bind_rows) %>%
-        tibble::add_column(info = "stat_categories", .before = 1) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "stat_categories", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     divisions <-
         r_parsed %>%
         purrr::pluck(2, "settings", 1, "divisions") %>%
         purrr::map(purrr::pluck, "division") %>%
         purrr::map_df(dplyr::bind_rows) %>%
-        tibble::add_column(info = "divisons", .before = 1) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "divisons", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     df <-
         dplyr::bind_rows(
@@ -186,6 +216,13 @@ category_league_settings <- function(r_parsed){
 ##  ~ Parse settings from a Yahoo! Fantasy Point League.  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#' points_league_settings
+#'
+#' helper function called by y_league_settings()
+#'
+#' @param r_parsed variable created within y_league_settings by y_parse_response
+#'
+#' @keywords internal
 #' @export
 point_league_settings <- function(r_parsed) {
 
@@ -193,24 +230,24 @@ point_league_settings <- function(r_parsed) {
         r_parsed %>%
         purrr::pluck(1) %>%
         dplyr::bind_rows() %>%
-        tibble::add_column(info = "league_meta", .before = 1) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "league_meta", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     league_settings <-
         r_parsed %>%
         purrr::pluck(2, "settings", 1) %>%
         purrr::keep(purrr::negate(purrr::is_list)) %>%
         dplyr::bind_rows() %>%
-        tibble::add_column(info = "league_settings", .before = 1) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "league_settings", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     roster_positions <-
         r_parsed %>%
         purrr::pluck(2, "settings", 1, "roster_positions") %>%
         purrr::map(purrr::flatten) %>%
-        purrr::map_df(., ~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
-        tibble::add_column(info = "roster_positions", .before = 1) %>%
-        tidyr::nest(data = !info)
+        purrr::map_df(~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
+        tibble::add_column("info" = "roster_positions", .before = 1) %>%
+        tidyr::nest(data = !("info"))
 
     stat_categories <-
         r_parsed %>%
@@ -229,9 +266,9 @@ point_league_settings <- function(r_parsed) {
 
     stats <-
         dplyr::left_join(stat_categories, stat_modifiers, by = "stat_id") %>%
-        tibble::add_column(info = "stat_modifiers", .before = 1) %>%
-        dplyr::rename(modifier_value = value) %>%
-        tidyr::nest(data = !info)
+        tibble::add_column("info" = "stat_modifiers", .before = 1) %>%
+        dplyr::rename("modifier_value" = "value") %>%
+        tidyr::nest(data = !("info"))
 
     df <-
         dplyr::bind_rows(
@@ -259,7 +296,14 @@ point_league_settings <- function(r_parsed) {
 ##  ~ Parse team meta data in standings response.  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' team_meta_data
+#'
+#' helper function called by y_ functions to parse team meta data
+#'
+#' @param x parsed content from response object
+#' @param ... arguments passed onto purrr::pluck
+#'
+#' @keywords internal
 team_meta_func <- function(x, ...) {
 
         team_info <-
@@ -267,7 +311,7 @@ team_meta_func <- function(x, ...) {
             purrr::pluck(...) %>%
             purrr::compact() %>%
             purrr::flatten() %>%
-            purrr:: discard(purrr::is_list) %>%
+            purrr::discard(purrr::is_list) %>%
             purrr::modify(as.character) %>%
             dplyr::bind_rows() %>%
             tidyr::nest(team_info = -c(team_key, team_id, name))
@@ -323,7 +367,13 @@ team_meta_func <- function(x, ...) {
 ##  ~ Parse team stats from standings response  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' stats_data_func
+#'
+#' helper function called by y_standings to parse team standings response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 stats_data_func <- function(x) {
 
     stats_count <-
@@ -390,7 +440,13 @@ stats_data_func <- function(x) {
 ##  ~ Parse team stats  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' @export
+#' team_stats_func
+#'
+#' helper function called by y_team_stats to parse team stats response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 team_stats_func <- function(x) {
 
     team_stats <-
@@ -431,26 +487,38 @@ team_stats_func <- function(x) {
 
 #.........................Team Info Func.........................
 
-#' @export
+#' team_info_func
+#'
+#' helper function called by y_matchups to parse team_info from matchups response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 team_info_func <- function(x) {
     df <- tibble::tibble(
         purrr::map_dfr(x, purrr::pluck, "team", 1, 1),
         purrr::map_dfr(x, purrr::pluck, "team", 1, 2),
         purrr::map_dfr(x, purrr::pluck, "team", 1, 3)
     ) %>%
-        dplyr::rename(team = name)
+        dplyr::rename("team" = "name")
 }
 
 # ARTofR::xxx_divider1("Week Info Function")
 
 #.........................Week Info Function.........................
 
-#' @export
+#' week_info_func
+#'
+#' helper function called by y_matchups to parse week_info from matchups response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 week_info_func <- function(x) {
 
     df <-
         x %>%
-        purrr::set_names(nm = purrr::map_chr(., purrr::pluck, "team", 1, 3, 1)) %>%
+        purrr::set_names(x =., nm = purrr::map_chr(.x = ., purrr::pluck, "team", 1, 3, 1)) %>%
         purrr::map(purrr::pluck, "team", 2, "matchups") %>%
         purrr::map(purrr::keep, purrr::is_list) %>%
         purrr::map(purrr::map_depth, 2, purrr::keep, purrr::negate(purrr::is_list)) %>%
@@ -467,15 +535,21 @@ week_info_func <- function(x) {
 
 #......................Stat Winner Function......................
 
-#' @export
+#' stats_winner_func
+#'
+#' helper function called by y_matchups to parse stat_winners from matchups response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 stat_winner_func <- function(x) {
 
     df <-
         x %>%
-        purrr::set_names(nm = purrr::map_chr(., purrr::pluck, "team", 1, 3, 1)) %>%
+        purrr::set_names(x = ., nm = purrr::map_chr(.x =., purrr::pluck, "team", 1, 3, 1)) %>%
         purrr::map(purrr::pluck, "team", 2, "matchups") %>%
         purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(., ~ purrr::set_names(., nm = seq_along(.))) %>%
+        purrr::map(.x = ., ~purrr::set_names(x = ., nm = seq_along(.))) %>%
         purrr::map(purrr::map_depth, 2, purrr::pluck, "stat_winners") %>%
         purrr::map_depth(4, purrr::flatten) %>%
         purrr::map_depth(2, purrr::flatten_df) %>%
@@ -491,16 +565,22 @@ stat_winner_func <- function(x) {
 
 #......................Week Stats Function.......................
 
-#' @export
+#' week_stats_func
+#'
+#' helper function called by y_matchups to parse week stats from matchups response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 week_stats_func <- function(x) {
 
     data <-
         x %>%
-        purrr::set_names(nm = purrr::map_chr(., purrr::pluck, "team", 1, 3, 1)) %>%
+        purrr::set_names(x =., nm = purrr::map_chr(.x = ., purrr::pluck, "team", 1, 3, 1)) %>%
         purrr::map(purrr::pluck, "team", 2, "matchups") %>%
         purrr::map(purrr::keep, purrr::is_list) %>%
         purrr::map_depth(3, purrr::pluck, "0", "teams") %>%
-        purrr::map(., ~ purrr::set_names(., nm = seq_along(.))) %>%
+        purrr::map(.x = ., ~purrr::set_names(x =., nm = seq_along(.))) %>%
         purrr::map(purrr::map_depth, 4, purrr::map_at, 1, magrittr::extract, c(1:3)) %>%
         purrr::map(purrr::map_depth, 2, purrr::map_at, "1", purrr::pluck, "team", 1) %>%
         purrr::map(purrr::map_depth, 2, magrittr::extract, c(1:2))
@@ -582,6 +662,13 @@ week_stats_func <- function(x) {
 ##  ~ PARSE TRANSACTIONS RESPONSE  ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#' transactions_func
+#'
+#' helper function called by y_transactions to parse transaction response
+#'
+#' @param x parsed content from response object
+#'
+#' @keywords internal
 transactions_func <- function(x){
 
     # ARTofR::xxx_divider1("TRANSACTION META DATA")
@@ -592,7 +679,7 @@ transactions_func <- function(x){
         x %>%
         purrr::pluck("transaction", 1) %>%
         dplyr::bind_rows() %>%
-        dplyr::rename(transaction_type = type) # rename so there isn't a conflict when binding cols
+        dplyr::rename("transaction_type" = "type") # rename so there isn't a conflict when binding cols
 
     # ARTofR::xxx_divider1("PLAYER INFO")
 
@@ -604,7 +691,7 @@ transactions_func <- function(x){
         purrr::keep(purrr::is_list) %>%
         purrr::map(purrr::keep, purrr::is_list) %>% #function breaks without this
         purrr::flatten() %>%
-        purrr::set_names(paste(names(.), seq_along(.), sep = "_")) %>% # set names to player_#
+        purrr::set_names(x =., nm = paste(names(.), seq_along(.), sep = "_")) %>% # set names to player_#
         purrr::map_depth(2, purrr::map_at, 3, purrr::map_at, "name", purrr::pluck, 1) %>%
         purrr::map(purrr::map_at, 2, purrr::map_at, "transaction_data", purrr::flatten) %>% #put player transaction data on the same level,
         # for some reason player 2 is on a different level.
@@ -615,4 +702,60 @@ transactions_func <- function(x){
 
     return(df)
 
+}
+
+# ARTofR::xxx_title1("YAHOO! PLAYER SLATE FUNCTION")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                        YAHOO! PLAYER SLATE FUNCTION                      ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ARTofR::xxx_title3("PARSE PLAYER RESPONSE")
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ PARSE PLAYER RESPONSE  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' player_slate_func
+#'
+#' helper function called by y_player_slate to parse player info from players response
+#'
+#' @param x parsed content from response object
+#' @param ... arguments passed onto purrr::pluck
+#'
+#' @keywords internal
+player_slate_func <- function(x, ...){
+
+    #......................GET RESPONSE.....................
+
+    r <-
+        y_get_response(x, ...)
+
+    #......................PARSE RESPONSE.....................
+
+    r_parsed <-
+        y_parse_response(r, "fantasy_content", "league", 2, "players")
+
+    # ARTofR::xxx_divider1("PLAYER INFO")
+
+    #..........................PLAYER SLATE...........................
+
+    df <-
+        r_parsed %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::compact() %>%
+        purrr::map_depth(2, purrr::flatten) %>%
+        purrr::map(purrr::flatten) %>%
+        purrr::map(purrr::flatten) %>%
+        purrr::map(purrr::map_at, "name", purrr::pluck, "full") %>%
+        purrr::map(purrr::map_at, "eligible_positions", purrr::flatten) %>%
+        purrr::map(purrr::map_at, "eligible_positions", ~purrr::set_names(x =., nm = paste("position", seq_along(.), sep = "_"))) %>%
+        purrr::map(~purrr::discard(.x =., names(.) == "headshot")) %>%
+        purrr::map_df(purrr::flatten_df)
+
+    return(df)
 }

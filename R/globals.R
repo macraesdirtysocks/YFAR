@@ -1,0 +1,15 @@
+utils::globalVariables(
+    c(
+        ".",
+        "team",
+        "team_key",
+        "name",
+        "meta_name",
+        "team_id",
+        "stat_id",
+        "player_id",
+        "league_id",
+        "league_key",
+        "value"
+    )
+)
