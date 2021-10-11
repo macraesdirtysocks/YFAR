@@ -10,7 +10,7 @@
 \item{...}{environment name argument passed to ls()}
 }
 \description{
-Function called by .token_check
+Function called by .token_check and y_create_token()
 Check environment for a Token2.0 class.
 }
 \keyword{internal}

@@ -2,6 +2,7 @@
 
 export("%>%")
 export(y_create_token)
+export(y_draft_results)
 export(y_games)
 export(y_league_settings)
 export(y_matchups)
