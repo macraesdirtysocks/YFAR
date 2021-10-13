@@ -32,9 +32,10 @@ y_rosters <- function(league_id = NULL, token_name = NULL) {
     df <- r_parsed %>%
         purrr::map(purrr::pluck, "team") %>%
         purrr::map_depth(2, purrr::compact) %>%
-        purrr::map(purrr::map_at, 1, purrr::flatten) %>%
-        purrr::map(purrr::map_at, 1, purrr::discard, purrr::is_list) %>%
+        # element 1 extract team_id and name
+        purrr::map(purrr::map_at, 1, rlang::squash) %>%
         purrr::map(purrr::map_at, 1, `[`, c("team_id", "name")) %>%
+        # rename team_id and name to "organization_id", "team_name"
         purrr::map(purrr::map_at, 1, purrr::set_names, c("organization_id", "team_name")) %>%
         purrr::map(purrr::map_at, 1, dplyr::bind_rows) %>%
         purrr::map(purrr::map_at, 2, purrr::pluck, "roster", "0", "players") %>%
@@ -48,19 +49,20 @@ y_rosters <- function(league_id = NULL, token_name = NULL) {
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::map_at, "eligible_positions", purrr::flatten) %>%
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::map_at, "eligible_positions", ~purrr::set_names(., paste("position_", seq_along(.)))) %>%
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::flatten) %>%
+        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 2, `[`, -1) %>%
         # formatting for player meta at element 2, 0, 2, 2
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 2, purrr::flatten) %>%
+        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 2, purrr::set_names, c("lineup_position", "lineup_position_is_flex")) %>%
         # formatting for player meta at element 2, 0, 2, 2
-        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 3, purrr::flatten) %>%
         # create df
-        purrr::map(purrr::map_at, 2, purrr::map_df, purrr::flatten_df, .id = "player_num") %>%
-        purrr::map_depth(2, purrr::modify_at, "number_of_trades", as.numeric) %>%
-        purrr::map_df(purrr::flatten_df) %>%
+        purrr::map(purrr::map_at, 2, purrr::map_depth, 2, purrr::flatten_df) %>%
+        purrr::map(purrr::map_at, 2, purrr::map_df, dplyr::bind_cols) %>%
+        purrr::map_df(dplyr::bind_cols) %>%
         dplyr::group_by(organization_id) %>%
         dplyr::mutate(player_num = seq(1:n())) %>%
         dplyr::ungroup() %>%
         dplyr::mutate(organization_id = stringr::str_pad(organization_id, width = 2, side = "left", pad = "0") %>%
-                   paste("o", ., sep = "."))
+                          paste("o", ., sep = "."))
 
     return(df)
 
