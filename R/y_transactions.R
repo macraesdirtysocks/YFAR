@@ -32,7 +32,7 @@ y_transactions <- function(league_id = NULL, token_name = NULL) {
 
     df <-
         purrr::map_df(r_parsed, .transactions_func) %>%
-        mutate(
+        dplyr::mutate(
             timestamp = as.numeric(timestamp) %>%
                 as.POSIXct(origin = "1970-01-01")
             )

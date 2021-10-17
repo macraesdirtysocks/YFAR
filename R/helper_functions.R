@@ -604,12 +604,6 @@
 #' @keywords internal
 .week_stats_func <- function(x) {
 
-    ARTofR::xxx_divider2("data")
-
-
-    ARTofR::
-
-
     data <-
         x %>%
         purrr::set_names(x =., nm = purrr::map_chr(.x = ., purrr::pluck, "team", 1, 3, 1)) %>%

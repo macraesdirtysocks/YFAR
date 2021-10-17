@@ -12,6 +12,7 @@ utils::globalVariables(
         "organization_id",
         "league_key",
         "value",
-        "n"
+        "n",
+        "timestamp"
     )
 )
