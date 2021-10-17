@@ -7,7 +7,7 @@
 y_matchups(team_id = NULL, token_name = NULL, week = NULL)
 }
 \arguments{
-\item{team_id}{as a string in the form "000.l.0000".  Team id can be found with y_games().}
+\item{team_id}{as a string in the form "000.l.0000".  Team id can be found with y_teams().}
 
 \item{token_name}{assigned object name used when creating token with y_create_token().}
 

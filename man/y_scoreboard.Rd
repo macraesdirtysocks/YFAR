@@ -2,12 +2,12 @@
 % Please edit documentation in R/y_scoreboard.R
 \name{y_scoreboard}
 \alias{y_scoreboard}
-\title{Get matchup stats and results data from Yahoo! Fantasy API}
+\title{Get scoreboard stats and results data from Yahoo! Fantasy API}
 \usage{
-y_scoreboard(team_id = NULL, token_name = NULL, week = NULL)
+y_scoreboard(league_id = NULL, token_name = NULL, week = NULL)
 }
 \arguments{
-\item{team_id}{team id as a string in the form "000.l.0000".  Team id can be found with y_games().}
+\item{league_id}{team id as a string in the form "000.l.0000".  League id can be found with y_games().}
 
 \item{token_name}{assigned object name used when creating token with y_create_token().}
 
@@ -17,7 +17,11 @@ y_scoreboard(team_id = NULL, token_name = NULL, week = NULL)
 a list
 }
 \description{
-y_matchups() gets matchup stats and results for a given league and week.
-It returns a list with the meta data as well as tibble containing the matchups data
-in the element `matchups_data`.
+`y_scoreboard()` gets scoreboard stats and results for a given league and week.
+It returns a list with the meta data as well as tibble containing the scoreboard data
+in the element `scoreboard_data`.
+}
+\details{
+`y_scoreboard()` takes a league id and returns matchup data for all teams in requested week.
+`y_matchups()` takes a team id and returns matchup data for requested weeks and team.
 }

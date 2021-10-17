@@ -4,7 +4,7 @@
 #' It returns a list with the meta data as well as tibble containing the matchups data
 #' in the element `matchups_data`.
 #'
-#' @param team_id as a string in the form "000.l.0000".  Team id can be found with y_games().
+#' @param team_id as a string in the form "000.l.0000".  Team id can be found with y_teams().
 #' @param token_name assigned object name used when creating token with y_create_token().
 #' @param week the week of fantasy season to return. Default NULL will return all weeks of season.
 #'
