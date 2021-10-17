@@ -7,7 +7,7 @@
 .league_id_check(league_id)
 }
 \arguments{
-\item{league_id}{league_id supplied to y_ function}
+\item{league_id}{league_id supplied to y_function}
 }
 \description{
 Checks for presence of supplied league_id and validity

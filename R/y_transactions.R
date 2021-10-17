@@ -3,9 +3,12 @@
 #' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #'
-#' @return a [tibble][tibble::tibble-package]
+#' @return a list
 #' @export
 y_transactions <- function(league_id = NULL, token_name = NULL) {
+
+    resource <- "league"
+    subresource <- "transactions"
 
     api_token <- token_name
 
@@ -13,11 +16,10 @@ y_transactions <- function(league_id = NULL, token_name = NULL) {
     .token_check(token_name, api_token, name = .GlobalEnv)
 
     uri <-
-        stringr::str_c(
-            "https://fantasysports.yahooapis.com/fantasy/v2/league",
-            league_id,
-            "transactions?format=json",
-            sep = "/"
+        httr::modify_url(
+            url = "https://fantasysports.yahooapis.com",
+            path = paste("/fantasy/v2", resource, league_id, subresource, sep = "/"),
+            query = "format=json"
         )
 
     r <-
@@ -28,8 +30,22 @@ y_transactions <- function(league_id = NULL, token_name = NULL) {
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "league", 2, "transactions")
 
-    df <- purrr::map_df(r_parsed, .transactions_func)
+    df <-
+        purrr::map_df(r_parsed, .transactions_func) %>%
+        mutate(
+            timestamp = as.numeric(timestamp) %>%
+                as.POSIXct(origin = "1970-01-01")
+            )
 
-    return(df)
+    data_list <-
+        structure(
+            list(
+                content = r_parsed,
+                uri = uri,
+                matchup_data = df
+            ),
+            class = "yahoo_fantasy_api")
+
+    return(data_list)
 
 }

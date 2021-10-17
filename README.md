@@ -29,6 +29,13 @@ secret obtained by registering an app with the Yahoo Developer Network.
 To register an app with the YDN log into your Yahoo account and go here:
 [Yahoo Developer Network](https://developer.yahoo.com/apps/create/).
 
+After creating and registering your app you should receive a client id
+and client secret.
+
+If further help regarding YDN is required please check out this
+[repository](https://github.com/edwarddistel/yahoo-fantasy-baseball-reader)
+which covers this topic and the Yahoo API in great detail.
+
 Pass the client id and secret as arguments to `YFAR::y_create_token()`
 which are passed to [httr](https://httr.r-lib.org/) to create an access
 token.

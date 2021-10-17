@@ -6,27 +6,32 @@
 #' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #'
-#' @return a [tibble][tibble::tibble-package] with both nested and un-nested columns.
+#' @return a list
 #' @export
 y_teams <- function(league_id = NULL, token_name = NULL){
+
+    resource <- "league"
+    subresource <- "teams"
 
     api_token <- token_name
 
     .league_id_check(league_id)
     .token_check(token_name, api_token, name = .GlobalEnv)
 
-    uri <- stringr::str_c(
-        "https://fantasysports.yahooapis.com/fantasy/v2",
-        "league",
-        league_id,
-        "teams?format=json",
-        sep = "/")
+    uri <-
+        httr::modify_url(
+            url = "https://fantasysports.yahooapis.com",
+            path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
+            query = "format=json"
+        )
 
-    r <- .y_get_response(uri, api_token)
+    r <-
+        .y_get_response(uri, api_token)
 
     httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
 
-    r_parsed <- .y_parse_response(r, "fantasy_content", "league", 2, "teams") %>%
+    r_parsed <-
+        .y_parse_response(r, "fantasy_content", "league", 2, "teams") %>%
         purrr::map(purrr::pluck, "team", 1) %>%
         purrr::keep(purrr::is_list) %>%
         purrr::map(purrr::flatten)
@@ -41,20 +46,34 @@ y_teams <- function(league_id = NULL, token_name = NULL){
         r_parsed %>%
         purrr::map(purrr::pluck, "team_logos", 1, "team_logo") %>%
         purrr::map_df(dplyr::bind_rows) %>%
-        purrr::set_names(~stringr::str_c("team", ., sep = "_"))
+        purrr::set_names(~paste("team", ., sep = "_"))
 
     managers <-
         r_parsed %>%
         purrr::map(purrr::pluck, "managers") %>%
         purrr::map(purrr::flatten) %>%
-        purrr::map(purrr::set_names, ~stringr::str_c(., seq_along(.), sep = "_")) %>%
+        purrr::map(purrr::set_names, ~paste(., seq_along(.), sep = "_")) %>%
         purrr::map(dplyr::bind_rows) %>%
         dplyr::bind_rows(.id = "team") %>%
         dplyr::mutate(dplyr::across(.cols = dplyr::everything(), tidyr::replace_na, "0")) %>%
         dplyr::group_nest(team, .key = "manager_info", keep = FALSE) %>%
         dplyr::select(-c(team))
 
-    df <- dplyr::bind_cols(team_meta, team_logos, managers)
+    df <-
+        dplyr::bind_cols(
+            team_meta,
+            team_logos,
+            managers
+            )
 
-    return(df)
+    data_list <-
+        structure(
+            list(
+                content = r_parsed,
+                uri = uri,
+                matchup_data = df
+            ),
+            class = "yahoo_fantasy_api")
+
+    return(data_list)
 }

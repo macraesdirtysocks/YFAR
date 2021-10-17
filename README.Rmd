@@ -33,6 +33,11 @@ The Yahoo Fantasy API uses Oauth2.0 for authentication.  This means to use the f
 To register an app with the YDN log into your Yahoo account and go here:
 [Yahoo Developer Network](https://developer.yahoo.com/apps/create/).
 
+After creating and registering your app you should receive a client id and client secret.
+
+If further help regarding YDN is required please check out this [repository](https://github.com/edwarddistel/yahoo-fantasy-baseball-reader) 
+which covers this topic and the Yahoo API in great detail.
+
 Pass the client id and secret as arguments to `YFAR::y_create_token()` which are passed to [httr](https://httr.r-lib.org/) to create an access token.
 
 The first time `y_create_token()` is run the console will ask for a code and a web browser will open to display the code.  Copy and paste this code into the console to create your access token.  If this step is being a nuisance and your default browser is Chrome try Firefox.

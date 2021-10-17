@@ -3,9 +3,13 @@
 #' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #'
-#' @return a [tibble][tibble::tibble-package]
+#' @return a list
 #' @export
 y_rosters <- function(league_id = NULL, token_name = NULL) {
+
+    resource <- "league"
+    subresource1 <- "teams"
+    subresource2 <- "roster"
 
     api_token <- token_name
 
@@ -13,12 +17,10 @@ y_rosters <- function(league_id = NULL, token_name = NULL) {
     .token_check(token_name, api_token, name = .GlobalEnv)
 
     uri <-
-        stringr::str_c(
-            "https://fantasysports.yahooapis.com/fantasy/v2/league",
-            league_id,
-            "teams",
-            "roster?format=json",
-            sep = "/"
+        httr::modify_url(
+            url = "https://fantasysports.yahooapis.com",
+            path = paste("fantasy/v2", resource, league_id, subresource1, subresource2, sep = "/"),
+            query = "format=json"
         )
 
     r <-
@@ -29,14 +31,18 @@ y_rosters <- function(league_id = NULL, token_name = NULL) {
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "league", 2, "teams")
 
-    df <- r_parsed %>%
+    df <-
+        r_parsed %>%
         purrr::map(purrr::pluck, "team") %>%
         purrr::map_depth(2, purrr::compact) %>%
         # element 1 extract team_id and name
         purrr::map(purrr::map_at, 1, rlang::squash) %>%
         purrr::map(purrr::map_at, 1, `[`, c("team_id", "name")) %>%
         # rename team_id and name to "organization_id", "team_name"
-        purrr::map(purrr::map_at, 1, purrr::set_names, c("organization_id", "team_name")) %>%
+        purrr::map(purrr::map_at,
+                   1,
+                   purrr::set_names,
+                   c("organization_id", "team_name")) %>%
         purrr::map(purrr::map_at, 1, dplyr::bind_rows) %>%
         purrr::map(purrr::map_at, 2, purrr::pluck, "roster", "0", "players") %>%
         purrr::map(purrr::map_at, 2, purrr::keep, purrr::is_list) %>%
@@ -45,14 +51,50 @@ y_rosters <- function(league_id = NULL, token_name = NULL) {
         # formatting for player meta at element 2, 0, 2, 1
         purrr::map(purrr::map_at, 2, purrr::map_depth, 2, purrr::compact) %>%
         purrr::map(purrr::map_at, 2, purrr::map_depth, 2, purrr::flatten) %>%
-        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::map_at, "name", purrr::pluck, "full") %>%
-        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::map_at, "eligible_positions", purrr::flatten) %>%
-        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::map_at, "eligible_positions", ~purrr::set_names(., paste("position_", seq_along(.)))) %>%
+        purrr::map(
+            purrr::map_at,
+            2,
+            purrr::map,
+            purrr::map_at,
+            1,
+            purrr::map_at,
+            "name",
+            purrr::pluck,
+            "full"
+        ) %>%
+        purrr::map(
+            purrr::map_at,
+            2,
+            purrr::map,
+            purrr::map_at,
+            1,
+            purrr::map_at,
+            "eligible_positions",
+            purrr::flatten
+        ) %>%
+        purrr::map(
+            purrr::map_at,
+            2,
+            purrr::map,
+            purrr::map_at,
+            1,
+            purrr::map_at,
+            "eligible_positions",
+            ~ purrr::set_names(., paste("position_", seq_along(.)))
+        ) %>%
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 1, purrr::flatten) %>%
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 2, `[`, -1) %>%
         # formatting for player meta at element 2, 0, 2, 2
         purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 2, purrr::flatten) %>%
-        purrr::map(purrr::map_at, 2, purrr::map, purrr::map_at, 2, purrr::set_names, c("lineup_position", "lineup_position_is_flex")) %>%
+        purrr::map(
+            purrr::map_at,
+            2,
+            purrr::map,
+            purrr::map_at,
+            2,
+            purrr::set_names,
+            c("lineup_position", "lineup_position_is_flex")
+        ) %>%
         # formatting for player meta at element 2, 0, 2, 2
         # create df
         purrr::map(purrr::map_at, 2, purrr::map_depth, 2, purrr::flatten_df) %>%
@@ -61,9 +103,25 @@ y_rosters <- function(league_id = NULL, token_name = NULL) {
         dplyr::group_by(organization_id) %>%
         dplyr::mutate(player_num = seq(1:n())) %>%
         dplyr::ungroup() %>%
-        dplyr::mutate(organization_id = stringr::str_pad(organization_id, width = 2, side = "left", pad = "0") %>%
-                          paste("o", ., sep = "."))
+        dplyr::mutate(
+            organization_id = stringr::str_pad(
+                organization_id,
+                width = 2,
+                side = "left",
+                pad = "0"
+            ) %>%
+                paste("o", ., sep = ".")
+        )
 
-    return(df)
+    data_list <-
+        structure(
+            list(
+                content = r_parsed,
+                uri = uri,
+                matchup_data = df
+            ),
+            class = "yahoo_fantasy_api")
+
+    return(data_list)
 
 }

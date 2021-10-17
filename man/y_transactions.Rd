@@ -12,7 +12,7 @@ y_transactions(league_id = NULL, token_name = NULL)
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
-a [tibble][tibble::tibble-package]
+a list
 }
 \description{
 Get transaction data from Yahoo! Fantasy API

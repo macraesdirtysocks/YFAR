@@ -26,6 +26,9 @@ Imports:
     tidyr,
     tibble,
     rlang,
-    magrittr
+    magrittr,
+    glue (>= 1.4.2)
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
+Remotes:  
+    tidyverse/glue

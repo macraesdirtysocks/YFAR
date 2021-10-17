@@ -12,7 +12,7 @@ y_league_settings(league_id = NULL, token_name = NULL)
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
 \value{
-a [tibble][tibble::tibble-package] with nested columns.
+a list
 }
 \description{
 Each Yahoo! Fantasy league can have it's own specific settings and this function will

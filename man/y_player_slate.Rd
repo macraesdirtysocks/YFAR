@@ -21,7 +21,7 @@ y_player_slate(
 \item{number_of_players}{Count of players to return}
 }
 \value{
-a [tibble][tibble::tibble-package]
+a list
 }
 \description{
 Function returns a tibble containing info on all players in your leagues universe.

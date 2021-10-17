@@ -24,16 +24,18 @@ y_create_token <-function(my_key = NULL, my_secret = NULL, app_name = NULL) {
     stopifnot(!is.null(app_name) && is.character(app_name))
 
     #Create App
-    myapp <- httr::oauth_app(appname = app_name,
-                             key = my_key,
-                             secret = my_secret)
+    myapp <-
+        httr::oauth_app(appname = app_name,
+                        key = my_key,
+                        secret = my_secret)
 
     # Get token endpoints
     token <-
-        httr::oauth2.0_token(httr::oauth_endpoints("yahoo"),
-                             myapp,
-                             use_oob = TRUE,
-                             oob_value = "oob")
+        httr::oauth2.0_token(
+            httr::oauth_endpoints("yahoo"),
+            myapp,
+            use_oob = TRUE,
+            oob_value = "oob")
 
     return(token)
 

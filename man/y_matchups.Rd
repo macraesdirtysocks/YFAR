@@ -4,18 +4,20 @@
 \alias{y_matchups}
 \title{Get matchup stats and results data from Yahoo! Fantasy API}
 \usage{
-y_matchups(league_id = NULL, token_name = NULL)
+y_matchups(team_id = NULL, token_name = NULL, week = NULL)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{team_id}{team id as a string in the form "000.l.0000".  League id can be found with y_games().}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{assigned object name used when creating token with y_create_token().}
+
+\item{week}{the week of fantasy season to return. Default NULL will return all weeks of season.}
 }
 \value{
-a [tibble][tibble::tibble-package] with nested columns
+a list
 }
 \description{
-y_matchups() gets matchup stats and results for a given league.
-It returns a tibble of nested columns with a length equal to the number of teams
-in the league.
+y_matchups() gets matchup stats and results for a given league and week.
+It returns a list with the meta data as well as tibble containing the matchups data
+in the element `matchups_data`.
 }
