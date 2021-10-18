@@ -29,7 +29,7 @@ y_games <- function(token_name = NULL) {
     r <-
         .y_get_response(uri, api_token)
 
-    httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
+    # httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
 
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "users", "0", "user", 2, "games")
@@ -67,7 +67,7 @@ y_games <- function(token_name = NULL) {
             list(
                 content = r_parsed,
                 uri = uri,
-                matchup_data = df
+                data = df
             ),
             class = "yahoo_fantasy_api")
 

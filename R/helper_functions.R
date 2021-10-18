@@ -147,11 +147,14 @@
 #'
 #' @keywords internal
 .y_get_response <- function(x, y) {
-    httr::GET(url = x,
+    r <- httr::GET(url = x,
               httr::add_headers(
                   Authorization = stringr::str_c("Bearer",
                                                  y$credentials$access_token, sep = " ")
               ))
+    httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
+    stopifnot(httr::http_type(r) == "application/json")
+    return(r)
 }
 
 

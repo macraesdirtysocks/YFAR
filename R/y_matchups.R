@@ -33,7 +33,7 @@ y_matchups <- function(team_id = NULL, token_name = NULL, week = NULL) {
     r <-
         .y_get_response(uri, api_token)
 
-    httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
+    # httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
 
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "team")
@@ -154,7 +154,7 @@ y_matchups <- function(team_id = NULL, token_name = NULL, week = NULL) {
                 content = r_parsed,
                 uri = uri,
                 data = matchup_list,
-                matchup_data = df
+                data = df
             ),
             class = "yahoo_fantasy_api")
 
