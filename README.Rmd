@@ -47,7 +47,7 @@ By default caching is enabled and httr will create a .httr-oauth file and you ca
 ### Get access token
 Returns an Token2.0 environment
 
-`install.packages("YFAR")`
+`library("YFAR")`
 
 `my_token <- y_create_token(client_id, client_secret)`
 

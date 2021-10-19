@@ -153,8 +153,8 @@ y_matchups <- function(team_id = NULL, token_name = NULL, week = NULL) {
             list(
                 content = r_parsed,
                 uri = uri,
-                data = matchup_list,
-                data = df
+                data_list = matchup_list,
+                df = df
             ),
             class = "yahoo_fantasy_api")
 

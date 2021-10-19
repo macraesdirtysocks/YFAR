@@ -91,6 +91,7 @@ y_weeks <- function(game_id = NULL, token_name = NULL) {
             list(
                 content = r_parsed,
                 uri = uri,
+                data_list = game_week_list,
                 data = df
             ),
             class = "yahoo_fantasy_api")

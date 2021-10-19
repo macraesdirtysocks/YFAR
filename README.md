@@ -52,7 +52,7 @@ and you can refresh your token with `my_token$refresh()`.
 
 Returns an Token2.0 environment
 
-`install.packages("YFAR")`
+`library("YFAR")`
 
 `my_token <- y_create_token(client_id, client_secret)`
 

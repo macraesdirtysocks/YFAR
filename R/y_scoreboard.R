@@ -205,7 +205,7 @@ y_scoreboard <- function(league_id = NULL, token_name = NULL, week = NULL) {
             list(
                 content = r_parsed,
                 uri = uri,
-                data = scoreboard_list,
+                data_list = scoreboard_list,
                 data = df
             ),
             class = "yahoo_fantasy_api")

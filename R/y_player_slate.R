@@ -50,7 +50,7 @@ y_player_slate <- function(league_id = NULL, token_name = NULL, start = 0, numbe
             list(
                 content = r_parsed,
                 uri = uri,
-                pages_get = pages,
+                pages_list = pages,
                 data = df
             ),
             class = "yahoo_fantasy_api")
