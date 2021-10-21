@@ -129,6 +129,32 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
+##                                 WEEK CHECK                               ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#...........................WEEK CHECK...........................
+
+
+#' week check
+#'
+#' Checks for presence of supplied week and validity
+#'
+#' @param week team id supplied to y_function
+#'
+#' @keywords internal
+.week_check <- function(week){
+
+    stopifnot(!is.null(week))
+    stopifnot(week != "current" | !is.numeric(week))
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
 ##                          Y_GET_RESPONSE FUNCTION                         ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -184,6 +210,7 @@
         purrr::pluck(...) %>%
         purrr::keep(purrr::is_list)
 }
+
 
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -469,214 +496,6 @@
 
     return(df)
 
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                            TEAM STATS FUNCTION                           ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#......................TEAM STATS FUNCTION.......................
-
-
-#' team_stats_func
-#'
-#' helper function called by y_team_stats to parse team stats response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.team_stats_func <- function(x) {
-
-    team_stats <-
-        x %>%
-        purrr::pluck("team", 2, "team_stats", "stats") %>%
-        purrr::map_df(purrr::pluck, "stat") %>%
-        tidyr::pivot_wider(
-            names_from = stat_id,
-            values_from = value,
-            names_prefix = "stat_"
-        )
-
-    team_points <-
-        x %>%
-        purrr::pluck("team", 2, "team_points") %>%
-        dplyr::bind_rows()
-
-    df <- dplyr::bind_cols(team_points, team_stats)
-
-    return(df)
-
-}
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                               YAHOO MATCHUPS                             ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#.........................Team Info Func.........................
-
-
-#' team_info_func
-#'
-#' helper function called by y_matchups to parse team_info from matchups response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.team_info_func <- function(x) {
-    df <- tibble::tibble(
-        purrr::map_dfr(x, purrr::pluck, "team", 1, 1),
-        purrr::map_dfr(x, purrr::pluck, "team", 1, 2),
-        purrr::map_dfr(x, purrr::pluck, "team", 1, 3)
-    ) %>%
-        dplyr::rename("team" = "name")
-}
-
-#.........................Week Info Function.........................
-
-#' week_info_func
-#'
-#' helper function called by y_matchups to parse week_info from matchups response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.week_info_func <- function(x) {
-
-    df <-
-        x %>%
-        purrr::set_names(x =., nm = purrr::map_chr(.x = ., purrr::pluck, "team", 1, 3, 1)) %>%
-        purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(purrr::map_depth, 2, purrr::keep, purrr::negate(purrr::is_list)) %>%
-        purrr::map(purrr::map_depth, 1, purrr::flatten) %>%
-        purrr::map(purrr::map_depth, 2, as.character) %>%
-        purrr::map(dplyr::bind_rows) %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::nest_by(team, .key = "week_info")
-
-    return(df)
-}
-
-#......................Stat Winner Function......................
-
-#' stats_winner_func
-#'
-#' helper function called by y_matchups to parse stat_winners from matchups response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.stat_winner_func <- function(x) {
-
-    df <-
-        x %>%
-        purrr::set_names(x = ., nm = purrr::map_chr(.x =., purrr::pluck, "team", 1, 3, 1)) %>%
-        purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(.x = ., ~purrr::set_names(x = ., nm = seq_along(.))) %>%
-        purrr::map(purrr::map_depth, 2, purrr::pluck, "stat_winners") %>%
-        purrr::map_depth(4, purrr::flatten) %>%
-        purrr::map_depth(2, purrr::flatten_df) %>%
-        purrr::map_depth(3, as.character) %>%
-        purrr::map(dplyr::bind_rows, .id = "week") %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::nest_by(team, .key = "stat_winner")
-
-    return(df)
-}
-
-#......................Week Stats Function.......................
-
-#' week_stats_func
-#'
-#' helper function called by y_matchups to parse week stats from matchups response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.week_stats_func <- function(x) {
-
-    data <-
-        x %>%
-        purrr::set_names(x =., nm = purrr::map_chr(.x = ., purrr::pluck, "team", 1, 3, 1)) %>%
-        purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map_depth(3, purrr::pluck, "0", "teams") %>%
-        purrr::map(.x = ., ~purrr::set_names(x =., nm = seq_along(.))) %>%
-        purrr::map(purrr::map_depth, 4, purrr::map_at, 1, magrittr::extract, c(1:3)) %>%
-        purrr::map(purrr::map_depth, 2, purrr::map_at, "1", purrr::pluck, "team", 1) %>%
-        purrr::map(purrr::map_depth, 2, magrittr::extract, c(1:2))
-
-    opponent <-
-        data %>%
-        purrr::map_depth(2, purrr::pluck, "matchup", "1") %>%
-        purrr::map_depth(2, purrr::flatten) %>%
-        purrr::map_depth(3, as.character) %>%
-        purrr::map(dplyr::bind_rows, .id = "week") %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::nest_by(team, .key = "opponent_info")
-
-    team_points <-
-        data %>%
-        purrr::map_depth(2, purrr::pluck, "matchup", "0", "team", 2, "team_points") %>%
-        purrr::map_depth(2, magrittr::extract, "total") %>%
-        purrr::map_depth(3, as.character) %>%
-        purrr::map_depth(2, dplyr::bind_rows) %>%
-        purrr::map(dplyr::bind_rows, .id = "week") %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::nest_by(team, .key = "team_points")
-
-    remaining_games <-
-        data %>%
-        purrr::map_depth(2,
-                         purrr::pluck,
-                         "matchup",
-                         "0",
-                         "team",
-                         2,
-                         "team_remaining_games",
-                         "total") %>%
-        purrr::map_depth(3, as.character) %>%
-        purrr::map_depth(2, dplyr::bind_rows) %>%
-        purrr::map(dplyr::bind_rows, .id = "week") %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::nest_by(team, .key = "remaining_games")
-
-    week_stats <-
-        data %>%
-        purrr::map_depth(2,
-                         purrr::pluck,
-                         "matchup",
-                         "0",
-                         "team",
-                         2,
-                         "team_stats",
-                         "stats") %>%
-        purrr::map_depth(3, purrr::pluck, "stat") %>%
-        purrr::modify_depth(4, as.integer) %>%
-        purrr::map_depth(3, dplyr::bind_rows) %>%
-        purrr::map_depth(2, dplyr::bind_rows) %>%
-        purrr::map(dplyr::bind_rows, .id = "week") %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::nest_by(team, .key = "week_stats")
-
-    df <-
-        dplyr::full_join(opponent, team_points, by = "team") %>%
-        dplyr::full_join(remaining_games, by = "team") %>%
-        dplyr::full_join(week_stats, by = "team")
-
-    return(df)
 }
 
 

@@ -13,6 +13,8 @@ y_weeks <- function(game_id = NULL, token_name = NULL) {
 
     api_token <- token_name
 
+    game_weeks <-
+
 
     #.............................Checks.............................
 
@@ -20,6 +22,8 @@ y_weeks <- function(game_id = NULL, token_name = NULL) {
     stopifnot(is.numeric(game_id))
     stopifnot(nchar(game_id) > 2 & nchar(game_id) < 5)
     .token_check(token_name, api_token, name = .GlobalEnv)
+
+
 
 
     #..............................URI...............................
