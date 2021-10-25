@@ -1,158 +1,151 @@
-#' Get team rosters
+#' Get roster data for a Yahoo Fantasy League.
 #'
-#' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
-#' @param token_name Assigned object name used when creating token with y_create_token().
+#' Supply a team or league id to the function to retrieve roster data.  If a date
+#' is supplied the roster data for that date will be returned.
+#'
+#' @param id league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.
+#' @param token_name assigned object name used when creating token with `y_create_token()`.
+#' @param date date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.
 #'
 #' @return a list
 #' @export
-y_rosters <- function(league_id = NULL, token_name = NULL) {
-
-    resource <- "league"
-    subresource1 <- "teams"
-    subresource2 <- "roster"
+y_rosters <- function(id = NULL, token_name = NULL, date = NULL){
 
     api_token <- token_name
 
-    .league_id_check(league_id)
     .token_check(token_name, api_token, name = .GlobalEnv)
+    .date_check(date)
 
 
-    #..............................URI...............................
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                                                            ~~
+    ##                                  Y ROSTERS                               ----
+    ##                                                                            ~~
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    # the if statement below accounts for the response depending on the arguments
+    # supplied. if team_id is supplied mapping is not necessary but if a league_id
+    # is supplied mapping is necessary because you get a list for each team.
 
-    uri <-
-        httr::modify_url(
-            url = "https://fantasysports.yahooapis.com",
-            path = paste("fantasy/v2", resource, league_id, subresource1, subresource2, sep = "/"),
-            query = "format=json"
-        )
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                      if                                  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##  ~ league id check  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    #..........................GET RESPONSE..........................
+    if (stringr::str_detect(id, pattern = "[:digit:]*(\\.l\\.[:digit:]*)$") == TRUE) {
 
+        #.......................RESOURCE VARIABLES.......................
 
-    r <-
-        .y_get_response(uri, api_token)
+        resource <- "league"
+        subresource1 <- "teams"
+        subresource2 <- "roster"
+        league_id <- id
 
+        #..............................URI...............................
 
-    #.........................PARSE RESPONSE.........................
+        uri <-
+            httr::modify_url(
+                url = "https://fantasysports.yahooapis.com",
+                path = paste(
+                    "fantasy/v2",
+                    resource,
+                    league_id,
+                    subresource1,
+                    subresource2,
+                    sep = "/"
+                ),
+                param = glue::glue("date={date}"),
+                query = "format=json"
+            )
 
+        #............................RESPONSE............................
 
-    r_parsed <-
-        .y_parse_response(r, "fantasy_content", "league", 2, "teams")
+        r <-
+            .y_get_response(uri, api_token)
 
+        r_parsed <-
+            .y_parse_response(r, "fantasy_content", resource)
 
-    #...........................Empty list...........................
+        df <-
+            .league_resource_fn(r_parsed)
 
-
-    roster_list <-
-        list(
-            # team_coverage_type = NULL, # roster coverage type,  decided to exclude.
-            team_meta = NULL,
-            player_data =
+        data_list <-
+            structure(
                 list(
-                    meta = NULL,
-                    selected_position = NULL
-                )
-            # minimum_games_coverage = NULL # goalie coverage type, decided to exclude
-        )
+                    content = r_parsed,
+                    uri = uri,
+                    df = df
+                ),
+                class = "yahoo_fantasy_api"
+            )
+
+        return(data_list)
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                   else if                                ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~
+        ##  ~ team id check  ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~
+
+    } else if (stringr::str_detect(id, pattern = "[:digit:]*\\.l\\.[:digit:]*(\\.t\\.[:digit:])$") == TRUE) {
 
 
-    #............................TEAM META...........................
+        #.......................RESOURCE VARIABLES.......................
+
+        resource <- "team"
+        subresource <- "roster"
+        team_id <- id
+
+        #..............................URI...............................
+
+        uri <-
+            httr::modify_url(
+                url = "https://fantasysports.yahooapis.com",
+                path = paste("fantasy/v2", resource, team_id, subresource, sep = "/"),
+                param = glue::glue("date={date}"),
+                query = "format=json"
+            )
+
+        #............................RESPONSE............................
+
+        r <-
+            .y_get_response(uri, api_token)
+
+        r_parsed <-
+            .y_parse_response(r, "fantasy_content", resource)
 
 
-    roster_list$team_meta <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, 1, 1) %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(purrr::compact) %>%
-        purrr::set_names(nm = seq_along(.)) %>%
-        purrr::map(`[`, 1:3) %>%
-        # use unlist to purrr::keep all team meta.  decided to just use first 3 elements
-        # purrr::map(unlist) %>%
-        purrr::map_df(dplyr::bind_cols)
+        #.............................RETURN.............................
 
+        df <-
+            .team_parse_fn(r_parsed)
 
-    #..........................ROSTER META...........................
+        data_list <-
+            structure(
+                list(
+                    content = r_parsed,
+                    uri = uri,
+                    df = df
+                ),
+                class = "yahoo_fantasy_api"
+            )
 
-    # roster coverage type
+        return(data_list)
 
-    # roster_list$roster_meta <-
-    #     r_parsed %>%
-    #     purrr::map(purrr::pluck, "team", 2, "roster") %>%
-    #     purrr::map(purrr::keep, is_bare_atomic) %>%
-    #     purrr::map_df(dplyr::bind_rows)
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                    else                                  ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    } else {
 
-    #..........................PLAYER META...........................
+        stop(message("please supply a league_id or team_id"))
 
-
-    roster_list$player_data$meta <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, "team", 2, "roster", "0", "players") %>%
-        purrr::map_depth(2, purrr::pluck, "player", 1) %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(purrr::compact) %>%
-        purrr::map_depth(2, purrr::keep, purrr::is_list) %>%
-        purrr::map_depth(2, purrr::compact) %>%
-        purrr::map_depth(1, purrr::map, purrr::flatten) %>%
-        purrr::map_depth(2, purrr::map_if, purrr::is_list, purrr::flatten) %>%
-        purrr::map_depth(2, purrr::map_at, "eligible_positions", ~purrr::set_names(., nm = paste("eligible", names(.), seq_along(.), sep = "_"))) %>%
-        # purrr::map_depth(2, purrr::map_if, purrr::is_list, unlist)
-        purrr::map_depth(2, rlang::squash) %>%
-        purrr::map_depth(2, purrr::map_if, purrr::negate(is.character), as.character) %>%
-        purrr::map_depth(2, dplyr::bind_rows) %>%
-        purrr::set_names(., nm = seq_along(.)) %>%
-        purrr::map(dplyr::bind_rows) %>%
-        dplyr::bind_rows(.id = "team_id")
-
-
-    #.....................PLAYER ROSTER POSITION.....................
-
-
-    roster_list$player_data$selected_position <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, "team", 2, "roster", "0", "players") %>%
-        purrr::map_depth(2, purrr::pluck, "player", 2, "selected_position") %>%
-        purrr::map_depth(3, dplyr::bind_rows) %>%
-        purrr::map_depth(2, dplyr::bind_cols) %>%
-        purrr::map(dplyr::bind_rows) %>%
-        dplyr::bind_rows()
-
-
-    #..........................MINIMUM GAMES.........................
-
-    # goalie coverage type
-
-    # roster_list$minimum_games <-
-    #     r_parsed %>%
-    #     purrr::map(purrr::pluck, "team", 2, "roster", "minimum_games") %>%
-    #     purrr::map_df(dplyr::bind_rows)
-
-
-    #............................dplyr::bind DF.............................
-
-
-    df <-
-        roster_list$player_data$meta %>%
-        dplyr::bind_cols(., roster_list$player_data$selected_position) %>%
-        dplyr::right_join(roster_list$team_meta, ., by = "team_id")
-
-
-    #.............................RETURN.............................
-
-
-    data_list <-
-        structure(
-            list(
-                content = r_parsed,
-                uri = uri,
-                data_list = roster_list,
-                data = df
-            ),
-            class = "yahoo_fantasy_api")
-
-    return(data_list)
-
-
+    }
 }

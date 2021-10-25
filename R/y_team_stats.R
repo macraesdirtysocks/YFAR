@@ -17,8 +17,8 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
     stopifnot(is.numeric(week) | is.null(week) | week == "current")
 
     # the if statement below accounts for the response depending on the arguments
-    # supplied. if team_id is supplied purrr::ping is not necessary but if a league_id
-    # is supplied purrr::ping is necessary because you get a list for each team.
+    # supplied. if team_id is supplied mapping is not necessary but if a league_id
+    # is supplied mapping is necessary because you get a list for each team.
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                          LEAGUE RESOURCE TEAM STATS                      ----
@@ -163,7 +163,7 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         # tests if supplied id is a team_id
-        # purrr::ping here is not required because tem_id will always return a single list
+        # mapping here is not required because team_id will always return a single list
         # whether for a single week or the season.
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
