@@ -60,6 +60,33 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
+##                                  ID CHECK                                ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' id check
+#'
+#' detect if league or team id provided to id argument
+#'
+#' @param id league_id supplied to y_function
+#'
+#' @keywords internal
+.id_check <- function(id){
+
+    if (stringr::str_detect(id, pattern = "[:digit:]*(\\.l\\.[:digit:]*)$") == TRUE) {
+        "league"
+    } else if (stringr::str_detect(id, pattern = "[:digit:]*\\.l\\.[:digit:]*(\\.t\\.[:digit:])$") == TRUE) {
+        "team"
+    } else {
+        stop(message("please supply a league_id or team_id"))
+    }
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
 ##                              LEAGUE ID CHECK                             ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -524,59 +551,6 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
             outcome_totals,
             divison_outcome_totals
         )
-
-    return(df)
-
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                        YAHOO! TRANSACTIONS FUNCTION                      ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#..................YAHOO! TRANSACTIONS FUNCTION..................
-
-
-#' transactions_func
-#'
-#' helper function called by y_transactions to parse transaction response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.transactions_func <- function(x){
-
-    # ARTofR::xxx_divider1("TRANSACTION META DATA")
-
-    #......................TRANSACTION META DATA.....................
-
-    transaction_meta <-
-        x %>%
-        purrr::pluck("transaction", 1) %>%
-        dplyr::bind_rows() %>%
-        dplyr::rename("transaction_type" = "type") # rename so there isn't a conflict when binding cols
-
-    #..........................PLAYER INFO...........................
-
-    player_info <-
-        x %>%
-        purrr::pluck("transaction", 2, "players") %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::map(purrr::keep, purrr::is_list) %>% #function breaks without this
-        purrr::flatten() %>%
-        purrr::set_names(x =., nm = paste(names(.), seq_along(.), sep = "_")) %>% # set names to player_#
-        purrr::map_depth(2, purrr::map_at, 3, purrr::map_at, "name", purrr::pluck, 1) %>%
-        purrr::map(purrr::map_at, 2, purrr::map_at, "transaction_data", purrr::flatten) %>% #put player transaction data on the same level,
-        # for some reason player 2 is on a different level.
-        purrr::map_depth(2, purrr::flatten_df) %>%
-        purrr::map_df(dplyr::bind_cols)
-
-    df <- dplyr::bind_cols(transaction_meta, player_info)
 
     return(df)
 

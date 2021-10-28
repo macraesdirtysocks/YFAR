@@ -4,10 +4,10 @@
 \alias{y_transactions}
 \title{Get transaction data from Yahoo! Fantasy API}
 \usage{
-y_transactions(league_id = NULL, token_name = NULL)
+y_transactions(id = NULL, token_name = NULL)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{id}{league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
 
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 }
