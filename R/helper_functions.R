@@ -582,62 +582,6 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 }
 
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                        YAHOO! PLAYER SLATE FUNCTION                      ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#..................YAHOO! PLAYER SLATE FUNCTION..................
-
-
-#' player_slate_func
-#'
-#' helper function called by y_player_slate to parse player info from players response
-#'
-#' @param x parsed content from response object
-#' @param ... arguments passed onto purrr::pluck
-#'
-#' @keywords internal
-.player_slate_func <- function(x, ...){
-
-
-    #......................GET RESPONSE.....................
-
-    r <-
-        .y_get_response(x, ...)
-
-
-    #......................PARSE RESPONSE.....................
-
-    r_parsed <-
-        .y_parse_response(r, "fantasy_content", "league", 2, "players")
-
-
-    #..........................PLAYER SLATE...........................
-
-    df <-
-        r_parsed %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::map_depth(2, purrr::flatten) %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map(purrr::map_at, "name", purrr::pluck, "full") %>%
-        purrr::map(purrr::map_at, "eligible_positions", purrr::flatten) %>%
-        purrr::map(purrr::map_at, "eligible_positions", ~purrr::set_names(x =., nm = paste("position", seq_along(.), sep = "_"))) %>%
-        purrr::map(~purrr::discard(.x =., names(.) == "headshot")) %>%
-        purrr::map_df(purrr::flatten_df)
-
-    return(df)
-}
-
-
-
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
@@ -874,5 +818,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::map(dplyr::bind_rows) %>%
         dplyr::bind_rows()
 
-    df <- purrr::reduce(player_list[2:3], dplyr::bind_cols)
+    df <- player_list[-1] %>% # drop 1st element with all the raw data in it
+        compact() %>% # drop empty elements
+        purrr::reduce(dplyr::bind_cols)
 }

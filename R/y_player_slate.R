@@ -35,12 +35,18 @@ y_player_slate <- function(league_id = NULL, token_name = NULL, start = 0, numbe
             query = "format=json"
         )
 
+    r <-
+        map(uri, .y_get_response, api_token)
+
     r_parsed <-
-        purrr::map_df(uri, .player_slate_func, y = api_token)
+        map(r, .y_parse_response, "fantasy_content", resource, 2)
+
+    df <-
+        purrr::map_df(r_parsed, .player_parse_fn)
 
     # REMOVE DUPLICATE PLAYERS
     df <-
-        r_parsed %>%
+        df %>%
         dplyr::group_by(player_id) %>%
         dplyr::slice_head(n = 1) %>%
         dplyr::ungroup()
