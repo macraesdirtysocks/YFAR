@@ -10,13 +10,24 @@
 #' @export
 y_league_settings <- function(league_id = NULL, token_name = NULL){
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                  ARGUMENTS                               ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     resource <- "league"
     subresource <- "settings"
-
     api_token <- token_name
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    CHECKS                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     .league_id_check(league_id)
     .token_check(token_name, api_token, name = .GlobalEnv)
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                     URI                                  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     uri <-
         httr::modify_url(
@@ -25,20 +36,36 @@ y_league_settings <- function(league_id = NULL, token_name = NULL){
             query = "format=json"
         )
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                GET RESPONSE                              ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     r <-
         .y_get_response(uri, api_token)
 
-    # httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                   CONTENT                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "league")
 
+    #...................... league scoring type......................
+
+    # Get league scoring type
+
     scoring_type <-
-        r_parsed[[1]][["scoring_type"]] #get league scoring type
+        r_parsed[[1]][["scoring_type"]]
 
     cat(league_id, "is a", scoring_type, "league, returning league settings\n")
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                PARSE CONTENT                             ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     # decide which helper to run based on scoring type, "points" or "categories"
+    # this is found in the response content league info > scoring type
+
     df <- if(scoring_type != "point") {
 
         .category_league_settings(r_parsed)
@@ -47,6 +74,10 @@ y_league_settings <- function(league_id = NULL, token_name = NULL){
 
         .point_league_settings(r_parsed)
     }
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    RETURN                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     data_list <-
         structure(

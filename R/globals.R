@@ -15,6 +15,7 @@ utils::globalVariables(
         "n",
         "timestamp",
         "start",
-        "end"
+        "end",
+        "type"
     )
 )

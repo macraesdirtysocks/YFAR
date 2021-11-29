@@ -4,11 +4,13 @@
 #' games and leagues participated in by the logged in user including those which
 #' are currently active.
 #'
+#' Function is memoised
+#'
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #'
 #' @return a list
 #' @export
-y_games <- function(token_name = NULL) {
+y_games <- memoise::memoise(function(token_name = NULL) {
 
     resource <- "users"
     subresource1 <- "games"
@@ -29,7 +31,6 @@ y_games <- function(token_name = NULL) {
     r <-
         .y_get_response(uri, api_token)
 
-    # httr::stop_for_status(r, task = "Authroize, refresh token with yahoo_token$refresh() and try again")
 
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "users", "0", "user", 2, "games")
@@ -74,3 +75,4 @@ y_games <- function(token_name = NULL) {
     return(data_list)
 
 }
+)

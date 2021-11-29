@@ -2,28 +2,23 @@
 % Please edit documentation in R/y_player_slate.R
 \name{y_player_slate}
 \alias{y_player_slate}
-\title{Get player data from Yahoo! Fantasy API}
+\title{Retrieve the full slate of players for provided league id}
 \usage{
-y_player_slate(
-  league_id = NULL,
-  token_name = NULL,
-  start = 0,
-  number_of_players = 100
-)
+y_player_slate(league_id, token_name, debug = FALSE, ...)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{league_id}{league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
 
-\item{start}{Return start number}
+\item{debug}{Print uri and page counts to console as functions runs.  Useful for debugging.}
 
-\item{number_of_players}{Count of players to return}
+\item{...}{Arguments sort and status passed onto internal .uri_gen_func.}
 }
 \value{
-a list
+A list
 }
 \description{
-Function returns a tibble containing info on all players in your leagues universe.
-By default the players are sorts by "Actual Rank"
+This function is not intented to get a subset of players, i.e. top 100 players.
+Use `y_players()` for that case.
 }

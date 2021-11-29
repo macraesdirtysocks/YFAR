@@ -17,3 +17,6 @@ Returns a tibble containing all the meta data for all fantasy hockey
 games and leagues participated in by the logged in user including those which
 are currently active.
 }
+\details{
+Function is memoised
+}

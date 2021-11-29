@@ -1,0 +1,2968 @@
+---
+title: "Yahoo_API_Guide"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+vignette: >
+  %\VignetteIndexEntry{Yahoo_API_Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, include = FALSE}
+library(kableExtra)
+library(prettydoc)
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Fantasy Sports API
+
+## Introduction to Fantasy Sports API
+
+The Fantasy Sports APIs provide URIs used to access fantasy sports data. Currently the APIs support retrieval of Fantasy Football, Baseball, Basketball, and Hockey data including game, league, team, and player information.  
+
+The APIs are based on a RESTful model. Therefore, resources like game, league, team, player etc. and collections like games, leagues, teams, players form the building blocks for these APIs. 
+
+Each resource is identified by a resource ID, and a collection is identified by its scope, specified in the URI.
+
+- Historically, Yahoo! has provided two full draft and trade style fantasy football and baseball games
+
+  - a free version
+  
+  - a plus version (which contains more features and content).   
+
+With the 2010 seasons, the Free and Plus versions of Football and Baseball have merged.  
+Each game is comprised of many "leagues", which typically contain 8-12 teams, which are managed by one or more users.  
+
+At the beginning of a league's season, professional athletes ("players") are uniquely assigned or chosen through a draft to each team. The players that are not chosen or assigned are available to be acquired via a free-agent or waiver wire process (a "transaction").   
+
+These teams compete against each other based on statistics from real-world competitions based on categories like touchdowns, yards gained, batting average and ERA. 
+
+Many fantasy sport rules can be set and changed within a league; for instance, the roster positions, statistics used to score, scoring modifiers, and game style are configurable.
+
+The game structure means that a lot of fantasy data is relevant only in the context of a particular league and team. For instance, without the league's scoring rules, the statistics compiled by a player in a real-life competition are not meaningful to a particular league. Three rushing touchdowns by a running back is irrelevant to a league that only considers defensive players.  
+
+Many leagues are private -- the information about them is only available to users that are a members.  
+
+## Getting Started
+
+### OAuth
+
+If you're going to use the Fantasy Sports APIs, you're going to have to get a bit familiar with OAuth.  
+
+OAuth is the authentication mechanism for these services that allows users to grant you permission to make requests on their behalf. Many other Yahoo! services use OAuth, and thus all of the underlying details are explained in exhaustive detail in our primary OAuth documentation.  
+
+Of particular interest is the OAuth Authorization Flow, which explains where each request is made and where the user needs to get involved.  
+
+However, constructing OAuth flows from scratch is complicated and easy to get wrong. It's often easier to use existing libraries, which are available for most languages on the OAuth.net Code page.
+
+### Registering Your Application  
+
+To work with OAuth and Yahoo! services, you also must register your application with the Yahoo! Developer Network.   
+
+When you register your application, you define a scope of Yahoo! services that your application will need access to, as well as the basic descriptive information that will be presented to users of your application when they're asked to grant you permissions.  
+
+You will be given a consumer key and secret value that will need to be fed into OAuth requests that you generate. You should be sure to keep these values secret, as anyone with access to them could masquerade as your application.  
+
+To create a new OAuth application to use with the Fantasy Sports APIs, you should go through the New API Key flow on YDN. Be sure to specify that you need access to private user data, and select either Read or Read/Write access for Fantasy Sports.
+
+
+## Resources and Collections
+
+### Introduction
+
+- The primary building blocks of the Fantasy Sports APIs are Resources and Collections.
+
+  - Resources typically describe chunks of data that can be identified by a unique key. 
+  
+  - Collections are simply wrappers that contain similar resources.  
+  
+So, for instance, if we need to retrieve data about a single league, we might ask for a League Resource and provide a single league key. 
+
+However, if we wanted data across several leagues, we would ask for a Leagues Collection and provide multiple league keys.
+
+
+The format for requesting a Resource will typically look like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/{resource}/{resource_key}
+
+
+
+While the format for requesting a Collection will typically look like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/{collection};{resource}_keys={resource_key1},{resource_key2}
+
+
+### Collections
+
+As mentioned, Collections are simply groups of Resources. If you care about particular Resources within a Collection, you can apply filters to the Collection to narrow the results. The most common type of filtering is by key.   
+
+For instance, if you'd like to see two particular players, you could ask for them directly:
+
+>     /fantasy/v2/players;player_keys={player_key1},{player_key2}
+
+
+Some Collections support more complex filters. Within a game, for example, you might ask for only the players that play a certain position. 
+
+You could also request only the particular user who is currently logged in:
+
+>     /fantasy/v2/users;use_login=1
+
+### Sub-Resources
+
+Resources will typically define a list of valid Sub-Resources. These are Resources and Collections that can live within the scope of the parent Resource.   
+
+For instance, a fantasy league in the Football draft and trade games can contain up to 20 fantasy teams; therefore, the League Resource can have a Teams Collection as a sub-resource. 
+
+As a general rule of thumb, if you can possibly have multiple of one Resource contained within another Resource, then you'll have a Collection of the first Resource as a sub-resource of the second Resource. You would only have a singular Resource as a sub-resource of another Resource if it would only make sense to ever ask for one instance of that Resource.
+
+The scope of a sub-resource is typically defined by the parent Resource; for instance, if you're viewing a Players Collection as a sub-resource of a particular League, then you would expect to only see Players that are eligible within that League. Further filters could then be applied to this already narrowed list.
+
+Having sub-resources allows you to chain together Resources and Collections to provide more data, and the URI you request directly specifies how the chaining works. For instance, if you wanted to take a particular logged in user, see which games he had played, and then get the league information within those games, you might construct a request like:
+
+>     /fantasy/v2/users;use_login=1/games/leagues
+
+This would present you with a Users Collection, a single User Resource for the logged in user, a Games Collection for that user, potentially multiple Game Resources for each game the user is playing, a Leagues Collection beneath each Game Resource, and potentially multiple League Resources for each league the user belongs to in that game.
+
+When you specify a sub-resource beneath a Collection, you're really saying that you'd like to see that sub-resource appended beneath each Resource within the Collection. Therefore, the sub-resources available to a Collection will be equivalent to the sub-resources available to the corresponding Resource.
+
+If you ever need to branch off other sub-resources outside of your main resource chain, you can use the out parameter, which will let you specify one level of extra sub-resources to pull in. At the moment, you cannot pass any parameters along to these out sub-resources, aside from any data that might get passed by default. This typically means that you can't chain other resources off of sub-resources specified by the out parameter.
+
+As an example, if you wanted to view a league's settings along with two teams in particular in a league, you might construct a URI like:
+
+>     /fantasy/v2/league/{league_key};out=settings/teams;team_keys={team_key1},{team_key2}
+
+### Parameters
+
+Parameters can be provided to Resources and Collections as semicolon-delimited key-value pairs. 
+
+These should be placed after the Resource or Collection name in the URI; in the case of entry-point Resources like Games, Leagues, Teams, and Players, the parameters belong after the resource_key.
+
+>     /fantasy/v2/{resource}/{resource_key};{key}={value};{key}={value}/{collection};{key}={value};{key}={value}/{collection};{key}={value}/{resource};{key}={value}
+
+**Resource keys, out parameters, and other filters are just specific types of parameters that can be applied to various Resources or Collections.**
+
+## Game resource
+
+### Description
+
+With the Game API, you can obtain the fantasy game related information, like the fantasy game name, the Yahoo! game code, and season.
+
+To refer to a Game resource, you'll need to provide a game_key, which will either be a game_id or game_code. 
+
+The game_id is a unique ID identifying a given fantasy game for a given season. For instance:
+
+>
+>  - game_id for the Free NFL draft and trade fantasy game for the 2009 season is 222
+>  
+>  - the game_id for the Plus version is 223.   
+  
+A game_code generally identifies a game, independent of season, and, when used as a game_key, will typically return the current season of that game. 
+
+For instance, the game_code for the Free NFL game is nfl, and the game_code for the Plus game is pnfl; using nfl as your game_key during the 2010 season would be the same as providing the game_id for the 2010 season of the NFL game (242). 
+
+As of the 2010 seasons, the Plus and Free games have been combined into a single code. Next year, the game_code nfl will point to the new game_id for the 2011 version of the NFL game. Thus, if you always want the current season of a game, the game_code should be used as a game_key.
+
+Below is a list of game IDs for most of our seasons of each game. If you're looking for a current game ID that's not listed in the table below, as mentioned above, you can request game information by game_code. For example:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/game/nfl
+
+### Game IDs Table
+
+```{r}
+
+data.frame(
+  
+Season = c("2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2012","2011"), 
+nfl_game_ID = c(57,49,79,101,124,153,175,199,222,242,273,257), 
+pnfl_game_ID = c(58,62,78,102,125,154,176,200,223,"--","--","--"),
+mlb_game_ID = c(12,39,74,98,113,147,171,195,215,238,268,253), 
+pmlb_game_ID = c("--",44,73,99,114,148,172,196,216,"--","--","--"), 
+nba_game_ID = c(16,67,95,112,131,165,187,211,234,249,304,265), 
+nhl_game_ID = c(15,64,94,111,130,164,186,210,233,248,303,263)
+) %>% 
+  knitr::kable(align = "r")
+```
+
+### HTTP Operations Supported
+
+    GET
+    
+### URIs
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/game/{game_key}
+
+Any sub-resource under a game is extracted using a URI like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/game/{game_key}/{sub_resource}
+
+Multiple sub-resources can be extracted from game in the same URI using a format like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/game/{game_key};out={sub_resource_1},{sub_resource_2}
+
+### Game key format
+
+{game_code} or {game_id}
+
+Example: nhl or 411
+
+```{r}
+
+data.frame(
+
+Name = c(
+  "metadata",
+  "leagues",
+  "players",
+  "game_weeks",
+  "stat_categories",
+  "position_types",
+  "roster_positions"
+  
+),
+
+Description = c(
+  "Includes game key, code, name, url, type and season.",
+  "Fetch specified leagues under a game.",
+  "Fetch specified players under a game.",
+  "Start and end date information for each week in the game",
+  "Detailed description of all available stat categories for the game.",
+  "Detailed description of all player position types for the game.",
+  "Detailed description of all roster positions for the game."
+),
+
+URI = c(
+  "/fantasy/v2/game/{game_key}/metadata",
+  "/fantasy/v2/game/{game_key}/leagues;league_keys={league_key1},{league_key2}",
+  "/fantasy/v2/game/{game_key}/players;player_keys={player_key1},{player_key2}",
+  "/fantasy/v2/game/{game_key}/game_weeks",
+  "/fantasy/v2/game/{game_key}/stat_categories",
+  "/fantasy/v2/game/{game_key}/position_types",
+  "/fantasy/v2/game/{game_key}/roster_positions"
+),
+
+Sample = c(
+  "The 2009 Football PLUS game: http://fantasysports.yahooapis.com/fantasy/v2/game/223",
+  "A publicly viewable league within the 2009 football plus game:http://fantasysports.yahooapis.com/fantasy/v2/game/223/leagues;league_keys=223.l.431",
+  "Brett Favre's information from the 2009 football plus game:http://fantasysports.yahooapis.com/fantasy/v2/game/223/players;player_keys=223.p.1025",
+  "NFL game weeks: http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/game_weeks",
+  "NFL stat categories: http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/stat_categories",
+  "NFL position types: http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/position_types",
+  "NFL roster positions: http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/roster_positions"
+)
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em") %>% 
+  column_spec(4, bold = TRUE, width = "30em")
+```
+
+### Sample XML
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/game/nfl
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/game/nfl" xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" time="30.575037002563ms" copyright="Data provided by Yahoo! and STATS, LLC" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng">  
+  <game>  
+    <game_key>257</game_key>  
+    <game_id>257</game_id>  
+    <name>Football</name>  
+    <code>nfl</code>  
+    <type>full</type>  
+    <url>http://football.fantasysports.yahoo.com/f1</url>  
+    <season>2011</season>  
+  </game>  
+</fantasy_content> 
+>```
+
+## Games collection
+
+### Description
+
+With the Games API, you can obtain information from a collection of games simultaneously. Each element beneath the Games Collection will be a Game Resource
+
+### HTTP Operations Supported
+
+    GET
+
+### URIs
+```{r}
+data.frame(
+
+URI = c(
+"http://fantasysports.yahooapis.com/fantasy/v2/games;game_keys={game_key1},{game_key2}", 
+"http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games",
+"http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys={game_key1},{game_key2}"
+),
+
+Description = c(
+"Fetch specific games {game_key1} and {game_key2}", 
+"Fetch all games for the logged in user",
+"Fetch specific games {game_key1} and {game_key2} that the logged in user owns teams in"
+),
+
+Sample = c(
+"nfl and mlb games : http://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=nfl,mlb",
+"all games for user: http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games",
+"nfl and mlb games for user: http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=nfl,mlb"
+)
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+```
+
+Any sub-resource valid for a game is a valid sub-resource under the games collection.
+
+Any sub-resource for a collection of games is extracted using a URI like:
+
+>     /games/{sub_resource}
+
+OR
+
+>     /games;game_keys={game_key1},{game_key2}/{sub_resource}
+
+Multiple sub-resources can be extracted from games in the same URI using a format like:
+
+>     /games;out={sub_resource_1},{sub_resource_2}
+
+OR
+
+>     /games;game_keys={game_key1},{game_key2};out={sub_resource_1},{sub_resource_2}
+
+
+### Sub-resources
+
+In addition to the sub-resources valid for a game resource, the following are valid sub-resources for a games collection. 
+ 	
+```{r}
+data.frame(
+  
+  Name = c(
+    "teams"
+  ),
+  
+  Description = c(
+    "Fetch teams owned by a user for one or more games."
+  ),	
+  
+  URI = c(
+    "/fantasy/v2/users;use_login=1/games/teams OR 
+    /fantasy/v2/users;use_login=1/games;game_keys={game_key1},{game_key2}/teams"),
+  
+  Sample = c(
+    "all teams for user: http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/teams"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "20em") %>%
+  column_spec(2, bold = TRUE, width = "40em") %>% 
+  column_spec(3, bold = TRUE, width = "40em")
+```
+
+## League resource
+
+### Description
+
+When users join a Fantasy Football, Baseball, Basketball, or Hockey draft and trade game, they are organized into leagues with a limited number of friends or other Yahoo! users, with each user managing a Team. 
+
+With the League API, you can obtain the league related information, like the league name, the number of teams, the draft status, et cetera. 
+
+Leagues only exist in the context of a particular Game, although you can request a League Resource as the base of your URI by using the global league_key. 
+
+> **A particular user can only retrieve data for private leagues of which they are a member, or for public leagues.**
+
+### HTTP Operations Supported
+
+    GET
+
+### URIs
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}
+
+Any sub-resource under a league is extracted using a URI like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/{sub_resource}
+
+Multiple sub-resources can be extracted from league in the same URI using a format like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key};out={sub_resource_1},{sub_resource_2}
+
+### League key format
+
+>     {game_key}.l.{league_id}
+
+- Example: 
+  - nhl.l.431
+  - 411.l.431
+
+> Note:
+>
+> The separator between the game_key and league_id is a lower case L (not the number 1).
+
+### Sub-resources
+
+*Default sub-resource: metadata*
+```{r}
+data.frame(
+  Name = c(
+    "metadata",
+    "settings",
+    "standings",
+    "scoreboard",
+    "teams",
+    "players",
+    "draftresults",
+    "transactions"
+  ),
+  Description = c(
+    "Includes league key, id, name, url, draft status, number of teams, and current week information.",
+    "League settings. For instance, draft type, scoring type, roster positions, stat categories and modifiers, divisions.",
+    "Ranking of teams within the league. Accepts Teams as a sub-resource, and includes team_standings data by default beneath the teams",
+    "League scoreboard. Accepts Matchups as a sub-resource, which in turn accept Teams as a sub-resource. Includes team_stats data by default.",
+    "All teams in the league.",
+    "The league's eligible players.",
+    "Draft results for all teams in the league.",
+    "League transactions -- adds, drops, and trades."
+    ),
+  
+  URI = c(
+    "/fantasy/v2/league/{league_key}/metadata",
+    "/fantasy/v2/league/{league_key}/settings",
+    "/fantasy/v2/league/{league_key}/standings",
+    "/fantasy/v2/league/{league_key}/scoreboard OR /fantasy/v2/league/{league_key}/scoreboard;week={week}",
+    "/fantasy/v2/league/{league_key}/teams",
+    "/fantasy/v2/league/{league_key}/players",
+    "/fantasy/v2/league/{league_key}/draftresults",
+    "/fantasy/v2/league/{league_key}/transactions"
+    ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/settings",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/standings",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/scoreboard;week=2",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/draftresults",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/transactions"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+  
+```
+
+
+### Sample XML
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431" xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" time="181.80584907532ms" copyright="Data provided by Yahoo! and STATS, LLC" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng">  
+  <league>  
+    <league_key>223.l.431</league_key>  
+    <league_id>431</league_id>  
+    <name>Y! Friends and Family League</name>  
+    <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431</url>  
+    <draft_status>postdraft</draft_status>  
+    <num_teams>14</num_teams>  
+    <edit_key>17</edit_key>  
+    <weekly_deadline/>  
+    <league_update_timestamp>1262595518</league_update_timestamp>  
+    <scoring_type>head</scoring_type>  
+    <current_week>16</current_week>  
+    <start_week>1</start_week>  
+    <end_week>16</end_week>  
+    <is_finished>1</is_finished>  
+  </league>  
+</fantasy_content>  
+>```
+
+- Other sample URIs:
+
+    - http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/settings
+    - http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/standings
+    - http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/scoreboard
+
+
+## Leagues collection
+
+### Description
+
+With the Leagues API, you can obtain information from a collection of leagues simultaneously. Each element beneath the Leagues Collection will be a League Resource.
+
+HTTP Operations Supported
+
+    GET
+
+### URIs
+
+```{r}
+data.frame(
+  URI = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys={league_key1},{league_key2}"
+  ),
+  
+  Description = c(
+    "Fetch specific leagues {league_key1} and {league_key2}"),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=223.l.431"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em")
+```
+
+
+Any sub-resource valid for a league is a valid sub-resource under the leagues collection.
+
+Any sub-resource for a collection of leagues is extracted using a URI like:
+
+>     /leagues/{sub_resource}
+
+OR
+
+>     /leagues;league_keys={league_key1},{league_key2}/{sub_resource}
+
+Multiple sub-resources can be extracted from leagues in the same URI using a format like:
+
+>     /leagues;out={sub_resource_1},{sub_resource_2}
+
+OR
+
+>     /leagues;league_keys={league_key1},{league_key2};out={sub_resource_1},{sub_resource_2}
+
+
+## Team Resource
+
+### Description
+
+The Team APIs allow you to retrieve information about a team within our fantasy games. 
+
+The team is the basic unit for keeping track of a roster of players, and can be managed by either one or two managers (the second manager being called a co-manager). 
+
+With the Team APIs, you can obtain team-related information, like the team name, managers, logos, stats and points, and rosters for particular weeks. 
+
+Teams only exist in the context of a particular League, although you can request a Team Resource as the base of your URI by using the global team_key. 
+
+A particular user can only retrieve data about a team if that team is part of a private league of which the user is a member, or if it's in a public league.
+
+HTTP Operations Supported
+
+    GET
+
+### URIs
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}
+
+Any sub-resource under a team is extracted using a URI like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/{sub_resource}
+
+Multiple sub-resources can be extracted from team in the same URI using a format like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key};out={sub_resource_1},{sub_resource_2}
+
+### Team key format
+
+>     {game_key}.l.{league_id}.t.{team_id}
+
+- Example: 
+
+  - nhl.l.431.t.1
+  
+  - 411.l.431.t.1
+
+### Sub-resources
+
+*Default sub-resource: metadata*
+```{r}
+data.frame(
+  Name = c(
+    "metadata",
+    "stats",
+    "standings",
+    "roster",
+    "draftresults",
+    "matchups"
+  ),
+  
+  Description = c(
+    "Includes team key, id, name, url, division ID, logos, and team manager information.",
+    "Team statistical data and points.",
+    "Team rank, wins, losses, ties, and winning percentage (as well as divisional data if applicable).",
+    "Team roster. Accepts a week parameter. Also accepts Players as a sub-resource (included by default)",
+    "List of players drafted by the team.",
+    "All the matchups this team has scheduled (for H2H leagues)."
+    ),
+  
+  URI = c(
+    "/fantasy/v2/team/{team_key}/metadata",
+    "Season stats: /fantasy/v2/team/{team_key}/stats Week stats: /fantasy/v2/team/{team_key}/stats;type=week;week={week} Note: {week} is a non-zero integer, or current for the current week.",
+    "/fantasy/v2/team/{team_key}/standings",
+    "Roster for a particular week: /fantasy/v2/team/{team_key}/roster;week={week} Note {week} is a non-zero integer. If week is current, or isn't provided, defaults to current week.",
+    "/fantasy/v2/team/{team_key}/draftresults",
+    "All matchups: /fantasy/v2/team/{team_key}/matchups Particular weeks: /fantasy/v2/team/{team_key}/matchups;weeks=1,3,6"
+  ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/stats;type=week;week=2",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/standings",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/411.l.431.t.9/roster;week=2 - The week 2 roster for team 223.l.431.t.9",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/draftresults",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/matchups;weeks=1,3,6"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em") %>% 
+  column_spec(4, bold = TRUE, width = "30em")
+
+```
+
+
+### Sample XML
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1" time="426.26690864563ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <team>  
+    <team_key>223.l.431.t.1</team_key>  
+    <team_id>1</team_id>  
+    <name>PFW - Blunda</name>  
+    <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/1</url>  
+    <team_logos>  
+      <team_logo>  
+        <size>medium</size>  
+        <url>http://l.yimg.com/a/i/us/sp/fn/default/full/nfl/icon_01_48.gif</url>  
+      </team_logo>  
+    </team_logos>  
+    <division_id>2</division_id>  
+    <faab_balance>22</faab_balance>  
+    <managers>  
+      <manager>  
+        <manager_id>13</manager_id>  
+        <nickname>Michael Blunda</nickname>  
+        <guid>XNAXQZRDZPJ3RVFMY7ZTSWEFLU</guid>  
+      </manager>  
+    </managers>  
+  </team>  
+</fantasy_content>  
+>```
+
+team's matchups for weeks 1 and 5 in a NFL H2H league
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1/matchups;weeks=1,5**
+
+>```
+    <?xml version="1.0" encoding="UTF-8"?>  
+    <fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1/matchups;weeks=1,5" time="576.54285430908ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+      <team>  
+        <team_key>223.l.431.t.1</team_key>  
+        <team_id>1</team_id>  
+        <name>PFW - Blunda</name>  
+        <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/1</url>  
+        <team_logos>  
+          <team_logo>  
+            <size>medium</size>  
+            <url>http://l.yimg.com/a/i/us/sp/fn/default/full/nfl/icon_01_48.gif</url>  
+          </team_logo>  
+        </team_logos>  
+        <division_id>2</division_id>  
+        <faab_balance>22</faab_balance>  
+        <managers>  
+          <manager>  
+            <manager_id>13</manager_id>  
+            <nickname>Michael Blunda</nickname>  
+            <guid>XNAXQZRDZPJ3RVFMY7ZTSWEFLU</guid>  
+          </manager>  
+        </managers>  
+        <matchups count="2">  
+          <matchup>  
+            <week>1</week>  
+            <status>postevent</status>  
+            <is_tied>0</is_tied>  
+            <winner_team_key>223.l.431.t.1</winner_team_key>  
+            <teams count="2">  
+              <team>  
+                <team_key>223.l.431.t.1</team_key>  
+                <team_id>1</team_id>  
+                <name>PFW - Blunda</name>  
+                <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/1</url>  
+                <team_logos>  
+                  <team_logo>  
+                    <size>medium</size>  
+                    <url>http://l.yimg.com/a/i/us/sp/fn/default/full/nfl/icon_01_48.gif</url>  
+                  </team_logo>  
+                </team_logos>  
+                <division_id>2</division_id>  
+                <faab_balance>22</faab_balance>  
+                <managers>  
+                  <manager>  
+                    <manager_id>13</manager_id>  
+                    <nickname>Michael Blunda</nickname>  
+                    <guid>XNAXQZRDZPJ3RVFMY7ZTSWEFLU</guid>  
+                  </manager>  
+                </managers>  
+                <team_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>1</week>  
+                  <total>117.88</total>  
+                </team_points>  
+                <team_projected_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>1</week>  
+                  <total>107.94</total>  
+                </team_projected_points>  
+              </team>  
+              <team>  
+                <team_key>223.l.431.t.5</team_key>  
+                <team_id>5</team_id>  
+                <name>RotoExperts</name>  
+                <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/5</url>  
+                <team_logos>  
+                  <team_logo>  
+                    <size>medium</size>  
+                    <url>http://a323.yahoofs.com/coreid/49be42a6i26e5zul3re3/d2x_9_UweKP95SJZ_Hwnk2Rl/2/tn48.jpg?ciA8DVOBIRa6b7wq</url>  
+                  </team_logo>  
+                </team_logos>  
+                <division_id>2</division_id>  
+                <faab_balance>1</faab_balance>  
+                <clinched_playoffs>1</clinched_playoffs>  
+                <managers>  
+                  <manager>  
+                    <manager_id>12</manager_id>  
+                    <nickname>Scott</nickname>  
+                    <guid>RW3ELDFMOFTES2EUAWQVCPPN7E</guid>  
+                  </manager>  
+                </managers>  
+                <team_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>1</week>  
+                  <total>103.82</total>  
+                </team_points>  
+                <team_projected_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>1</week>  
+                  <total>110.41</total>  
+                </team_projected_points>  
+              </team>  
+            </teams>  
+          </matchup>  
+          <matchup>  
+            <week>5</week>  
+            <status>postevent</status>  
+            <is_tied>0</is_tied>  
+            <winner_team_key>223.l.431.t.1</winner_team_key>  
+            <teams count="2">  
+              <team>  
+                <team_key>223.l.431.t.1</team_key>  
+                <team_id>1</team_id>  
+                <name>PFW - Blunda</name>  
+                <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/1</url>  
+                <team_logos>  
+                  <team_logo>  
+                    <size>medium</size>  
+                    <url>http://l.yimg.com/a/i/us/sp/fn/default/full/nfl/icon_01_48.gif</url>  
+                  </team_logo>  
+                </team_logos>  
+                <division_id>2</division_id>  
+                <faab_balance>22</faab_balance>  
+                <managers>  
+                  <manager>  
+                    <manager_id>13</manager_id>  
+                    <nickname>Michael Blunda</nickname>  
+                    <guid>XNAXQZRDZPJ3RVFMY7ZTSWEFLU</guid>  
+                  </manager>  
+                </managers>  
+                <team_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>5</week>  
+                  <total>140.00</total>  
+                </team_points>  
+                <team_projected_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>5</week>  
+                  <total>110.85</total>  
+                </team_projected_points>  
+              </team>  
+              <team>  
+                <team_key>223.l.431.t.7</team_key>  
+                <team_id>7</team_id>  
+                <name>RotoWire_Liss</name>  
+                <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/7</url>  
+                <team_logos>  
+                  <team_logo>  
+                    <size>medium</size>  
+                    <url>http://l.yimg.com/a/i/us/sp/fn/default/full/nfl/icon_10_48.gif</url>  
+                  </team_logo>  
+                </team_logos>  
+                <division_id>2</division_id>  
+                <faab_balance>68</faab_balance>  
+                <managers>  
+                  <manager>  
+                    <manager_id>7</manager_id>  
+                    <nickname>RotoWire_Liss</nickname>  
+                    <guid>4BDB5LIG3IFVROH7SRBX44LBZM</guid>  
+                  </manager>  
+                </managers>  
+                <team_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>5</week>  
+                  <total>86.47</total>  
+                </team_points>  
+                <team_projected_points>  
+                  <coverage_type>week</coverage_type>  
+                  <week>5</week>  
+                  <total>88.14</total>  
+                </team_projected_points>  
+              </team>  
+            </teams>  
+          </matchup>  
+        </matchups>  
+      </team>  
+    </fantasy_content>
+>```
+
+team's season stats in a NFL H2H league
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1/stats;type=season**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1/stats;type=season" time="129.66799736023ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <team>  
+    <team_key>223.l.431.t.1</team_key>  
+    <team_id>1</team_id>  
+    <name>PFW - Blunda</name>  
+    <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431/1</url>  
+    <team_logos>  
+      <team_logo>  
+        <size>medium</size>  
+        <url>http://l.yimg.com/a/i/us/sp/fn/default/full/nfl/icon_01_48.gif</url>  
+      </team_logo>  
+    </team_logos>  
+    <division_id>2</division_id>  
+    <faab_balance>22</faab_balance>  
+    <managers>  
+      <manager>  
+        <manager_id>13</manager_id>  
+        <nickname>Michael Blunda</nickname>  
+        <guid>XNAXQZRDZPJ3RVFMY7ZTSWEFLU</guid>  
+      </manager>  
+    </managers>  
+    <team_points>  
+      <coverage_type>season</coverage_type>  
+      <season>2009</season>  
+      <total>1461.71</total>  
+    </team_points>  
+  </team>  
+</fantasy_content> 
+>```
+
+team's date stats in a MLB roto league
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/team/253.l.102614.t.10/stats;type=date;date=2011-07-06**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/team/253.l.102614.t.10/stats;date=2011-07-06;type=date" time="68.986892700195ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <team>  
+    <team_key>253.l.102614.t.10</team_key>  
+    <team_id>10</team_id>  
+    <name>Matt Dzaman</name>  
+    <url>http://baseball.fantasysports.yahoo.com/b1/102614/10</url>  
+    <team_logos>  
+      <team_logo>  
+        <size>medium</size>  
+        <url>http://l.yimg.com/a/i/us/sp/fn/mlb/gr/icon_12_2.gif</url>  
+      </team_logo>  
+    </team_logos>  
+    <managers>  
+      <manager>  
+        <manager_id>10</manager_id>  
+        <nickname>smock514</nickname>  
+        <guid>VZVEVUCLSJAHSM73FMJ4BYFIKU</guid>  
+        <exposed_yahoo_id>1</exposed_yahoo_id>  
+      </manager>  
+    </managers>  
+    <team_stats>  
+      <coverage_type>date</coverage_type>  
+      <date>2011-07-06</date>  
+      <stats>  
+        <stat>  
+          <stat_id>60</stat_id>  
+          <value>13/31</value>  
+        </stat>  
+        <stat>  
+          <stat_id>7</stat_id>  
+          <value>9</value>  
+        </stat>  
+        <stat>  
+          <stat_id>12</stat_id>  
+          <value>3</value>  
+        </stat>  
+        <stat>  
+          <stat_id>13</stat_id>  
+          <value>11</value>  
+        </stat>  
+        <stat>  
+          <stat_id>16</stat_id>  
+          <value>1</value>  
+        </stat>  
+        <stat>  
+          <stat_id>3</stat_id>  
+          <value>.419</value>  
+        </stat>  
+        <stat>  
+          <stat_id>50</stat_id>  
+          <value>7.0</value>  
+        </stat>  
+        <stat>  
+          <stat_id>28</stat_id>  
+          <value>1</value>  
+        </stat>  
+        <stat>  
+          <stat_id>32</stat_id>  
+          <value>0</value>  
+        </stat>  
+        <stat>  
+          <stat_id>42</stat_id>  
+          <value>6</value>  
+        </stat>  
+        <stat>  
+          <stat_id>26</stat_id>  
+          <value>1.29</value>  
+        </stat>  
+        <stat>  
+          <stat_id>27</stat_id>  
+          <value>0.71</value>  
+        </stat>  
+      </stats>  
+    </team_stats>  
+  </team>  
+</fantasy_content>
+>```
+
+## Roster resource
+
+### Description
+
+Players on a team are organized into rosters corresponding to certain weeks, in NFL, or certain dates, in MLB, NBA, and NHL. 
+
+Each player on a roster will be assigned a position if they're in the starting lineup, or will be on the bench. You can only receive credit for stats accumulated by players in your starting lineup.
+
+You can use this API to edit your lineup by PUTting up new positions for the players on a roster. 
+
+You can also add/drop players from your roster by POSTing new transactions to the league's transactions collection.
+
+HTTP Operations Supported
+
+    GET  
+    PUT
+
+### URIs
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/roster
+
+Any sub-resource under a roster is extracted using a URI like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/roster/{sub_resource}
+
+For NFL, you can specify a week parameter to retrieve a specific week -- otherwise it will default to the current roster
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/roster;week=10
+
+For MLB, NHL, or NBA, you can specify a date parameter to retrieve a specific date -- otherwise it will default to today's roster.
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/roster;date=2011-05-01
+
+### Sub-resources
+
+*Default sub-resource: players*
+```{r}
+data.frame(
+  Name = c(
+    "players"
+  ),
+  
+  Description = c(
+    "Access the players collection within the roster."
+  ),
+  
+  URI = c(
+    "/fantasy/v2/team/{team_key}/roster/players"
+  ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/roster/players"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em") %>% 
+  column_spec(4, bold = TRUE, width = "30em")
+```
+
+### Sample XML
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/team/253.l.102614.t.10/roster/players**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/team/253.l.102614.t.10/roster/players" time="110.02206802368ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <team>  
+    <team_key>253.l.102614.t.10</team_key>  
+    <team_id>10</team_id>  
+    <name>Matt Dzaman</name>  
+    <url>http://baseball.fantasysports.yahoo.com/b1/102614/10</url>  
+    <team_logos>  
+      <team_logo>  
+        <size>medium</size>  
+        <url>http://l.yimg.com/a/i/us/sp/fn/mlb/gr/icon_12_2.gif</url>  
+      </team_logo>  
+    </team_logos>  
+    <managers>  
+      <manager>  
+        <manager_id>10</manager_id>  
+        <nickname>Sean Montgomery</nickname>  
+        <guid>VZVEVUCLSJAHSM73FMJ4BYFIKU</guid>  
+        <is_current_login>1</is_current_login>  
+      </manager>  
+    </managers>  
+    <roster>  
+      <coverage_type>date</coverage_type>  
+      <date>2011-07-22</date>  
+      <players count="22">  
+        <player>  
+          <player_key>253.p.7569</player_key>  
+          <player_id>7569</player_id>  
+          <name>  
+            <full>Brian McCann</full>  
+            <first>Brian</first>  
+            <last>McCann</last>  
+            <ascii_first>Brian</ascii_first>  
+            <ascii_last>McCann</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7569</editorial_player_key>  
+          <editorial_team_key>mlb.t.15</editorial_team_key>  
+          <editorial_team_full_name>Atlanta Braves</editorial_team_full_name>  
+          <editorial_team_abbr>Atl</editorial_team_abbr>  
+          <uniform_number>16</uniform_number>  
+          <display_position>C</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7569.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=eYxVIp_jg4DlEZmIgv6idg--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>C</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>C</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.7054</player_key>  
+          <player_id>7054</player_id>  
+          <name>  
+            <full>Adrian Gonzalez</full>  
+            <first>Adrian</first>  
+            <last>Gonzalez</last>  
+            <ascii_first>Adrian</ascii_first>  
+            <ascii_last>Gonzalez</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7054</editorial_player_key>  
+          <editorial_team_key>mlb.t.2</editorial_team_key>  
+          <editorial_team_full_name>Boston Red Sox</editorial_team_full_name>  
+          <editorial_team_abbr>Bos</editorial_team_abbr>  
+          <uniform_number>28</uniform_number>  
+          <display_position>1B</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7054.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=54BODgSe4P3NxShTjtIt9g--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>1B</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>1B</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.7746</player_key>  
+          <player_id>7746</player_id>  
+          <name>  
+            <full>Howie Kendrick</full>  
+            <first>Howie</first>  
+            <last>Kendrick</last>  
+            <ascii_first>Howie</ascii_first>  
+            <ascii_last>Kendrick</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7746</editorial_player_key>  
+          <editorial_team_key>mlb.t.3</editorial_team_key>  
+          <editorial_team_full_name>Los Angeles Angels</editorial_team_full_name>  
+          <editorial_team_abbr>LAA</editorial_team_abbr>  
+          <uniform_number>47</uniform_number>  
+          <display_position>1B,2B,OF</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7746.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=O01i1gfOs6RgisJQjmdipQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>1B</position>  
+            <position>2B</position>  
+            <position>OF</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <has_recent_player_notes>1</has_recent_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>2B</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>0</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.7737</player_key>  
+          <player_id>7737</player_id>  
+          <name>  
+            <full>Martin Prado</full>  
+            <first>Martin</first>  
+            <last>Prado</last>  
+            <ascii_first>Martin</ascii_first>  
+            <ascii_last>Prado</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7737</editorial_player_key>  
+          <editorial_team_key>mlb.t.15</editorial_team_key>  
+          <editorial_team_full_name>Atlanta Braves</editorial_team_full_name>  
+          <editorial_team_abbr>Atl</editorial_team_abbr>  
+          <uniform_number>14</uniform_number>  
+          <display_position>2B,3B,OF</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7737.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=WPYI1xO62JwsL8QturlmJw--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>2B</position>  
+            <position>3B</position>  
+            <position>OF</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>3B</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.7744</player_key>  
+          <player_id>7744</player_id>  
+          <name>  
+            <full>Erick Aybar</full>  
+            <first>Erick</first>  
+            <last>Aybar</last>  
+            <ascii_first>Erick</ascii_first>  
+            <ascii_last>Aybar</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7744</editorial_player_key>  
+          <editorial_team_key>mlb.t.3</editorial_team_key>  
+          <editorial_team_full_name>Los Angeles Angels</editorial_team_full_name>  
+          <editorial_team_abbr>LAA</editorial_team_abbr>  
+          <uniform_number>2</uniform_number>  
+          <display_position>SS</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7744.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=qHzsNyGFtGYxlpMxtysSPQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>SS</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>SS</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.7977</player_key>  
+          <player_id>7977</player_id>  
+          <name>  
+            <full>Andrew McCutchen</full>  
+            <first>Andrew</first>  
+            <last>McCutchen</last>  
+            <ascii_first>Andrew</ascii_first>  
+            <ascii_last>McCutchen</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7977</editorial_player_key>  
+          <editorial_team_key>mlb.t.23</editorial_team_key>  
+          <editorial_team_full_name>Pittsburgh Pirates</editorial_team_full_name>  
+          <editorial_team_abbr>Pit</editorial_team_abbr>  
+          <uniform_number>22</uniform_number>  
+          <display_position>OF</display_position>  
+          <image_url>http://l.yimg.com/a/p/sp/tools/med/2011/05/ipt/1304541420.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=61GeaeZwqXZWy2ITOX62Zg--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>OF</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>OF</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.7104</player_key>  
+          <player_id>7104</player_id>  
+          <name>  
+            <full>Shane Victorino</full>  
+            <first>Shane</first>  
+            <last>Victorino</last>  
+            <ascii_first>Shane</ascii_first>  
+            <ascii_last>Victorino</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7104</editorial_player_key>  
+          <editorial_team_key>mlb.t.22</editorial_team_key>  
+          <editorial_team_full_name>Philadelphia Phillies</editorial_team_full_name>  
+          <editorial_team_abbr>Phi</editorial_team_abbr>  
+          <uniform_number>8</uniform_number>  
+          <display_position>OF</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7104.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=QE9iNVRK5VCHq650WQii4g--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>OF</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>OF</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.8239</player_key>  
+          <player_id>8239</player_id>  
+          <name>  
+            <full>Matt Joyce</full>  
+            <first>Matt</first>  
+            <last>Joyce</last>  
+            <ascii_first>Matt</ascii_first>  
+            <ascii_last>Joyce</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8239</editorial_player_key>  
+          <editorial_team_key>mlb.t.30</editorial_team_key>  
+          <editorial_team_full_name>Tampa Bay Rays</editorial_team_full_name>  
+          <editorial_team_abbr>TB</editorial_team_abbr>  
+          <uniform_number>20</uniform_number>  
+          <display_position>OF</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8239.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=ZIy1Z9IryxkYXVsSsodRfQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>OF</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>OF</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.8857</player_key>  
+          <player_id>8857</player_id>  
+          <name>  
+            <full>Eric Hosmer</full>  
+            <first>Eric</first>  
+            <last>Hosmer</last>  
+            <ascii_first>Eric</ascii_first>  
+            <ascii_last>Hosmer</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8857</editorial_player_key>  
+          <editorial_team_key>mlb.t.7</editorial_team_key>  
+          <editorial_team_full_name>Kansas City Royals</editorial_team_full_name>  
+          <editorial_team_abbr>KC</editorial_team_abbr>  
+          <uniform_number>35</uniform_number>  
+          <display_position>1B</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110706/8857.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=h5CchQfLoumJ6xXRYqQNOw--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>1B</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>Util</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.8171</player_key>  
+          <player_id>8171</player_id>  
+          <name>  
+            <full>Jay Bruce</full>  
+            <first>Jay</first>  
+            <last>Bruce</last>  
+            <ascii_first>Jay</ascii_first>  
+            <ascii_last>Bruce</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8171</editorial_player_key>  
+          <editorial_team_key>mlb.t.17</editorial_team_key>  
+          <editorial_team_full_name>Cincinnati Reds</editorial_team_full_name>  
+          <editorial_team_abbr>Cin</editorial_team_abbr>  
+          <uniform_number>32</uniform_number>  
+          <display_position>OF</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8171.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=icy.cvuP8XXvyrQKm7m3HA--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>OF</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <has_recent_player_notes>1</has_recent_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>BN</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>0</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.8401</player_key>  
+          <player_id>8401</player_id>  
+          <name>  
+            <full>Elvis Andrus</full>  
+            <first>Elvis</first>  
+            <last>Andrus</last>  
+            <ascii_first>Elvis</ascii_first>  
+            <ascii_last>Andrus</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8401</editorial_player_key>  
+          <editorial_team_key>mlb.t.13</editorial_team_key>  
+          <editorial_team_full_name>Texas Rangers</editorial_team_full_name>  
+          <editorial_team_abbr>Tex</editorial_team_abbr>  
+          <uniform_number>1</uniform_number>  
+          <display_position>SS</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8401.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=HIAp3xabHCwOw.hJpkbd1w--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>SS</position>  
+            <position>Util</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <has_recent_player_notes>1</has_recent_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>BN</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.7926</player_key>  
+          <player_id>7926</player_id>  
+          <name>  
+            <full>Yovani Gallardo</full>  
+            <first>Yovani</first>  
+            <last>Gallardo</last>  
+            <ascii_first>Yovani</ascii_first>  
+            <ascii_last>Gallardo</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7926</editorial_player_key>  
+          <editorial_team_key>mlb.t.8</editorial_team_key>  
+          <editorial_team_full_name>Milwaukee Brewers</editorial_team_full_name>  
+          <editorial_team_abbr>Mil</editorial_team_abbr>  
+          <uniform_number>49</uniform_number>  
+          <display_position>SP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7926.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=1lRXgDptEQng1WvYIB3vDQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>SP</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.7172</player_key>  
+          <player_id>7172</player_id>  
+          <name>  
+            <full>Dan Haren</full>  
+            <first>Dan</first>  
+            <last>Haren</last>  
+            <ascii_first>Dan</ascii_first>  
+            <ascii_last>Haren</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7172</editorial_player_key>  
+          <editorial_team_key>mlb.t.3</editorial_team_key>  
+          <editorial_team_full_name>Los Angeles Angels</editorial_team_full_name>  
+          <editorial_team_abbr>LAA</editorial_team_abbr>  
+          <uniform_number>24</uniform_number>  
+          <display_position>SP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7172.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=fnc4Dr.qGpHVMT8tW4phOQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>SP</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.6210</player_key>  
+          <player_id>6210</player_id>  
+          <name>  
+            <full>Kyle Farnsworth</full>  
+            <first>Kyle</first>  
+            <last>Farnsworth</last>  
+            <ascii_first>Kyle</ascii_first>  
+            <ascii_last>Farnsworth</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.6210</editorial_player_key>  
+          <editorial_team_key>mlb.t.30</editorial_team_key>  
+          <editorial_team_full_name>Tampa Bay Rays</editorial_team_full_name>  
+          <editorial_team_abbr>TB</editorial_team_abbr>  
+          <uniform_number>43</uniform_number>  
+          <display_position>RP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/6210.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=kJYLFUywffdzSTtTQ5MupQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>RP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>RP</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.8929</player_key>  
+          <player_id>8929</player_id>  
+          <name>  
+            <full>Javy Guerra</full>  
+            <first>Javy</first>  
+            <last>Guerra</last>  
+            <ascii_first>Javy</ascii_first>  
+            <ascii_last>Guerra</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8929</editorial_player_key>  
+          <editorial_team_key>mlb.t.19</editorial_team_key>  
+          <editorial_team_full_name>Los Angeles Dodgers</editorial_team_full_name>  
+          <editorial_team_abbr>LAD</editorial_team_abbr>  
+          <uniform_number>54</uniform_number>  
+          <display_position>RP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/blank_player2.gif?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=8G0MjQyD1AdYbnv.fd2Wog--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>RP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>RP</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.7279</player_key>  
+          <player_id>7279</player_id>  
+          <name>  
+            <full>Jesse Crain</full>  
+            <first>Jesse</first>  
+            <last>Crain</last>  
+            <ascii_first>Jesse</ascii_first>  
+            <ascii_last>Crain</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.7279</editorial_player_key>  
+          <editorial_team_key>mlb.t.4</editorial_team_key>  
+          <editorial_team_full_name>Chicago White Sox</editorial_team_full_name>  
+          <editorial_team_abbr>CWS</editorial_team_abbr>  
+          <uniform_number>26</uniform_number>  
+          <display_position>RP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7279.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=Xx9Emr_lBK3smmABr7fOcg--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>RP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>P</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.8193</player_key>  
+          <player_id>8193</player_id>  
+          <name>  
+            <full>Max Scherzer</full>  
+            <first>Max</first>  
+            <last>Scherzer</last>  
+            <ascii_first>Max</ascii_first>  
+            <ascii_last>Scherzer</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8193</editorial_player_key>  
+          <editorial_team_key>mlb.t.6</editorial_team_key>  
+          <editorial_team_full_name>Detroit Tigers</editorial_team_full_name>  
+          <editorial_team_abbr>Det</editorial_team_abbr>  
+          <uniform_number>37</uniform_number>  
+          <display_position>SP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8193.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=lcgNVFPn0gpchY5fCbb6nw--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>P</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+        <player>  
+          <player_key>253.p.8099</player_key>  
+          <player_id>8099</player_id>  
+          <name>  
+            <full>Ian Kennedy</full>  
+            <first>Ian</first>  
+            <last>Kennedy</last>  
+            <ascii_first>Ian</ascii_first>  
+            <ascii_last>Kennedy</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8099</editorial_player_key>  
+          <editorial_team_key>mlb.t.29</editorial_team_key>  
+          <editorial_team_full_name>Arizona Diamondbacks</editorial_team_full_name>  
+          <editorial_team_abbr>Ari</editorial_team_abbr>  
+          <uniform_number>31</uniform_number>  
+          <display_position>SP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8099.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=TjXYM8e9wtrcLfrhDnCMKQ--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <has_recent_player_notes>1</has_recent_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>P</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.8179</player_key>  
+          <player_id>8179</player_id>  
+          <name>  
+            <full>Gio Gonzalez</full>  
+            <first>Gio</first>  
+            <last>Gonzalez</last>  
+            <ascii_first>Gio</ascii_first>  
+            <ascii_last>Gonzalez</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8179</editorial_player_key>  
+          <editorial_team_key>mlb.t.11</editorial_team_key>  
+          <editorial_team_full_name>Oakland Athletics</editorial_team_full_name>  
+          <editorial_team_abbr>Oak</editorial_team_abbr>  
+          <uniform_number>47</uniform_number>  
+          <display_position>SP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8179.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=Wg7KqIjVG4zwo0znBbEViw--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>BN</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.8759</player_key>  
+          <player_id>8759</player_id>  
+          <name>  
+            <full>Michael Pineda</full>  
+            <first>Michael</first>  
+            <last>Pineda</last>  
+            <ascii_first>Michael</ascii_first>  
+            <ascii_last>Pineda</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.8759</editorial_player_key>  
+          <editorial_team_key>mlb.t.12</editorial_team_key>  
+          <editorial_team_full_name>Seattle Mariners</editorial_team_full_name>  
+          <editorial_team_abbr>Sea</editorial_team_abbr>  
+          <uniform_number>36</uniform_number>  
+          <display_position>SP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/8759.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=31SmIDWcet4v3AVAOGrY2g--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>BN</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.6571</player_key>  
+          <player_id>6571</player_id>  
+          <name>  
+            <full>Ryan Vogelsong</full>  
+            <first>Ryan</first>  
+            <last>Vogelsong</last>  
+            <ascii_first>Ryan</ascii_first>  
+            <ascii_last>Vogelsong</ascii_last>  
+          </name>  
+          <editorial_player_key>mlb.p.6571</editorial_player_key>  
+          <editorial_team_key>mlb.t.26</editorial_team_key>  
+          <editorial_team_full_name>San Francisco Giants</editorial_team_full_name>  
+          <editorial_team_abbr>SF</editorial_team_abbr>  
+          <uniform_number>32</uniform_number>  
+          <display_position>SP,RP</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110706/6571.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=bdeeFeFntdasbz_0xzXCGA--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>P</position_type>  
+          <eligible_positions>  
+            <position>SP</position>  
+            <position>RP</position>  
+            <position>P</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>BN</position>  
+          </selected_position>  
+        </player>  
+        <player>  
+          <player_key>253.p.7382</player_key>  
+          <player_id>7382</player_id>  
+          <name>  
+            <full>David Wright</full>  
+            <first>David</first>  
+            <last>Wright</last>  
+            <ascii_first>David</ascii_first>  
+            <ascii_last>Wright</ascii_last>  
+          </name>  
+          <status>DL</status>  
+          <on_disabled_list>1</on_disabled_list>  
+          <editorial_player_key>mlb.p.7382</editorial_player_key>  
+          <editorial_team_key>mlb.t.21</editorial_team_key>  
+          <editorial_team_full_name>New York Mets</editorial_team_full_name>  
+          <editorial_team_abbr>NYM</editorial_team_abbr>  
+          <uniform_number>5</uniform_number>  
+          <display_position>3B</display_position>  
+          <image_url>http://l.yimg.com/a/i/us/sp/v/mlb/players_l/20110503x/7382.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=QNOFMSgR6NuPxUwDMUSM1w--</image_url>  
+          <is_undroppable>0</is_undroppable>  
+          <position_type>B</position_type>  
+          <eligible_positions>  
+            <position>3B</position>  
+            <position>Util</position>  
+            <position>DL</position>  
+          </eligible_positions>  
+          <has_player_notes>1</has_player_notes>  
+          <has_recent_player_notes>1</has_recent_player_notes>  
+          <selected_position>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <position>DL</position>  
+          </selected_position>  
+          <starting_status>  
+            <coverage_type>date</coverage_type>  
+            <date>2011-07-22</date>  
+            <is_starting>1</is_starting>  
+          </starting_status>  
+        </player>  
+      </players>  
+    </roster>  
+  </team>  
+</fantasy_content>
+>```
+
+### PUT
+
+Using PUT, you may modify a subset of players on the roster for a particular day, specifically in terms of changing their position or whether they're in the starting lineup. The URL for PUTting to a Roster resource is:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/roster
+
+You may move as many players as you like in your input XML -- any players whose position you do not change will stay in the same position they were previously. 
+
+If you try to move players in an invalid way, you will receive an error and no changes will be made. 
+
+Your input XML should look like:
+
+> **NFL**
+
+>```
+<?xml version="1.0"?>  
+<fantasy_content>  
+  <roster>  
+    <coverage_type>week</coverage_type>  
+    <week>13</week>  
+    <players>  
+      <player>  
+        <player_key>242.p.8332</player_key>  
+        <position>WR</position>  
+      </player>  
+      <player>  
+        <player_key>242.p.1423</player_key>  
+        <position>BN</position>  
+      </player>  
+    </players>  
+  </roster>  
+</fantasy_content>  
+>```
+
+> **MLB, NBA, or NHL**
+
+>```
+<?xml version="1.0"?>  
+<fantasy_content>  
+  <roster>  
+    <coverage_type>date</coverage_type>  
+    <date>2011-05-01</date>  
+    <players>  
+      <player>  
+        <player_key>253.p.8332</player_key>  
+        <position>1B</position>  
+      </player>  
+      <player>  
+        <player_key>253.p.1423</player_key>  
+        <position>BN</position>  
+      </player>  
+    </players>  
+  </roster>  
+</fantasy_content>  
+>```
+
+## Teams collection
+
+### Description
+
+With the Teams API, you can obtain information from a collection of teams simultaneously. 
+
+The teams collection is qualified in the URI by a particular league to obtain information about teams within the league, or by a particular user (and optionally, a game) to obtain information about the teams owned by the user. 
+
+Each element beneath the Teams Collection will be a Team Resource
+
+HTTP Operations Supported
+
+    GET
+
+### URIs
+```{r}
+data.frame(
+  
+  URI = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys={team_key1},{team_key2}",
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys={league_key1},{league_key2}/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys={game_key1},{game_key2}/teams"
+  ),
+  
+  Description = c(
+    "Fetch all teams within a league.",
+    "Fetch specific teams {team_key1} and {team_key2}",
+    "Fetch all teams of the leagues {league_key1} and {league_key2}",
+    "Fetch all teams for the logged in user",
+    "Fetch all teams for the logged in user for the games {game_key1} and {game_key2}"
+    
+  ),
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=223.l.431.t.1,223.l.431.t.2",
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=223.l.431,223.l.21821/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/teams",
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=nfl,mlb/teams"
+  )
+)
+```
+
+Any sub-resource valid for a team is a valid sub-resource under the teams collection.
+
+Any sub-resource for a collection of teams is extracted using a URI like:
+
+>     /teams/{sub_resource}
+
+OR
+
+>     /teams;team_keys={team_key1},{team_key2}/{sub_resource}
+
+Multiple sub-resources can be extracted from teams in the same URI using a format like:
+
+>     /teams;out={sub_resource_1},{sub_resource_2}
+
+OR
+
+>     /teams;team_keys={team_key1},{team_key2};out={sub_resource_1},{sub_resource_2}
+
+
+## Player resource
+
+### Description
+
+With the Player API, you can obtain the player (athlete) related information, such as their name, professional team, and eligible positions. The player is identified in the context of a particular game, and can be requested as the base of your URI by using the global player_key.
+HTTP Operations Supported
+
+    GET
+
+### URIs
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/player/{player_key}
+
+Any sub-resource under a player is extracted using a URI like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/player/{player_key}/{sub_resource}
+
+Multiple sub-resources can be extracted from player in the same URI using a format like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/player/{player_key};out={sub_resource_1},{sub_resource_2}
+
+### Player key format
+
+>     {game_key}.p.{player_id}
+
+- Example: 
+
+  - nhl.p.5479
+  
+  - 411.p.5479
+
+### Sub-resources
+
+*Default sub-resource: metadata*
+```{r}
+data.frame(
+  Name = c(
+    "metadata",
+    "stats",
+    "ownership",
+    "percent_owned",
+    "draft_analysis"
+  ),
+  
+  Description = c(
+    "Includes player key, id, name, editorial information, image, eligible positions, etc.",
+    "Player stats and points (if in a league context).",
+    "The player ownership status within a league (whether they're owned by a team, on waivers, or free agents). Only relevant within a league.",
+    "Data about ownership percentage of the player",
+    "Average pick, Average round and Percent Drafted."
+  ),
+  
+  URI = c(
+    "/fantasy/v2/player/{player_key}/metadata",
+    "Season stats: /fantasy/v2/player/{player_key}/stats Week stats: /fantasy/v2/player/{player_key}/stats;type=week;week={week} Note {week} is a non-zero integer.",
+    "/fantasy/v2/league/{league_key}/players;player_keys={player_key}/ownership",
+    "/fantasy/v2/player/{player_key}/percent_owned",
+    "/fantasy/v2/player/{player_key}/draft_analysis"
+  ),
+  
+  Sample = c(
+    "Drew Brees's info in the 2009 season: http://fantasysports.yahooapis.com/fantasy/v2/player/223.p.5479",
+    "Drew Brees's info and stats in the 2009 season: http://fantasysports.yahooapis.com/fantasy/v2/player/223.p.5479/stats",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players;player_keys=223.p.5479/ownership",
+    "The percentage of leagues in which Drew Brees was owned in the 2009 game: http://fantasysports.yahooapis.com/fantasy/v2/player/223.p.5479/percent_owned",
+    "Yahoo! fantasy draft information for Drew Brees in 2009: http://fantasysports.yahooapis.com/fantasy/v2/player/223.p.5479/draft_analysis"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em") %>% 
+  column_spec(4, bold = TRUE, width = "30em")
+```
+
+
+### Sample XML
+
+Player in a NFL league context
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players;player_keys=223.p.5479**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players;player_keys=223.p.5479" time="508.72206687927ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <league>  
+    <league_key>223.l.431</league_key>  
+    <league_id>431</league_id>  
+    <name>Y! Friends and Family League</name>  
+    <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431</url>  
+    <password>liss</password>  
+    <draft_status>postdraft</draft_status>  
+    <num_teams>14</num_teams>  
+    <edit_key>17</edit_key>  
+    <weekly_deadline/>  
+    <league_update_timestamp>1262595518</league_update_timestamp>  
+    <scoring_type>head</scoring_type>  
+    <current_week>16</current_week>  
+    <start_week>1</start_week>  
+    <end_week>16</end_week>  
+    <is_finished>1</is_finished>  
+    <players count="1">  
+      <player>  
+        <player_key>223.p.5479</player_key>  
+        <player_id>5479</player_id>  
+        <name>  
+          <full>Drew Brees</full>  
+          <first>Drew</first>  
+          <last>Brees</last>  
+          <ascii_first>Drew</ascii_first>  
+          <ascii_last>Brees</ascii_last>  
+        </name>  
+        <status>P</status>  
+        <editorial_player_key>nfl.p.5479</editorial_player_key>  
+        <editorial_team_key>nfl.t.18</editorial_team_key>  
+        <editorial_team_full_name>New Orleans Saints</editorial_team_full_name>  
+        <editorial_team_abbr>NO</editorial_team_abbr>  
+        <bye_weeks>  
+          <week>5</week>  
+        </bye_weeks>  
+        <uniform_number>9</uniform_number>  
+        <display_position>QB</display_position>  
+        <image_url>http://l.yimg.com/a/i/us/sp/v/nfl/players_l/headshots/20100903/5479.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=LTUFmLVwQ.kvKzbhSsG94w--</image_url>  
+        <is_undroppable>0</is_undroppable>  
+        <position_type>O</position_type>  
+        <eligible_positions>  
+          <position>QB</position>  
+        </eligible_positions>  
+      </player>  
+    </players>  
+  </league>  
+</fantasy_content>  
+>```
+
+Player season stats in a NFL league context
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players;player_keys=223.p.5479/stats**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players;player_keys=223.p.5479/stats" time="3140.1500701904ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <league>  
+    <league_key>223.l.431</league_key>  
+    <league_id>431</league_id>  
+    <name>Y! Friends and Family League</name>  
+    <url>http://football.fantasysports.yahoo.com/archive/pnfl/2009/431</url>  
+    <password>liss</password>  
+    <draft_status>postdraft</draft_status>  
+    <num_teams>14</num_teams>  
+    <edit_key>17</edit_key>  
+    <weekly_deadline/>  
+    <league_update_timestamp>1262595518</league_update_timestamp>  
+    <scoring_type>head</scoring_type>  
+    <current_week>16</current_week>  
+    <start_week>1</start_week>  
+    <end_week>16</end_week>  
+    <is_finished>1</is_finished>  
+    <players count="1">  
+      <player>  
+        <player_key>223.p.5479</player_key>  
+        <player_id>5479</player_id>  
+        <name>  
+          <full>Drew Brees</full>  
+          <first>Drew</first>  
+          <last>Brees</last>  
+          <ascii_first>Drew</ascii_first>  
+          <ascii_last>Brees</ascii_last>  
+        </name>  
+        <status>P</status>  
+        <editorial_player_key>nfl.p.5479</editorial_player_key>  
+        <editorial_team_key>nfl.t.18</editorial_team_key>  
+        <editorial_team_full_name>New Orleans Saints</editorial_team_full_name>  
+        <editorial_team_abbr>NO</editorial_team_abbr>  
+        <bye_weeks>  
+          <week>5</week>  
+        </bye_weeks>  
+        <uniform_number>9</uniform_number>  
+        <display_position>QB</display_position>  
+        <image_url>http://l.yimg.com/a/i/us/sp/v/nfl/players_l/headshots/20100903/5479.jpg?x=46&amp;y=60&amp;xc=1&amp;yc=1&amp;wc=164&amp;hc=215&amp;q=100&amp;sig=LTUFmLVwQ.kvKzbhSsG94w--</image_url>  
+        <is_undroppable>0</is_undroppable>  
+        <position_type>O</position_type>  
+        <eligible_positions>  
+          <position>QB</position>  
+        </eligible_positions>  
+        <player_stats>  
+          <coverage_type>season</coverage_type>  
+          <season>2009</season>  
+          <stats>  
+            <stat>  
+              <stat_id>4</stat_id>  
+              <value>4388</value>  
+            </stat>  
+            <stat>  
+              <stat_id>5</stat_id>  
+              <value>34</value>  
+            </stat>  
+            <stat>  
+              <stat_id>6</stat_id>  
+              <value>11</value>  
+            </stat>  
+            <stat>  
+              <stat_id>9</stat_id>  
+              <value>33</value>  
+            </stat>  
+            <stat>  
+              <stat_id>10</stat_id>  
+              <value>2</value>  
+            </stat>  
+            <stat>  
+              <stat_id>11</stat_id>  
+              <value>1</value>  
+            </stat>  
+            <stat>  
+              <stat_id>12</stat_id>  
+              <value>-4</value>  
+            </stat>  
+            <stat>  
+              <stat_id>13</stat_id>  
+              <value>0</value>  
+            </stat>  
+            <stat>  
+              <stat_id>15</stat_id>  
+              <value>0</value>  
+            </stat>  
+            <stat>  
+              <stat_id>16</stat_id>  
+              <value>0</value>  
+            </stat>  
+            <stat>  
+              <stat_id>18</stat_id>  
+              <value>6</value>  
+            </stat>  
+            <stat>  
+              <stat_id>57</stat_id>  
+              <value>0</value>  
+            </stat>  
+          </stats>  
+        </player_stats>  
+        <player_points>  
+          <coverage_type>season</coverage_type>  
+          <season>2009</season>  
+          <total>310.17</total>  
+        </player_points>  
+      </player>  
+    </players>  
+  </league>  
+</fantasy_content>  
+>```
+
+## Players collection
+
+### Description
+
+With the Players API, you can obtain information from a collection of players simultaneously. 
+
+To obtain general players information, the players collection can be qualified in the URI by a particular game, league or team. 
+
+To obtain specific league or team related information, the players collection is qualified by the relevant league or team. 
+
+Each element beneath the Players Collection will be a Player Resource
+
+HTTP Operations Supported
+
+    GET
+
+### URIs
+
+```{r}
+data.frame(
+  URI = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys={league_key1},{league_key2}/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/{team_key}/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys={team_key1},{team_key2}/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/players;player_keys={player_key1},{player_key2}"
+  ),
+  
+  Description = c(
+    "Fetch all players within a league.",
+    "Fetch all players from the leagues {league_key1} and {league_key2}",
+    "Fetch all players within a team.",
+    "Fetch all players from the teams {team_key1} and {team_key2}",
+    "Fetch specific players {player_key1} and {player_key2}"
+  ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=223.l.431,223.l.21821/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.1/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=223.l.431.t.1,223.l.431.t.2/players",
+    "http://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=223.p.5479,223.p.1025"
+    )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+```
+
+
+Any sub-resource valid for a player is a valid sub-resource under the players collection.
+
+Any sub-resource for a collection of players is extracted using a URI like:
+
+>     /players/{sub_resource}
+
+OR
+
+>     /players;player_keys={player_key1},{player_key2}/{sub_resource}
+
+Multiple sub-resources can be extracted from players in the same URI using a format like:
+
+>     /players;out={sub_resource_1},{sub_resource_2}
+
+OR
+
+>     /players;player_keys={player_key1},{player_key2};out={sub_resource_1},{sub_resource_2}
+
+
+### Filters
+
+The players collection can have filters such as the following to obtain a subset of a players collection that satisfy the filtering condition. 
+
+The filters can be combined to obtain a more restricted list of players.
+
+```{r}
+data.frame(
+  Filter_parameter = c(
+    "position",
+    "status",
+    "search",
+    "sort",
+    "sort_type",
+    "sort_season",
+    "sort_date (baseball, basketball, and hockey only)",
+    "sort_week (football only)",
+    "start",
+    "count"
+  ),
+  Filter_parameter_values = c(
+    "Valid player positions",
+    "A (all available players), FA (free agents only), W (waivers only), T (all taken players) ,K (keepers only)",
+    "player name",
+    "{stat_id}, NAME (last, first), OR (overall rank), AR (actual rank), PTS (fantasy points)",
+    "season, date (baseball, basketball, and hockey only), week (football only), lastweek (baseball, basketball, and hockey only), lastmonth",
+    "year",
+    "YYYY-MM-DD",
+    "week",
+    "Any integer 0 or greater",
+    "Any integer greater than 0"
+  ),
+  
+  Usage = c(
+    "/players;position=QB Note: Applied only in a league's context",
+    "/players;status=A Note: Applied only in a league's context",
+    "/players;search=smith Note: Applied only in a league's context",
+    "/players;sort=60 Note: Applied only in a league's context",
+    "/players;sort_type=season Note: Applied only in a league's context",
+    "/players;sort_type=season;sort_season=2010 Note: Applied only in a league's context",
+    "/players;sort_type=date;sort_date=2010-02-01 Note Applied only in a league's context",
+    "/players;sort_type=week;sort_week=10 Note: Applied only in a league's context",
+    "/players;start=25",
+    "/players;count=5"
+    
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+```
+
+## Transaction resource
+
+### Description
+
+With the Transaction API, you can obtain information about transactions (adds, drops, trades, and league settings changes) performed on a league. 
+
+A transaction is identified in the context of a particular league, although you can request a particular Transaction Resource as the base of your URI by using the global transaction_key.
+
+You can also PUT to the API to perform operations like editing waiver priorities or FAAB bids, or modifying the state of pending trades. You can also cancel pending transactions by DELETEing them.
+
+Keep in mind, if you don't have the transaction_key for a waiver claim or pending trade, the only way to discover these transactions is to filter the league Transactions collection by a particular type (waiver or pending_trade) and by a particular team_key. 
+
+Pending transactions will not show up if you simply ask for all of the transactions in the league, because they can only be seen by certain teams.
+
+HTTP Operations Supported
+
+    GET
+    PUT
+    DELETE
+
+### URIs
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/transaction/{transaction_key}
+
+Any sub-resource under a transaction is extracted using a URI like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/transaction/{transaction_key}/{sub_resource}
+
+Multiple sub-resources can be extracted from transaction in the same URI using a format like:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/transaction/{transaction_key};out={sub_resource_1},{sub_resource_2}
+
+### Transaction key format
+
+  * Completed transactions:
+    * {game_key}.l.{league_id}.tr.{transaction_id}
+    * Example: pnfl.l.431.tr.26 or 223.l.431.tr.26
+  
+  * Waiver claims: 
+    * {game_key}.l.{league_id}.w.c.{claim_id}
+    * Example: 257.l.193.w.c.2_6390
+  
+  * Pending trades: 
+    * {game_key}.l.{league_id}.pt.{pending_trade_id}
+    * Example: 257.l.193.pt.1
+
+ 
+### Sub-resources
+
+*Default sub-resources: metadata, players*
+```{r}
+data.frame(
+  Name = c(
+    "metadata",
+    "players"
+  ),
+  
+  Description = c(
+    "Includes transaction key, id, type, timestamp, status, players (not displayed for all transaction types) 	",
+    "Players that are part of the transaction. The Player Resources will include a transaction data element by default."
+  ),
+  
+  URI = c(
+    "/fantasy/v2/transaction/{transaction_key}/metadata",
+    "/fantasy/v2/transaction/{transaction_key}/players"
+    ),
+  
+  Sample = c(
+    "An add/drop transaction: http://fantasysports.yahooapis.com/fantasy/v2/transaction/223.l.431.tr.26",
+    "http://fantasysports.yahooapis.com/fantasy/v2/transaction/223.l.431.tr.26/players"
+    )
+)
+```
+
+
+### Sample XML
+
+#### Completed add/drop transaction
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/transaction/257.l.193.tr.2**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/transaction/257.l.193.tr.2" time="51.784038543701ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <transaction>  
+    <transaction_key>257.l.193.tr.2</transaction_key>  
+    <transaction_id>2</transaction_id>  
+    <type>add/drop</type>  
+    <status>successful</status>  
+    <timestamp>1310694660</timestamp>  
+    <players count="2">  
+      <player>  
+        <player_key>257.p.7847</player_key>  
+        <player_id>7847</player_id>  
+        <name>  
+          <full>Owen Daniels</full>  
+          <first>Owen</first>  
+          <last>Daniels</last>  
+          <ascii_first>Owen</ascii_first>  
+          <ascii_last>Daniels</ascii_last>  
+        </name>  
+        <transaction_data>  
+          <type>add</type>  
+          <source_type>freeagents</source_type>  
+          <destination_type>team</destination_type>  
+          <destination_team_key>257.l.193.t.1</destination_team_key>  
+        </transaction_data>  
+      </player>  
+      <player>  
+        <player_key>257.p.6390</player_key>  
+        <player_id>6390</player_id>  
+        <name>  
+          <full>Anquan Boldin</full>  
+          <first>Anquan</first>  
+          <last>Boldin</last>  
+          <ascii_first>Anquan</ascii_first>  
+          <ascii_last>Boldin</ascii_last>  
+        </name>  
+        <transaction_data>  
+          <type>drop</type>  
+          <source_type>team</source_type>  
+          <source_team_key>257.l.193.t.1</source_team_key>  
+          <destination_type>waivers</destination_type>  
+        </transaction_data>  
+      </player>  
+    </players>  
+  </transaction>  
+</fantasy_content>
+>```
+
+#### Pending trade transaction
+
+> **http://fantasysports.yahooapis.com/fantasy/v2/transaction/257.l.193.pt.1**
+
+>```
+<?xml version="1.0" encoding="UTF-8"?>  
+<fantasy_content xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng" xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/transaction/257.l.193.pt.1" time="45.558929443359ms" copyright="Data provided by Yahoo! and STATS, LLC">  
+  <transaction>  
+    <transaction_key>257.l.193.pt.1</transaction_key>  
+    <type>pending_trade</type>  
+    <status>proposed</status>  
+    <trader_team_key>257.l.193.t.2</trader_team_key>  
+    <tradee_team_key>257.l.193.t.1</tradee_team_key>  
+    <trade_proposed_time>1310694832</trade_proposed_time>  
+    <trade_note>This is a great trade, fo' shizzle.</trade_note>  
+    <players count="2">  
+      <player>  
+        <player_key>257.p.8261</player_key>  
+        <player_id>8261</player_id>  
+        <name>  
+          <full>Adrian Peterson</full>  
+          <first>Adrian</first>  
+          <last>Peterson</last>  
+          <ascii_first>Adrian</ascii_first>  
+          <ascii_last>Peterson</ascii_last>  
+        </name>  
+        <transaction_data>  
+          <type>pending_trade</type>  
+          <source_type>team</source_type>  
+          <source_team_key>257.l.193.t.2</source_team_key>  
+          <destination_type>team</destination_type>  
+          <destination_team_key>257.l.193.t.1</destination_team_key>  
+        </transaction_data>  
+      </player>  
+      <player>  
+        <player_key>257.p.9527</player_key>  
+        <player_id>9527</player_id>  
+        <name>  
+          <full>Arian Foster</full>  
+          <first>Arian</first>  
+          <last>Foster</last>  
+          <ascii_first>Arian</ascii_first>  
+          <ascii_last>Foster</ascii_last>  
+        </name>  
+        <transaction_data>  
+          <type>pending_trade</type>  
+          <source_type>team</source_type>  
+          <source_team_key>257.l.193.t.1</source_team_key>  
+          <destination_type>team</destination_type>  
+          <destination_team_key>257.l.193.t.2</destination_team_key>  
+        </transaction_data>  
+      </player>  
+    </players>  
+  </transaction>  
+</fantasy_content> 
+>```
+
+#### PUT
+
+Using PUT, you may edit the waiver priority or FAAB bid for any of your pending waiver claims. 
+
+You can also accept or reject trades that have been proposed to you, and allow or vote against trades if your league settings allow it. The URL for PUTting to a Transaction resource is:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/transaction/{transaction_key}
+
+You can only PUT to Transactions of the types waiver or pending_trade.
+
+
+##### Editing Waivers
+
+Once you have the transaction_key for a waiver claim, which you can get by asking the transactions collection for all waivers for a certain team, you can edit the waiver priority or FAAB bid. 
+
+The input XML should look like: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <transaction_key>248.l.55438.w.c.2_6093</transaction_key>  
+    <type>waiver</type>  
+    <waiver_priority>1</waiver_priority>  
+    <faab_bid>20</faab_bid>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+##### Accepting Trades
+
+Once you have the transaction_key for a pending trade that has been proposed to you, which you can get by asking the transactions collection for all pending trades for your team, you can choose to accept it. 
+
+The input XML should look like: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <transaction_key>248.l.55438.pt.11</transaction_key>  
+    <type>pending_trade</type>  
+    <action>accept</action>  
+    <trade_note>Dude, that is a totally fair trade.</trade_note>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+##### Rejecting Trades
+
+To reject a pending trade proposed to you.
+
+The input XML should look like: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <transaction_key>248.l.55438.pt.11</transaction_key>  
+    <type>pending_trade</type>  
+    <action>reject</action>  
+    <trade_note>No way!</trade_note>  
+  </transaction>  
+</fantasy_content> 
+>```
+	
+
+##### Allowing/Disallowing Trades
+
+If there are accepted trades in your league waiting to be processed, which you can get by asking the transactions collection for all pending trades for your team, and you're the commissioner of a league that has the commissioner approve trades, you can choose to allow or disallow the trade. 
+
+The input XML should look like: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <transaction_key>248.l.55438.pt.11</transaction_key>  
+    <type>pending_trade</type>  
+    <action>allow</action>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+OR
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <transaction_key>248.l.55438.pt.11</transaction_key>  
+    <type>pending_trade</type>  
+    <action>disallow</action>  
+  </transaction>  
+</fantasy_content>
+>```
+
+##### Voting Against Trades
+
+If there are accepted trades in your league waiting to be processed, which you can get by asking the transactions collection for all pending trades for your team, and you're a manager in a league that allows managers to vote against trades, you can choose to vote against the trade. The input XML should look like: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <transaction_key>248.l.55438.pt.11</transaction_key>  
+    <type>pending_trade</type>  
+    <action>vote_against</action>  
+    <voter_team_key>248.l.55438.t.2</voter_team_key>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+#### DELETE
+
+Using DELETE, you may cancel any pending waiver claim or proposed trade. The URL for DELETEing a transaction resource is:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/transaction/{transaction_key}
+
+You can only DELETE transactions of the types waiver or pending_trade if the pending trade has not yet been accepted.
+
+## Transactions collection
+
+### Description
+
+With the Transactions API, you can obtain information via GET from a collection of transactions simultaneously. 
+
+The transactions collection is qualified in the URI by a particular league. 
+
+Each element beneath the Transactions Collection will be a Transaction Resource
+
+You can also POST to the API to perform operations like adding and/or dropping players to/from a team and proposing trades.
+
+HTTP Operations Supported
+
+    GET
+    POST
+
+### URIs
+```{r}
+data.frame(
+  URI = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions",
+    "http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys={transaction_key1},{transaction_key2}",
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys={league_key1},{league_key2}/transactions",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions;types=waiver,pending_trade;team_key={team_key}"
+  ),
+  
+  Description = c(
+    "Fetch all completed transactions within a league.",
+    "Fetch specific transactions {transaction_key1} and {transaction_key2}",
+    "Fetch all completed transactions of the leagues {league_key1} and {league_key2}",
+    "Fetch all pending trades and waivers relevant to the particular team."
+  ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/transactions",
+    "http://fantasysports.yahooapis.com/fantasy/v2/transactions;transaction_keys=223.l.431.tr.26,223.l.431.tr.27",
+    "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=223.l.431,223.l.21821/transactions",
+    "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/transactions;types=waiver,pending_trade;team_key=223.l.431.t.1"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+```
+
+Any sub-resource valid for a transaction is a valid sub-resource under the transactions collection.
+
+Any sub-resource for a collection of transactions is extracted using a URI like:
+
+>     /transactions/{sub_resource}
+
+OR
+
+>     /transactions;transaction_keys={transaction_key1},{transaction_key2}/{sub_resource}
+
+Multiple sub-resources can be extracted from transactions in the same URI using a format like:
+
+>     /transactions;out={sub_resource_1},{sub_resource_2}
+
+OR
+
+>     /transactions;transaction_keys={transaction_key1},{transaction_key2};out={sub_resource_1},{sub_resource_2}
+
+
+### Filters
+
+The transactions collection can have filters such as the following to obtain a subset of a transactions collection that satisfy the filtering condition. 
+
+These filters can be combined to obtain a more restricted list of transactions.
+
+```{r}
+data.frame(
+  Filter_parameter = c(
+    "type",
+    "types",
+    "team_key",
+    "type with team_key",
+    "count"
+  ),
+  
+  Filter_parameter_values = c(
+    "add,drop,commish,trade",
+    "Any valid types",
+    "A team_key within the league",
+    "waiver,pending_trade",
+    "Any integer greater than 0"
+  ),
+  
+  Usage = c(
+    "/transactions;type=add",
+    "/transactions;types=add,trade",
+    "/transactions;team_key=257.l.193.t.1",
+    "You can only use these options when also providing the team_key, ie /transactions;team_key=257.l.193.t.1;type=waiver",
+    "/transactions;count=5"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+```
+
+
+### POST
+
+Using POST, players can be added and/or dropped from a team, or trades can be proposed. 
+
+The URI for POSTing to transactions collection is:
+
+>     http://fantasysports.yahooapis.com/fantasy/v2/league/{league_key}/transactions
+
+#### Adding/Dropping Players
+
+
+Adding/Dropping Players
+
+The input XML format for a POST request to the transactions API for adding a player is: 
+
+>```
+fantasy_content>  
+  <transaction>  
+    <type>add</type>  
+    <player>  
+      <player_key>{player_key}</player_key>  
+      <transaction_data>  
+        <type>add</type>  
+        <destination_team_key>{team_key}</destination_team_key>  
+      </transaction_data>  
+    </player>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+The input XML format for a POST request to the transactions API for dropping a player is: 
+
+>```
+fantasy_content>  
+  <transaction>  
+    <type>drop</type>  
+    <player>  
+      <player_key>{player_key}</player_key>  
+      <transaction_data>  
+        <type>drop</type>  
+        <destination_team_key>{team_key}</destination_team_key>  
+      </transaction_data>  
+    </player>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+The input XML format for a POST request to the transactions API for replacing one player with another player in a team is: 
+
+>```
+    <fantasy_content>  
+      <transaction>  
+        <type>add/drop</type>  
+        <players>  
+          <player>  
+            <player_key>{player_key}</player_key>  
+            <transaction_data>  
+              <type>add</type>  
+              <destination_team_key>{team_key}</destination_team_key>  
+            </transaction_data>  
+          </player>  
+          <player>  
+            <player_key>{player_key}</player_key>  
+            <transaction_data>  
+              <type>drop</type>  
+              <source_team_key>{team_key}</source_team_key>  
+            </transaction_data>  
+          </player>  
+        </players>  
+      </transaction>  
+    </fantasy_content>  
+>```
+
+You may also add players that are currently on waivers -- the players will not be immediately added to your team, but rather, you will be returned back a waiver claim that will be processed at some point in the future. 
+
+Various league rules will control in which conditions you will actually receive the player, in the case that multiple teams have placed waiver claims.
+
+If you are placing a waiver claim in a league that uses FAAB, you may add that to the XML that you POST: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <type>add/drop</type>  
+    <faab_bid>25</faab_bid>  
+    <players>  
+      <player>  
+        <player_key>238.p.5484</player_key>  
+        <transaction_data>  
+          <type>add</type>  
+          <destination_team_key>238.l.627060.t.6</destination_team_key>  
+        </transaction_data>  
+      </player>  
+      <player>  
+        <player_key>238.p.6327</player_key>  
+        <transaction_data>  
+          <type>drop</type>  
+          <destination_team_key>238.l.627060.t.6</destination_team_key>  
+        </transaction_data>  
+      </player>  
+    </players>  
+  </transaction>  
+</fantasy_content>  
+>```
+
+Once you have a waiver claim transaction, you may also edit the waiver priority or FAAB bid, or cancel the waiver entirely.
+
+#### Proposing Trades
+
+The input XML format for a POST request to the transactions API for proposing a trade is: 
+
+>```
+<?xml version='1.0'?>  
+<fantasy_content>  
+  <transaction>  
+    <type>pending_trade</type>  
+    <trader_team_key>248.l.55438.t.11</trader_team_key>  
+    <tradee_team_key>248.l.55438.t.4</tradee_team_key>  
+    <trade_note>Yo yo yo yo yo!!!</trade_note>  
+    <players>  
+      <player>  
+        <player_key>248.p.4130</player_key>  
+        <transaction_data>  
+          <type>pending_trade</type>  
+          <source_team_key>248.l.55438.t.11</source_team_key>  
+          <destination_team_key>248.l.55438.t.4</destination_team_key>  
+        </transaction_data>  
+      </player>  
+      <player>  
+        <player_key>248.p.2415</player_key>  
+        <transaction_data>  
+          <type>pending_trade</type>  
+          <source_team_key>248.l.55438.t.4</source_team_key>  
+          <destination_team_key>248.l.55438.t.11</destination_team_key>  
+        </transaction_data>  
+      </player>  
+    </players>  
+  </transaction>  
+</fantasy_content>  
+>```
+	
+Once you have a pending trade transaction, you may accept, reject, allow/disallow, or vote against the trade (depending on which role you have in the league). You may also cancel the trade. 
+
+## User resource
+
+### Description
+
+With the User API, you can retrieve fantasy information for a particular Yahoo! user. 
+
+Most usefully, you can see which games a user is playing, and which leagues they belong to and teams that they own within those games. 
+
+Because you can currently only view user information for the logged in user, you would generally want to use the Users collection, passing along the `use_login` flag, instead of trying to request a User resource directly from the URI.
+
+HTTP Operations Supported
+
+    GET
+
+### URIs
+
+It is generally recommended that you instead use the Users collection, passing along the use_login flag.
+
+### Sub-resources
+
+*Default sub-resource: N/A*	 	
+```{r}
+data.frame(
+  Name = c(
+    "games",
+    "games/leagues",
+    "games/teams"
+  ),
+  
+  Description = c(
+    "Fetch the Games in which the user has played. Additionally accepts flags is_available to only return available games.",
+    "Fetch leagues that the user belongs to in one or more games. The leagues will be scoped to the user. This will throw an error if any of the specified games do not support league sub-resources.",
+    "Fetch teams owned by the user in one or more games. The teams will be scoped to the user. This will throw an error if any of the specified games do not support team sub-resources."
+  ),
+  
+  URI = c(
+    "/fantasy/v2/users;use_login=1/games",
+    "/fantasy/v2/users;use_login=1/games;game_keys={game_key1},{game_key2}/leagues",
+    "/fantasy/v2/users;use_login=1/games;game_keys={game_key1},{game_key2}/teams"
+  ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games",
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=223/leagues",
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=223/teams"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em") %>% 
+  column_spec(4, bold = TRUE, width = "30em")
+```
+
+## Users collection
+
+### Description
+
+With the Users API, you can obtain information from a collection of users simultaneously. 
+
+Each element beneath the Users Collection will be a User Resource
+
+HTTP Operations Supported
+
+    GET
+
+### URIs
+
+```{r}
+data.frame(
+  URI = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1 "
+  ),
+  
+  Description = c(
+    "Fetch user information of the logged-in user."
+  ),
+  
+  Sample = c(
+    "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1"
+  )
+) %>% 
+  knitr::kable() %>% 
+  kable_styling(font_size = 8) %>% 
+  column_spec(1, bold = TRUE, width = "30em") %>%
+  column_spec(2, bold = TRUE, width = "30em") %>% 
+  column_spec(3, bold = TRUE, width = "30em")
+```
+
+Any sub-resource valid for a user is a valid sub-resource under the users collection.
+
+Any sub-resource for a collection of users is extracted using a URI like:
+
+>     /users;use_login=1/{sub_resource}
+
+Multiple sub-resources can be extracted from users in the same URI using a format like:
+
+>     /users;use_login=1;out={sub_resource_1},{sub_resource_2}
+
+>     /users;field={field_name1},{field_name2}
+	
+
+
+	
+
+
+
+
+ 	 	 	
+
+
+ 	 	 	
+
+
+
+ 	 	 	
+
+
+ 	 	 	
+
+
+ 	 	 	
+
+
+
+
+ 	 	
+

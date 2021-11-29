@@ -7,3 +7,6 @@ app_info.csv
 .Rdata
 .DS_Store
 in_progress
+inst/doc
+/doc/
+/Meta/

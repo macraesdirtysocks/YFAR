@@ -4,3 +4,5 @@
 ^\.httr-oauth$
 ^LICENSE\.md$
 ^README\.Rmd$
+^doc$
+^Meta$

@@ -91,7 +91,9 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::map(dplyr::bind_cols) %>%
             purrr::map_df(dplyr::bind_rows)
 
-        #..........................ROSTER META...........................
+
+        #...........................TEAM STATS...........................
+
 
         team_stats_list$team_stats <-
             r_parsed %>%
@@ -108,7 +110,9 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
                 names_prefix = "stat_id_"
             )
 
-        #..........................PLAYER META...........................
+
+        #..........................TEAM POINTS...........................
+
 
         team_stats_list$team_points <-
             r_parsed %>%
@@ -120,7 +124,9 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::map(., ~purrr::set_names(., nm = paste("points", names(.), sep = "_"))) %>%
             purrr::map_df(dplyr::bind_cols, .id = "team_id")
 
-        #.....................PLAYER ROSTER POSITION.....................
+
+        #..........................GAMES PLAYED..........................
+
 
         team_stats_list$games_played <-
             r_parsed %>%
@@ -131,12 +137,12 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::map(purrr::pluck, "team", 2, "team_remaining_games", "total") %>%
             purrr::map_df(dplyr::bind_cols, .id = "team_id")
 
-        #............................dplyr::bind DF.............................
+
+        #...............................DF...............................
+
 
         df <- team_stats_list %>%
             purrr::keep(purrr::is_list) %>%
-            purrr::compact() %>%
-
             purrr::reduce(dplyr::left_join, by = "team_id")
 
         #.............................RETURN.............................
@@ -209,7 +215,9 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::map(dplyr::bind_rows) %>%
             dplyr::bind_cols()
 
-        #..........................ROSTER META...........................
+
+        #...........................TEAM STATS...........................
+
 
         team_stats_list$team_stats <-
             r_parsed %>%
@@ -223,7 +231,9 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
                 names_prefix = "stat_id_"
             )
 
-        #..........................PLAYER META...........................
+
+        #..........................TEAM POINTS...........................
+
 
         team_stats_list$team_points <-
             r_parsed %>%
@@ -231,18 +241,22 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::set_names(nm = paste("points", names(.), sep = "_")) %>%
             dplyr::bind_cols()
 
-        #.....................PLAYER ROSTER POSITION.....................
+
+        #..........................GAMES PLAYED..........................
+
 
         team_stats_list$games_played <-
             r_parsed %>%
             purrr::pluck(2, "team_remaining_games", "total") %>%
             dplyr::bind_cols()
 
-        #............................dplyr::bind DF.............................
+
+        #...............................DF...............................
+
 
         df <- team_stats_list %>%
             purrr::compact() %>% # purrr::compact is needed here because week = NULL will not return games_played
-            dplyr::bind_cols()
+            purrr::reduce(dplyr::bind_cols)
 
         #.............................RETURN.............................
 

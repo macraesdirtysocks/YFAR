@@ -182,6 +182,64 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
+##                                URI_GEN_FUNC                              ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' Generate uris.  Arugments are passed on to `httr::modify_url()`.
+#'
+#' The Yahoo! Fantasy API will return a max of 25 players per call to the API.
+#' This function divided by 25 and finds the remainder to construct the uri's
+#' which are then passed to `y_get_response()`.
+#'
+#' @param number_of_players number of players
+#' @param start where to start the uris i.e. 50
+#' @param resp_len length of each response with a max of 25
+#' @param resource resource from the api to be called
+#' @param subresource subresource from the api to be called, takes a vector if more than one subresource
+#' @param league_id league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
+#' @param status status of players to return ("ALL", "A", "FA", "T", "W", "K")
+#' @param sort sort order of the players to return (stat_id, "OR", "AR", "PTS", "NAME(last, first)")
+#'
+#' @return a vector of strings
+#' @export
+.uri_gen_func <- function(number_of_players = 100, start = 0, resp_len = 25,
+                         resource, league_id, subresource, status = "ALL", sort = "OR"){
+
+    subresource <- ifelse(length(subresource) > 1, glue::glue_collapse(subresource, sep = "/"), subresource)
+
+    resp_len <- ifelse(resp_len > 25, 25, resp_len)
+
+    remainder <- number_of_players%%resp_len
+
+    full_pages <- (number_of_players - remainder)
+
+    full_pages_multiple <- full_pages/resp_len
+
+    end <- full_pages + start
+
+    page_start <- seq(from = start, to = end, by = resp_len)
+
+    page_count <- c(rep(resp_len, times = full_pages_multiple), remainder)
+
+    uri <- httr::modify_url(
+        url = "https://fantasysports.yahooapis.com",
+        path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
+        params = glue::glue("status={status};start={page_start};count={page_count};sort={sort}"),
+        query = "format=json"
+    )
+
+    uri <- uri[!grepl("count=0", uri)]
+
+    return(uri)
+
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
 ##                          Y_GET_RESPONSE FUNCTION                         ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,14 +258,19 @@
 #'
 #' @keywords internal
 .y_get_response <- function(x, y) {
-    r <- httr::GET(url = x,
-              httr::add_headers(
-                  Authorization = stringr::str_c("Bearer",
-                                                 y$credentials$access_token, sep = " ")
-              ))
-    httr::stop_for_status(r, task = "authorize, refresh token with yahoo_token$refresh() and try again")
+
+    r <- httr::RETRY(verb = "GET",
+                     terminate_on = c(401),
+                     url = x,
+                   httr::add_headers(
+                       Authorization = stringr::str_c("Bearer",
+                                                      y$credentials$access_token, sep = " ")
+                   ))
+
     stopifnot(httr::http_type(r) == "application/json")
+
     return(r)
+
 }
 
 ARTofR::xxx_title1("DATE CHECK FUNCTION")
@@ -608,9 +671,6 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::map(.team_parse_fn) %>%
         purrr::map_df(purrr::map_if, purrr::negate(is.character), as.character)
 
-    # df <- league_list$teams %>%
-        # add_column(league_list$league_info, .before = 1)
-
     return(league_list)
 }
 
@@ -627,6 +687,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #'
 #' @keywords internal
 .team_parse_fn <- function(x) {
+
     team_list <- list(
         team = NULL,
         team_info = NULL,
@@ -659,7 +720,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::pluck("team_logos") %>%
         purrr::flatten() %>%
         purrr::set_names(nm = paste(names(.), seq_along(.), sep = "_")) %>%
-        unlist(recursive = T) %>%
+        unlist(recursive = TRUE) %>%
         dplyr::bind_rows()
 
     team_list$roster_adds <-
@@ -684,7 +745,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
     team_list$rosters$roster_info <- .roster_parse_fn(x)
 
     df <-
-        purrr::reduce(team_list[2:length(team_list)], dplyr::bind_cols)
+        purrr::reduce(team_list[-1], dplyr::bind_cols)
 
 }
 
@@ -701,6 +762,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #'
 #' @keywords internal
 .roster_parse_fn <- function(x) {
+
     roster_list <- list(
         roster = NULL,
         roster_info = NULL,
@@ -724,15 +786,9 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         dplyr::bind_rows() %>%
         dplyr::bind_cols()
 
-    # roster_df <- reduce(roster_list[2:3], bind_cols) %>%
-        # set_names(paste("roster", names(.), sep = "_"))
-
-    # player_df <-
-        # .player_parse_fn(roster_list[["roster"]][["0"]])
-
     roster_list$player_info$player_info = .player_parse_fn(roster_list[["roster"]][["0"]])
 
-    # df <- bind_cols(roster_df, player_df)
+
     df <- purrr::reduce(roster_list[2:4], dplyr::bind_cols) %>%
         purrr::set_names(paste("roster", names(.), sep = "_"))
 
@@ -753,16 +809,17 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .player_parse_fn <- function(x) {
 
+
     player_list <- list(
         player = NULL,
         player_info = NULL,
-        player_selected_position = NULL
+        player_selected_position = NULL,
+        df = NULL
     )
 
     player_list$player <-
         x %>%
         purrr::pluck("players") %>%
-        purrr::set_names(seq_along(.)) %>%
         purrr::keep(purrr::is_list) %>%
         purrr::compact()
 
@@ -792,7 +849,13 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::map(dplyr::bind_rows) %>%
         dplyr::bind_rows()
 
-    df <- player_list[-1] %>% # drop 1st element with all the raw data in it
-        compact() %>% # drop empty elements
-        purrr::reduce(dplyr::bind_cols)
+    df <-
+        # drop 1st element with all the raw data in it
+        player_list[-1] %>%
+        purrr::compact() %>%
+        dplyr::bind_cols()
+
+    return(df)
 }
+
+
