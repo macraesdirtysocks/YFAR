@@ -4,7 +4,7 @@
 \alias{y_matchups}
 \title{Get matchup stats and results data from Yahoo! Fantasy API}
 \usage{
-y_matchups(team_id = NULL, token_name = NULL, week = NULL)
+y_matchups(team_id = NULL, token_name = NULL, week = NULL, debug = FALSE)
 }
 \arguments{
 \item{team_id}{as a string in the form "000.l.0000.t.00".  Team id can be found with y_teams().}
@@ -12,12 +12,18 @@ y_matchups(team_id = NULL, token_name = NULL, week = NULL)
 \item{token_name}{assigned object name used when creating token with y_create_token().}
 
 \item{week}{the week of fantasy season to return. Default NULL will return all weeks of season.}
+
+\item{debug}{Print uri and page counts to console as functions runs.  Useful for debugging.}
 }
 \value{
-a list
+a tibble if debug = FALSE or a list if debug = TRUE
 }
 \description{
 y_matchups() gets matchup stats and results for a given league and week.
 It returns a list with the meta data as well as tibble containing the matchups data
 in the element `matchups_data`.
+}
+\details{
+If the week argument is set to a fantasy week that has yet to occur the stats will all
+show a value of 1 which the api returns as boolean value for is_tied.
 }

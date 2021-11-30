@@ -4,14 +4,18 @@
 #' It returns a list with the meta data as well as tibble containing the matchups data
 #' in the element `matchups_data`.
 #'
+#' If the week argument is set to a fantasy week that has yet to occur the stats will all
+#' show a value of 1 which the api returns as boolean value for is_tied.
+#'
 #' @param team_id as a string in the form "000.l.0000.t.00".  Team id can be found with y_teams().
 #' @param token_name assigned object name used when creating token with y_create_token().
 #' @param week the week of fantasy season to return. Default NULL will return all weeks of season.
+#' @param debug Print uri and page counts to console as functions runs.  Useful for debugging.
 #'
-#' @return a list
+#' @return a tibble if debug = FALSE or a list if debug = TRUE
 #' @export
 y_matchups <-
-    function(team_id = NULL, token_name = NULL, week = NULL) {
+    function(team_id = NULL, token_name = NULL, week = NULL, debug = FALSE) {
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                  ARGUMENTS                               ----
@@ -36,7 +40,7 @@ y_matchups <-
         uri <-
             httr::modify_url(
                 url = "https://fantasysports.yahooapis.com",
-                path = c("fantasy/v2", resource, team_id, subresource, sep = "/"),
+                path = paste("fantasy/v2", resource, team_id, subresource, sep = "/"),
                 param = glue::glue("weeks={week}"),
                 query = "format=json"
             )
@@ -76,21 +80,30 @@ y_matchups <-
         ##                                PARSE CONTENT                             ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+        #........................MATCHUP META DATA.......................
+
+
         matchup_list$matchup_meta <-
             r_parsed %>%
             purrr::pluck(2, "matchups") %>%
             purrr::map(purrr::pluck, "matchup") %>%
             purrr::map(purrr::keep, purrr::negate(purrr::is_list)) %>%
             purrr::map(purrr::map_if, purrr::negate(is.character), as.character) %>%
+            purrr::set_names(nm = seq_along(.)) %>%
             purrr::map(dplyr::bind_cols) %>%
-            dplyr::bind_rows()
+            dplyr::bind_rows(.id = "matchup_num")
+
+
+
+        #..........................STAT WINNERS..........................
+
 
         matchup_list$stat_winners <-
             r_parsed %>%
             purrr::pluck(2, "matchups") %>%
             purrr::keep(purrr::is_list) %>%
             purrr::map(purrr::pluck, "matchup", "stat_winners") %>%
-            # compact() %>%
             purrr::map_depth(2, purrr::pluck, "stat_winner") %>%
             purrr::map_depth(2,
                              purrr::map_if,
@@ -104,10 +117,13 @@ y_matchups <-
                 tidyr::pivot_wider,
                 id_cols = stat_id,
                 names_from = stat_id,
-                values_from = "winner_team_key",
+                values_from = 2,
                 names_glue = "stat_id_{ stat_id }_winner"
             ) %>%
-            dplyr::bind_rows(.id = "week")
+            dplyr::bind_rows(.id = "matchup_num")
+
+
+        #.........................TEAM META DATA.........................
 
 
         matchup_list$team_data$meta <-
@@ -118,7 +134,6 @@ y_matchups <-
             purrr::map(purrr::pluck, "teams") %>%
             purrr::map(purrr::keep, purrr::is_list) %>%
             purrr::map_depth(2, purrr::pluck, "team", 1) %>%
-            # purrr::map_depth(2, purrr::map_at, 1, magrittr::extract, 1:3)
             purrr::map_depth(2, magrittr::extract, 1:3) %>%
             purrr::map_depth(2, dplyr::bind_cols) %>%
             purrr::map_depth(2,
@@ -127,7 +142,11 @@ y_matchups <-
                              as.character) %>%
             purrr::map(dplyr::bind_rows) %>%
             purrr::set_names(nm = seq_along(.)) %>%
-            dplyr::bind_rows(.id = "week")
+            dplyr::bind_rows(.id = "matchup_num")
+
+
+        #...........................TEAM STATS...........................
+
 
         matchup_list$team_data$stats <-
             r_parsed %>%
@@ -152,8 +171,13 @@ y_matchups <-
                              purrr::negate(is.character),
                              as.character) %>%
             purrr::map(dplyr::bind_rows) %>%
-            # purrr::set_names(nm = seq_along(.)) %>%
-            dplyr::bind_rows()
+            purrr::set_names(nm = seq_along(.)) %>%
+            dplyr::bind_rows() %>%
+            dplyr::mutate(dplyr::across(.cols = dplyr::everything(), as.numeric))
+
+
+        #........................TOTAL WEEK POINTS.......................
+
 
         matchup_list$team_data$week_points <-
             r_parsed %>%
@@ -173,6 +197,10 @@ y_matchups <-
             purrr::set_names(nm = seq_along(.)) %>%
             dplyr::bind_rows()
 
+
+        #......................GAMES PLAYED COUNTS.......................
+
+
         matchup_list$team_data$game_counts <-
             r_parsed %>%
             purrr::pluck(2, "matchups") %>%
@@ -191,14 +219,17 @@ y_matchups <-
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         df <-
-            dplyr::right_join(matchup_list$matchup_meta,
-                              dplyr::bind_cols(matchup_list$team_data),
-                              by = "week") %>%
-            dplyr::left_join(matchup_list$stat_winners, by = "week")
+            dplyr::left_join(
+                purrr::reduce(matchup_list[["team_data"]], dplyr::bind_cols),
+                matchup_list[["stat_winners"]],
+                by = "matchup_num"
+            ) %>%
+            dplyr::left_join(matchup_list[["matchup_meta"]], ., by = "matchup_num")
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                    RETURN                                ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
         data_list <-
             structure(list(
@@ -209,6 +240,8 @@ y_matchups <-
             ),
             class = "yahoo_fantasy_api")
 
-        return(data_list)
+        if(debug){return(data_list)}
+
+        return(df)
 
     }

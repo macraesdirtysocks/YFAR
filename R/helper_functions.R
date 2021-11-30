@@ -267,6 +267,7 @@
                                                       y$credentials$access_token, sep = " ")
                    ))
 
+    httr::stop_for_status(r)
     stopifnot(httr::http_type(r) == "application/json")
 
     return(r)
