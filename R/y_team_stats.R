@@ -6,10 +6,11 @@
 #' @param token_name Assigned object name used when creating token with `y_create_token()`.
 #' @param week week of fantasy season to return.  Accepts 3 arguments `current`, `NULL`, `a number`.
 #' `current` by default returns current week, null returns aggregated season stats, number returns stats for that week.
+#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
 #'
 #' @return a list
 #' @export
-y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
+y_team_stats <- function(id = NULL, token_name = NULL, week = "current", debug = FALSE) {
 
     api_token <- token_name
 
@@ -99,16 +100,21 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             r_parsed %>%
             purrr::pluck(2, "teams") %>%
             purrr::map(purrr::pluck, "team", 2, "team_stats", "stats") %>%
+            purrr::keep(purrr::is_list) %>%
             purrr::set_names(nm = seq_along(.)) %>%
-            purrr::map_depth(2, purrr::pluck, "stat") %>%
-            purrr::map_depth(2, dplyr::bind_rows) %>%
-            purrr::map_df(dplyr::bind_rows, .id = "team_id") %>%
-            tidyr::pivot_wider(
-                id_cols = c(team_id, stat_id),
-                names_from = stat_id,
-                values_from = value,
-                names_prefix = "stat_id_"
-            )
+                purrr::map_depth(2, purrr::pluck, "stat") %>%
+                purrr::map_depth(2, purrr::flatten_df) %>%
+                purrr::map(dplyr::bind_rows) %>%
+                # # convert stat id numbers to display name i.e. stat 1 = G
+                purrr::map(dplyr::left_join, .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+                purrr::map(dplyr::select, display_name, value) %>%
+                purrr::map(
+                    tidyr::pivot_wider,
+                    id_cols = display_name,
+                    names_from = display_name,
+                    values_from = value
+                ) %>%
+            dplyr::bind_rows(.id = "team_id")
 
 
         #..........................TEAM POINTS...........................
@@ -146,6 +152,8 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::reduce(dplyr::left_join, by = "team_id")
 
         #.............................RETURN.............................
+
+        if(!debug){return(df)}
 
         data_list <-
             structure(
@@ -222,14 +230,13 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
         team_stats_list$team_stats <-
             r_parsed %>%
             purrr::pluck(2, "team_stats", "stats") %>%
-            purrr::map(purrr::pluck, "stat") %>%
-            purrr::map_df(dplyr::bind_rows) %>%
-            tidyr::pivot_wider(
-                id_cols = stat_id,
-                names_from = stat_id,
-                values_from = value,
-                names_prefix = "stat_id_"
-            )
+            purrr::map_df(purrr::flatten_df) %>%
+            dplyr::left_join(.yahoo_hockey_stat_categories(), by = "stat_id") %>%
+            dplyr::select(display_name, value) %>%
+            tidyr::pivot_wider(id_cols = display_name,
+                               names_from = display_name,
+                               values_from = value)
+
 
 
         #..........................TEAM POINTS...........................
@@ -259,6 +266,8 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current") {
             purrr::reduce(dplyr::bind_cols)
 
         #.............................RETURN.............................
+
+        if(!debug){return(df)}
 
         data_list <-
             structure(

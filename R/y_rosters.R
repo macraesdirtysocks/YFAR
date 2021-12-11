@@ -3,13 +3,14 @@
 #' Supply a team or league id to the function to retrieve roster data.  If a date
 #' is supplied the roster data for that date will be returned.
 #'
-#' @param id league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.
-#' @param token_name assigned object name used when creating token with `y_create_token()`.
-#' @param date date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.
+#' @param id League id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.
+#' @param token_name Assigned object name used when creating token with `y_create_token()`.
+#' @param date Date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.
+#' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
 #'
 #' @return a list
 #' @export
-y_rosters <- function(id = NULL, token_name = NULL, date = NULL){
+y_rosters <- function(id = NULL, token_name = NULL, date = NULL, debug = FALSE){
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
@@ -68,17 +69,19 @@ y_rosters <- function(id = NULL, token_name = NULL, date = NULL){
             .y_get_response(uri, api_token)
 
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", resource)
+            .y_parse_response(r, "fantasy_content")
 
         df <-
             .league_resource_fn(r_parsed)
 
+        if(!debug){return(df$teams)}
+
         data_list <-
             structure(
                 list(
+                    response = r,
                     content = r_parsed,
-                    uri = uri,
-                    df = df
+                    uri = uri
                 ),
                 class = "yahoo_fantasy_api"
             )
@@ -118,7 +121,7 @@ y_rosters <- function(id = NULL, token_name = NULL, date = NULL){
             .y_get_response(uri, api_token)
 
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", resource)
+            .y_parse_response(r, "fantasy_content")
 
 
         #.............................RETURN.............................
@@ -126,12 +129,14 @@ y_rosters <- function(id = NULL, token_name = NULL, date = NULL){
         df <-
             .team_parse_fn(r_parsed)
 
+        if(!debug){return(df)}
+
         data_list <-
             structure(
                 list(
+                    response = r,
                     content = r_parsed,
-                    uri = uri,
-                    df = df
+                    uri = uri
                 ),
                 class = "yahoo_fantasy_api"
             )

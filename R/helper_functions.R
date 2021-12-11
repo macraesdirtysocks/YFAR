@@ -31,6 +31,36 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
+##                              Y_VALIDATE_TOKEN                            ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' y_validate_token
+#'
+#' @param token_name name used when assigning value of `y_create_token()`
+#'
+#' @return a string
+.y_token_validate <- function(token_name){
+
+    api_token <- token_name
+
+    token_status <- httr::http_error(httr::GET(api_token[["endpoint"]][["authorize"]]))
+
+    if(token_status == TRUE) {
+
+        stop(message("token needs refresh, use my_token$refresh() and try again"))
+
+    } else {
+
+        print("token still valid")
+    }
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
 ##                            TOKEN COUNT FUNCTION                          ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -156,6 +186,36 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
+##                              PLAYER ID CHECK                             ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' player id check
+#'
+#' Checks for presence of supplied player id and validity
+#'
+#' @param player_id league_id supplied to y_function
+#'
+#' @keywords internal
+.player_id_check <- function(player_id) {
+    if (is.null(player_id) == TRUE) {
+        stop(message("player_id argument required but not supplied"))
+    } else if (is.character(player_id) == FALSE) {
+        stop(message("player_id should be a character string"))
+    } else if (stringr::str_detect(player_id, pattern = "[:digit:]*\\.p\\.[:digit:]*") == FALSE) {
+        stop(message("player_id syntax should be 000.p.0000"))
+    } else {
+        invisible(player_id)
+    }
+
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
 ##                                 WEEK CHECK                               ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,19 +253,26 @@
 #' This function divided by 25 and finds the remainder to construct the uri's
 #' which are then passed to `y_get_response()`.
 #'
-#' @param number_of_players number of players
-#' @param start where to start the uris i.e. 50
-#' @param resp_len length of each response with a max of 25
+#' @param league_id league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
 #' @param resource resource from the api to be called
 #' @param subresource subresource from the api to be called, takes a vector if more than one subresource
-#' @param league_id league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
-#' @param status status of players to return ("ALL", "A", "FA", "T", "W", "K")
-#' @param sort sort order of the players to return (stat_id, "OR", "AR", "PTS", "NAME(last, first)")
+#' @param resp_len length of each response with a max of 25
+#' @param start Return start number
+#' @param number_of_players Count of players to return
+#' @param ... api filter parameters
 #'
 #' @return a vector of strings
 #' @export
-.uri_gen_func <- function(number_of_players = 100, start = 0, resp_len = 25,
-                         resource, league_id, subresource, status = "ALL", sort = "OR"){
+.uri_gen_func <- function(resp_len = 25, league_id, resource, subresource, start, number_of_players, ...){
+
+    uri_params <- list(...)
+
+    uri_params <-
+        if(!purrr::is_empty(uri_params)) {
+            paste(names(uri_params), purrr::map_chr(uri_params, `[[`, 1), sep = "=",collapse = ";")
+        } else{
+            NULL
+        }
 
     subresource <- ifelse(length(subresource) > 1, glue::glue_collapse(subresource, sep = "/"), subresource)
 
@@ -226,7 +293,7 @@
     uri <- httr::modify_url(
         url = "https://fantasysports.yahooapis.com",
         path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
-        params = glue::glue("status={status};start={page_start};count={page_count};sort={sort}"),
+        params = glue::glue(uri_params, "start={page_start}", "count={page_count}", .sep = ";", .null = NULL),
         query = "format=json"
     )
 
@@ -266,9 +333,6 @@
                        Authorization = stringr::str_c("Bearer",
                                                       y$credentials$access_token, sep = " ")
                    ))
-
-    httr::stop_for_status(r)
-    stopifnot(httr::http_type(r) == "application/json")
 
     return(r)
 
@@ -333,6 +397,38 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::keep(purrr::is_list)
 }
 
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                                CURRENT WEEK                              ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Get current fantasy week
+#'
+#' @param game_id 3 digit number which prefixes league_id.
+#' Identifies Yahoo Fanatasy Sport i.e. 411 is 2021  fantasy hockey.
+#' Can be found with `y_games()`.
+#'
+#' @param token_name api token value assigned by `y_create_token()`
+#'
+#' @keywords internal
+.current_week <- function(game_id = NULL, token_name = NULL){
+
+    api_token <- token_name
+
+    season_weeks <- YFAR::y_weeks(game_id, token_name = api_token)
+
+    i <- purrr::map2(.x = season_weeks$start, .y = season_weeks$end, lubridate::interval)
+
+    this_week <- season_weeks[purrr::map_lgl(.x = i, .f = ~lubridate::`%within%`(lubridate::now(), .x)),]
+
+    return(this_week)
+
+}
 
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -661,16 +757,15 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
     league_list$league_info <-
         x %>%
-        purrr::pluck(1) %>%
+        purrr::pluck("league", 1) %>%
         dplyr::bind_rows()
 
     league_list$teams <-
         x %>%
-        purrr::pluck(2, "teams") %>%
+        purrr::pluck("league", 2, "teams") %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::map(purrr::pluck, "team") %>%
-        purrr::map(.team_parse_fn) %>%
-        purrr::map_df(purrr::map_if, purrr::negate(is.character), as.character)
+        purrr::map_df(.team_parse_fn)
+
 
     return(league_list)
 }
@@ -689,64 +784,20 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .team_parse_fn <- function(x) {
 
-    team_list <- list(
-        team = NULL,
-        team_info = NULL,
-        team_logo = NULL,
-        roster_adds = NULL,
-        managers = NULL,
-        rosters = list(roster_info = NULL)
-    )
-
-    team_list$team <-
+    team_meta <-
         x %>%
-        purrr::pluck(1) %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact()
-
-    team_list$team_info <-
-        team_list$team %>%
+        purrr::pluck("team", 1) %>%
         purrr::keep(purrr::is_list) %>%
         purrr::compact() %>%
-        purrr::flatten() %>%
-        purrr::keep(purrr::negate(purrr::is_list)) %>%
-        dplyr::bind_rows() %>%
-        dplyr::rename("team_name" = name, "team_url" = url)
+        purrr::map_depth(1, unlist, recursive = TRUE) %>%
+        purrr::map_depth(2, as.character) %>%
+        purrr::map(~purrr::set_names(.x, janitor::make_clean_names(names(.x))))
 
-    team_list$team_logo <-
-        team_list$team %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::flatten() %>%
-        purrr::pluck("team_logos") %>%
-        purrr::flatten() %>%
-        purrr::set_names(nm = paste(names(.), seq_along(.), sep = "_")) %>%
-        unlist(recursive = TRUE) %>%
-        dplyr::bind_rows()
+    roster <- .roster_parse_fn(x, "team", 2, "roster")
 
-    team_list$roster_adds <-
-        team_list$team %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::flatten() %>%
-        purrr::pluck("roster_adds") %>%
-        dplyr::bind_rows()
+    df <- dplyr::bind_cols(team_meta, roster)
 
-    team_list$managers <-
-        team_list$team %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::flatten() %>%
-        purrr::pluck("managers") %>%
-        purrr::flatten() %>%
-        purrr::set_names(nm = paste(names(.), seq_along(.), sep = "_")) %>%
-        unlist(recursive = T) %>%
-        dplyr::bind_rows()
-
-    team_list$rosters$roster_info <- .roster_parse_fn(x)
-
-    df <-
-        purrr::reduce(team_list[-1], dplyr::bind_cols)
+    return(df)
 
 }
 
@@ -760,39 +811,39 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' helper function called by y_rosters.  this function calls .player_parse_fn helper.
 #'
 #' @param x list passed on from .roster_resource_fn
+#' @param ... arguments passed on to purrr::pluck
 #'
 #' @keywords internal
-.roster_parse_fn <- function(x) {
+.roster_parse_fn <- function(x, ...) {
 
-    roster_list <- list(
-        roster = NULL,
-        roster_info = NULL,
-        minimum_games = NULL,
-        player_info = NULL
-    )
+        preprocess <-
+            x %>%
+            purrr::pluck(...)
 
-    roster_list$roster <-
-        x %>%
-        purrr::pluck(2, "roster")
+        roster_meta <-
+            preprocess %>%
+            purrr::keep(purrr::is_bare_atomic) %>%
+            dplyr::bind_cols()
 
-    roster_list$roster_info <-
-        roster_list$roster %>%
-        purrr::keep(purrr::is_atomic) %>%
-        dplyr::bind_cols()
+        player_data <-
+            preprocess %>%
+            purrr::pluck("0", "players") %>%
+            purrr::keep(purrr::is_list) %>%
+            purrr::flatten() %>%
+            purrr::map_df(.player_parse_fn)
 
-    roster_list$minimum_games <-
-        roster_list$roster %>%
-        .["minimum_games"] %>%
-        unlist() %>%
-        dplyr::bind_rows() %>%
-        dplyr::bind_cols()
+        goalie_min_games <-
+            preprocess %>%
+            purrr::pluck("minimum_games") %>%
+            dplyr::bind_cols()
 
-    roster_list$player_info$player_info = .player_parse_fn(roster_list[["roster"]][["0"]])
+        df <- dplyr::bind_cols(
+            roster_meta,
+            player_data,
+            goalie_min_games,
+            .name_repair = janitor::make_clean_names)
 
-
-    df <- purrr::reduce(roster_list[2:4], dplyr::bind_cols) %>%
-        purrr::set_names(paste("roster", names(.), sep = "_"))
-
+        return(df)
 
 }
 
@@ -810,53 +861,354 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .player_parse_fn <- function(x) {
 
+        df <-
+            x %>%
+            purrr::keep(purrr::is_list) %>%
+            purrr::compact() %>%
+            purrr::map(unlist, recursive = TRUE) %>%
+            purrr::map( ~ purrr::set_names(.x, janitor::make_clean_names(names(.x)))) %>%
+            purrr::flatten_df()
 
-    player_list <- list(
-        player = NULL,
-        player_info = NULL,
-        player_selected_position = NULL,
-        df = NULL
-    )
+        return(df)
 
-    player_list$player <-
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                             PLAYER STATS PARSE                           ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' Parse player stats
+#'
+#' @param x element to parse
+#'
+#' @return a tibble
+#' @keywords internal
+.player_stats_parse <- function(x){
+
+basic_stats <-
+    x %>%
+    purrr::pluck(2, "player_stats", "stats") %>%
+    purrr::map_df(purrr::flatten_df)
+
+advanced_stats <-
+    x %>%
+    purrr::pluck(2, "player_advanced_stats", "stats") %>%
+    purrr::map_df(purrr::flatten_df)
+
+
+stats <-
+    dplyr::bind_rows(basic_stats, advanced_stats) %>%
+    dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+    dplyr::select(display_name, value) %>%
+    tidyr::pivot_wider(id_cols = display_name,
+                       names_from = display_name,
+                       values_from = value)
+
+return(stats)
+
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                         TRANSACTION PARSE FUNCTION                       ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' Parse transactions resource
+#'
+#' This function call .player_parse_fn
+#'
+#' @param x element to parse
+#'
+#' @return a tibble
+#' @keywords internal
+.transaction_parse_fn <- function(x) {
+
+    transaction_meta <-
         x %>%
-        purrr::pluck("players") %>%
+        purrr::pluck(1) %>%
+        dplyr::bind_cols()
+
+    players <-
+        x %>%
+        purrr::pluck(2, "players") %>%
+        purrr::map(purrr::pluck, "player") %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::compact()
-
-    player_list$player_info <-
-        player_list$player %>%
-        purrr::map(purrr::pluck, "player", 1) %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(purrr::compact) %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(purrr::compact) %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map(purrr::map_if, purrr::is_list, unlist) %>%
-        purrr::map(purrr::map_at,
-            "eligible_positions",
-            purrr::set_names,
-            nm = ~ paste(., seq_along(.), sep = "_")) %>%
-        purrr::map(unlist) %>%
-        purrr::map(dplyr::bind_rows) %>%
-        dplyr::bind_rows()
-
-    player_list$player_selected_position <-
-        player_list$player %>%
-        purrr::map(purrr::pluck, "player", 2) %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(purrr::compact) %>%
-        purrr::map(unlist) %>%
-        purrr::map(dplyr::bind_rows) %>%
-        dplyr::bind_rows()
+        purrr::compact() %>%
+        purrr::map_df(.player_parse_fn)
 
     df <-
-        # drop 1st element with all the raw data in it
-        player_list[-1] %>%
-        purrr::compact() %>%
-        dplyr::bind_cols()
+        dplyr::bind_cols(transaction_meta, players)
 
     return(df)
 }
 
 
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                        YAHOO HOCKEY STAT CATEGORIES                      ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Create a tibble of the stat categories for yahoo fantasy hockey
+#'
+#' @return a tibble
+#' @keywords internal
+.yahoo_hockey_stat_categories <- function(){
+    structure(
+        list(
+            stat_id = c(
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29",
+                "30",
+                "31",
+                "32",
+                "33",
+                "34",
+                "1001",
+                "1002",
+                "1003",
+                "1004",
+                "1005",
+                "1006",
+                "1007",
+                "1008",
+                "1009",
+                "1010",
+                "1011"
+            ),
+            name = c(
+                "Games Played",
+                "Goals",
+                "Assists",
+                "Points",
+                "Plus/Minus",
+                "Penalty Minutes",
+                "Powerplay Goals",
+                "Powerplay Assists",
+                "Powerplay Points",
+                "Shorthanded Goals",
+                "Shorthanded Assists",
+                "Shorthanded Points",
+                "Game-Winning Goals",
+                "Game-Tying Goals",
+                "Shots on Goal",
+                "Shooting Percentage",
+                "Faceoffs Won",
+                "Faceoffs Lost",
+                "Games Started",
+                "Wins",
+                "Losses",
+                "Ties",
+                "Goals Against",
+                "Goals Against Average",
+                "Shots Against",
+                "Saves",
+                "Save Percentage",
+                "Shutouts",
+                "Time on Ice",
+                "F/D Games",
+                "Goalie Games",
+                "Hits",
+                "Blocks",
+                "Time on Ice",
+                "Average Time on Ice",
+                "Power Play Time",
+                "Average Power Play Time",
+                "Short-Handed Time",
+                "Average Short-Handed Time",
+                "Corsi",
+                "Fenwick",
+                "Offensive Zone Starts",
+                "Defensive Zone Starts",
+                "Zone Start Percentage",
+                "Game Star",
+                "Shifts"
+            ),
+            display_name = c(
+                "gp",
+                "g",
+                "a",
+                "p",
+                "x",
+                "pim",
+                "ppg",
+                "ppa",
+                "ppp",
+                "shg",
+                "sha",
+                "shp",
+                "gwg",
+                "gtg",
+                "sog",
+                "sh_percent",
+                "fw",
+                "fl",
+                "gs",
+                "w",
+                "l",
+                "t",
+                "ga",
+                "gaa",
+                "sa",
+                "sv",
+                "sv_percent",
+                "sho",
+                "toi",
+                "gp_2",
+                "gp_3",
+                "hit",
+                "blk",
+                "toi_2",
+                "toi_g",
+                "ppt",
+                "avg_ppt",
+                "sht",
+                "avg_sht",
+                "cor",
+                "fen",
+                "off_zs",
+                "def_zs",
+                "zs_pct",
+                "g_str",
+                "shifts"
+            ),
+            sort_order = c(
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "0",
+                "1",
+                "1",
+                "0",
+                "1",
+                "0",
+                "0",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1",
+                "1"
+            ),
+            is_composite_stat = c(
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                1L,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                1L,
+                NA,
+                NA,
+                1L,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                1L,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA,
+                NA
+            )
+        ),
+        class = c("tbl_df", "tbl", "data.frame"),
+        row.names = c(NA, -46L)
+    )}

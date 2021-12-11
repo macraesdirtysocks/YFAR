@@ -1,37 +1,28 @@
-#' Get player data from Yahoo! Fantasy API
+#' Get player stats
 #'
-#' This function is not intended to get all players in a league.  To get all players in your league use the
-#' function `y_player_slate()`.
-#'
-#' Function returns a tibble containing info on all players in your leagues universe.
-#' By default the players are sorted by "Actual Rank"
-#'
-#' This function is intented to get a subset of players i.e. top 100 players sorted by AR (actual rank).
-#' If you want all players in that exist in your leagues universe use `y_player_slate()`
-#'
-#' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
+#' @param players player keys.  Keys are in the form xxx.p.xxxx and found using
+#' `y_players()`, `y_player_slate()` or `y_rosters()`
 #' @param token_name Assigned object name used when creating token with y_create_token().
-#' @param number_of_players Number of players
-#' @param start Where to start the uris i.e. 50
-#' @param debug Returns a list of data uri call and content.  Useful for debugging.
-#' @param ... URI filter arguments (as characters) passed onto internal .uri_gen_func.
+#' @param game_date Date of fantasy season in form YYYY-MM-DD to return.
+#' Default is null and will return current date.  Accepts a vector of dates.
+#' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
 #'
-#' @return a list or tibble
-#'
+#' @return a tibble or list
 #' @export
-y_players <-
-    memoise::memoise(function(league_id = NULL, token_name = NULL,
-                              start = 0, number_of_players = 100, debug = FALSE, ...) {
-
+y_player_stats <-
+    function(players = NULL,
+             token_name = NULL,
+             game_date = NULL,
+             debug = FALSE) {
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                  ARGUMENTS                               ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-        resource <- "league"
-        subresource <- "players"
         api_token <- token_name
+        resource <- "players"
+        subresource <- "stats"
+        players <- glue::glue_collapse(players, sep = ",")
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,8 +30,9 @@ y_players <-
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-        .league_id_check(league_id)
+        .player_id_check(players)
         .token_check(token_name, api_token, name = .GlobalEnv)
+        .date_check(glue::glue_collapse(game_date, sep = ","))
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,15 +40,12 @@ y_players <-
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-        uri <-
-            .uri_gen_func(
-                league_id = league_id,
-                resource = resource,
-                subresource = subresource,
-                start = start,
-                number_of_players = number_of_players, ...)
-
-        if(debug){print(uri)}
+        uri <- httr::modify_url(
+            url = "https://fantasysports.yahooapis.com",
+            path = glue::glue("fantasy/v2","players;player_keys={players}/stats", .sep = "/"),
+            param = glue::glue("type=date", "date={game_date}", .sep = ";"),
+            query = "format=json"
+        )
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,38 +63,51 @@ y_players <-
 
 
         r_parsed <-
-            purrr::map(r, .y_parse_response, "fantasy_content", resource, 2, subresource)
+            purrr::map(r, .y_parse_response, "fantasy_content", "players")
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                PARSE CONTENT                             ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+        #........................preprocess list.........................
+
+
+        preprocess <-
+            r_parsed %>%
+            purrr::map(purrr::keep, purrr::is_list) %>%
+            purrr::map(purrr::compact) %>%
+            purrr::map_depth(2, purrr::pluck, "player")
+
+
+        #..........................player_info...........................
+
+
+        player_info <-
+            preprocess %>%
+            purrr::map_depth(2, purrr::pluck, 1) %>%
+            purrr::map_df(purrr::map_df, .player_parse_fn, .id = "week_day")
+
+
+        #..........................player_stats..........................
+
+
+        stats <-
+            preprocess %>%
+            purrr::map_df(purrr::map_df, .player_stats_parse)
+
+
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                      DF                                  ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if(!debug){
 
+        if (!debug) {
             df <-
-                r_parsed %>%
-                purrr::flatten() %>%
-                purrr::map(.player_parse_fn) %>%
-                # add in rank column which is not included in the response
-                purrr::set_names(nm = seq_along(.)) %>%
-                purrr::imap(~purrr::prepend(.x, list("rank" = .y))) %>%
-                purrr::map_df(dplyr::bind_cols)
-
-            #....................remove duplicate players....................
-
-            df <-
-                df %>%
-                dplyr::group_by(player_id) %>%
-                dplyr::slice_head(n = 1) %>%
-                dplyr::ungroup()
+                dplyr::bind_cols(player_info, stats)
 
             return(df)
-
         }
 
 
@@ -124,4 +126,5 @@ y_players <-
 
         return(data_list)
 
-    })
+
+    }

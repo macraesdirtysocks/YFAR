@@ -1,18 +1,24 @@
 #' Retrieve the full slate of players for provided league id
 #'
-#' This function is not intented to get a subset of players, i.e. top 100 players.
+#' This function is not intended to get a subset of players, i.e. top 100 players.
 #' Use `y_players()` for that case.
 #'
-#' @param league_id league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
+#' Note: this function uses janitor::make_clean_names and as a result is a bit slow.
+#'
+#' @param league_id League id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
 #' @param token_name Assigned object name used when creating token with `y_create_token()`.
 #' @param debug Print uri and page counts to console as functions runs.  Useful for debugging.
-#' @param ... Arguments sort and status passed onto internal .uri_gen_func.
+#' @param ... URI filter arguments passed onto internal .uri_gen_func.
 #'
 #'
-#' @return A list
+#' @return A tibble
 #' @export
 y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE, ...) {
-    #.......................function arguments.......................
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                  ARGUMENTS                               ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
     api_token <- token_name
@@ -54,11 +60,12 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
                 start = page_start,
                 number_of_players = 25,
                 resp_len = 25,
-                resource,
-                league_id,
-                subresource,
+                league_id = league_id,
+                resource = resource,
+                subresource = subresource,
                 ...
             )
+
 
         resp_list$uri <-
             append(resp_list$uri, uri, after = length(resp_list$uri))
@@ -94,13 +101,20 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
 
         if (identical(httr::status_code(r), 200L)) {
+
+            #..........................get content...........................
+
             r_parsed <-
-                .y_parse_response(r, "fantasy_content", resource, 2)
+                .y_parse_response(r, "fantasy_content", resource, 2, subresource)
+
+            # assign response to list element with corresponding page start
 
             resp_list[["resp_200"]][[as.character(page_start)]] <-
                 r_parsed
 
-            count <- purrr::pluck(r_parsed, "players", "count")
+            #..........................update count..........................
+
+            count <- length(r_parsed)
 
             if (debug) {
                 print(count)
@@ -116,8 +130,12 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
             # loop will terminate
 
         } else {
+            # assign response to list element with corresponding page start
             resp_list[["resp_error"]] <-
                 append(resp_list[["resp_error"]], page_start)
+
+            #..........................update count..........................
+
             count <- 25
 
         }
@@ -135,17 +153,17 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
 
     # If there is an error in a response it will prevent the
-    # function from retrieving the entrire 25 player block in the response.
-    # Often it is a single element producing the error so the pages that produce
-    # errors get added to resp_list$resp_error.  Then the error pages are sequenced out by 1
-    # so only the one element producing the error is omitted.
+    # function from retrieving the entire 25 player block in the response.  This creates
+    # a 25 player gap in the player slate when often it is a single element producing the error.
+    # The pages that produce errors get added to resp_list$resp_error.  Then the error pages
+    # are sequenced out by 1 so only the one element producing the error is omitted.
 
     # example: page beginning at 25 returns response code 400. This means players in the
     # response would be 25:49 and they will be missing from the player slate.  25
     # is added to resp_list$resp_error and eventually sequenced out 25:49 and a GET request
     # is generated for each of them in order to flesh out which number is producing the error.
 
-    # This can be seen in the uri construction param count=1 vs count=25 above.
+    # This can be seen in the uri construction param resp_len=1 vs resp_len=25.
 
 
     #......................sequence error pages......................
@@ -170,11 +188,12 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
         purrr::map(
             error_pages,
             .uri_gen_func,
+            start = error_pages,
             number_of_players = 25,
             resp_len = 1,
-            "league",
-            "411.l.1245",
-            "players",
+            league_id = league_id,
+            resource = resource,
+            subresource = subresource,
             ...
         ) %>%
         purrr::flatten_chr()
@@ -206,7 +225,8 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
                    .y_parse_response,
                    "fantasy_content",
                    resource,
-                   2) %>%
+                   2,
+                   subresource) %>%
         append(resp_list[["resp_200"]], ., after = length(resp_list[["resp_200"]]) +
                    1)
 
@@ -214,7 +234,17 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
     #...............................df...............................
 
 
-    df <- purrr::map_df(resp_list$resp_200, .player_parse_fn)
+    if(!debug){
+
+        cat("parsing", length(resp_list$resp_200), "responses", "\n")
+
+        df <-
+            resp_list$resp_200 %>%
+            purrr::flatten() %>%
+            purrr::map_df(.player_parse_fn)
+
+        return(df)
+    }
 
 
     #.............................return.............................
@@ -224,8 +254,7 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
             list(
                 content = resp_list$resp_200,
                 uri = resp_list$uri,
-                error_pages = resp_list$resp_error,
-                df = df
+                error_pages = resp_list$resp_error
             ),
             class = "yahoo_fantasy_api"
         )

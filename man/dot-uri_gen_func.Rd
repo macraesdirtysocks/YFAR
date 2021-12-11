@@ -5,32 +5,29 @@
 \title{Generate uris.  Arugments are passed on to `httr::modify_url()`.}
 \usage{
 .uri_gen_func(
-  number_of_players = 100,
-  start = 0,
   resp_len = 25,
-  resource,
   league_id,
+  resource,
   subresource,
-  status = "ALL",
-  sort = "OR"
+  start,
+  number_of_players,
+  ...
 )
 }
 \arguments{
-\item{number_of_players}{number of players}
-
-\item{start}{where to start the uris i.e. 50}
-
 \item{resp_len}{length of each response with a max of 25}
-
-\item{resource}{resource from the api to be called}
 
 \item{league_id}{league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.}
 
+\item{resource}{resource from the api to be called}
+
 \item{subresource}{subresource from the api to be called, takes a vector if more than one subresource}
 
-\item{status}{status of players to return ("ALL", "A", "FA", "T", "W", "K")}
+\item{start}{Return start number}
 
-\item{sort}{sort order of the players to return (stat_id, "OR", "AR", "PTS", "NAME(last, first)")}
+\item{number_of_players}{Count of players to return}
+
+\item{...}{api filter parameters}
 }
 \value{
 a vector of strings

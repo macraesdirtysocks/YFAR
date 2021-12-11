@@ -4,15 +4,17 @@
 \alias{y_draft_results}
 \title{Get draft results}
 \usage{
-y_draft_results(league_id = NULL, token_name = NULL)
+y_draft_results(id = NULL, token_name = NULL, debug = FALSE)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{id}{League id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
 
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
+
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
-a list
+a list or tibble
 }
 \description{
 Get draft results

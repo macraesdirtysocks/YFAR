@@ -4,12 +4,24 @@
 \alias{y_transactions}
 \title{Get transaction data from Yahoo! Fantasy API}
 \usage{
-y_transactions(id = NULL, token_name = NULL)
+y_transactions(
+  id = NULL,
+  token_name = NULL,
+  count = NULL,
+  transaction_type = NULL,
+  debug = FALSE
+)
 }
 \arguments{
 \item{id}{league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
 
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
+
+\item{count}{Number of transactions to return.}
+
+\item{transaction_type}{Filter argument for request.  Accepts 1 of "commish", "add", "drop", "trade".}
+
+\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
 a list

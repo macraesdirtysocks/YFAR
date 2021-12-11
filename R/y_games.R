@@ -7,16 +7,32 @@
 #' Function is memoised
 #'
 #' @param token_name Assigned object name used when creating token with y_create_token().
+#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
 #'
-#' @return a list
+#' @return a tibble
 #' @export
-y_games <- memoise::memoise(function(token_name = NULL) {
+y_games <- memoise::memoise(function(token_name = NULL, debug = FALSE) {
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                  ARGUMENTS                               ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     resource <- "users"
     subresource1 <- "games"
     subresource2 <- "leagues"
-
     api_token <- token_name
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    CHECKS                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    .token_check(token_name, api_token, name = .GlobalEnv)
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                     URI                                  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
     uri <-
         httr::modify_url(
@@ -26,14 +42,27 @@ y_games <- memoise::memoise(function(token_name = NULL) {
             query = "format=json"
         )
 
-    .token_check(token_name, api_token, name = .GlobalEnv)
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                GET RESPONSE                              ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
     r <-
         .y_get_response(uri, api_token)
 
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                   CONTENT                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
     r_parsed <-
         .y_parse_response(r, "fantasy_content", "users", "0", "user", 2, "games")
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                PARSE CONTENT                             ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     df <-
         r_parsed %>%
@@ -62,6 +91,12 @@ y_games <- memoise::memoise(function(token_name = NULL) {
         purrr::map_df(dplyr::bind_cols) %>%
         dplyr::relocate(c(league_key, league_id), .after = "meta_type") %>%
         dplyr::filter(meta_name == "Hockey")
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    RETURN                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    if(!debug){return(df)}
 
     data_list <-
         structure(

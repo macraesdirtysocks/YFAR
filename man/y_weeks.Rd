@@ -4,13 +4,15 @@
 \alias{y_weeks}
 \title{Title}
 \usage{
-y_weeks(game_id = NULL, token_name = NULL)
+y_weeks(game_id = NULL, token_name = NULL, debug = FALSE)
 }
 \arguments{
 \item{game_id}{a 3 or 4 digit integer.  It is the first 3 digits of league_id.
 Can be found with y_games().}
 
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
+
+\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
 a list

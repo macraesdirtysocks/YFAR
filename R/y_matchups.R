@@ -10,7 +10,7 @@
 #' @param team_id as a string in the form "000.l.0000.t.00".  Team id can be found with y_teams().
 #' @param token_name assigned object name used when creating token with y_create_token().
 #' @param week the week of fantasy season to return. Default NULL will return all weeks of season.
-#' @param debug Print uri and page counts to console as functions runs.  Useful for debugging.
+#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
 #'
 #' @return a tibble if debug = FALSE or a list if debug = TRUE
 #' @export
@@ -104,22 +104,19 @@ y_matchups <-
             purrr::pluck(2, "matchups") %>%
             purrr::keep(purrr::is_list) %>%
             purrr::map(purrr::pluck, "matchup", "stat_winners") %>%
-            purrr::map_depth(2, purrr::pluck, "stat_winner") %>%
-            purrr::map_depth(2,
-                             purrr::map_if,
-                             purrr::negate(is.character),
-                             as.character) %>%
-            purrr::map_depth(2, dplyr::bind_rows) %>%
-            purrr::map(dplyr::bind_rows) %>%
-            purrr::set_names(nm = seq_along(.)) %>%
-            purrr::map_if(
-                purrr::negate(purrr::is_empty),
+            # weeks that have not occured will return NA, compact gets rid of them
+            purrr::compact() %>%
+            purrr::map(purrr::flatten_df) %>%
+            # convert stat id numbers to display name i.e. stat 1 = G
+            purrr::map(dplyr::left_join, .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+            purrr::map(dplyr::select, display_name, winner_team_key) %>%
+            purrr::map(
                 tidyr::pivot_wider,
-                id_cols = stat_id,
-                names_from = stat_id,
-                values_from = 2,
-                names_glue = "stat_id_{ stat_id }_winner"
+                id_cols = display_name,
+                names_from = display_name,
+                values_from = winner_team_key
             ) %>%
+            purrr::set_names(nm = seq_along(.)) %>%
             dplyr::bind_rows(.id = "matchup_num")
 
 
@@ -152,27 +149,25 @@ y_matchups <-
             r_parsed %>%
             purrr::pluck(2, "matchups") %>%
             purrr::keep(purrr::is_list) %>%
-            purrr::map(purrr::pluck, "matchup", "0") %>%
-            purrr::map(purrr::pluck, "teams") %>%
+            purrr::map(purrr::pluck, "matchup", "0", "teams") %>%
             purrr::map(purrr::keep, purrr::is_list) %>%
             purrr::map_depth(2, purrr::pluck, "team", 2, "team_stats", "stats") %>%
             purrr::map_depth(3, purrr::pluck, "stat") %>%
+            purrr::map_depth(3, purrr::flatten_df) %>%
             purrr::map_depth(2, dplyr::bind_rows) %>%
+            # # convert stat id numbers to display name i.e. stat 1 = G
+            purrr::map_depth(2, dplyr::left_join, .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+            purrr::map_depth(2, dplyr::select, display_name, value) %>%
             purrr::map_depth(
                 2,
                 tidyr::pivot_wider,
-                id_cols = stat_id,
-                names_from = stat_id,
-                values_from = value,
-                names_glue = "stat_id_{ stat_id }"
+                id_cols = display_name,
+                names_from = display_name,
+                values_from = value
             ) %>%
-            purrr::map_depth(2,
-                             purrr::map_if,
-                             purrr::negate(is.character),
-                             as.character) %>%
-            purrr::map(dplyr::bind_rows) %>%
             purrr::set_names(nm = seq_along(.)) %>%
-            dplyr::bind_rows() %>%
+            purrr::map(dplyr::bind_rows, .id = "team_num") %>%
+            dplyr::bind_rows(.id = "matchup_num") %>%
             dplyr::mutate(dplyr::across(.cols = dplyr::everything(), as.numeric))
 
 
@@ -231,6 +226,8 @@ y_matchups <-
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+        if(!debug){return(df)}
+
         data_list <-
             structure(list(
                 content = r_parsed,
@@ -240,8 +237,6 @@ y_matchups <-
             ),
             class = "yahoo_fantasy_api")
 
-        if(debug){return(data_list)}
-
-        return(df)
+        return(data_list)
 
     }

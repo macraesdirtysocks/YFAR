@@ -4,13 +4,15 @@
 \alias{y_games}
 \title{Get all Yahoo! Fantasy hockey meta data.}
 \usage{
-y_games(token_name = NULL)
+y_games(token_name = NULL, debug = FALSE)
 }
 \arguments{
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
+
+\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
-a list
+a tibble
 }
 \description{
 Returns a tibble containing all the meta data for all fantasy hockey

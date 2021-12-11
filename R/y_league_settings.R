@@ -5,10 +5,11 @@
 #'
 #' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
 #' @param token_name Assigned object name used when creating token with y_create_token().
+#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
 #'
 #' @return a list
 #' @export
-y_league_settings <- function(league_id = NULL, token_name = NULL){
+y_league_settings <- function(league_id = NULL, token_name = NULL, debug = FALSE){
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
@@ -78,6 +79,8 @@ y_league_settings <- function(league_id = NULL, token_name = NULL){
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                    RETURN                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    if(!debug){return(df)}
 
     data_list <-
         structure(

@@ -7,18 +7,21 @@
 y_player_slate(league_id, token_name, debug = FALSE, ...)
 }
 \arguments{
-\item{league_id}{league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.}
+\item{league_id}{League id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.}
 
 \item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
 
 \item{debug}{Print uri and page counts to console as functions runs.  Useful for debugging.}
 
-\item{...}{Arguments sort and status passed onto internal .uri_gen_func.}
+\item{...}{URI filter arguments passed onto internal .uri_gen_func.}
 }
 \value{
-A list
+A tibble
 }
 \description{
-This function is not intented to get a subset of players, i.e. top 100 players.
+This function is not intended to get a subset of players, i.e. top 100 players.
 Use `y_players()` for that case.
+}
+\details{
+Note: this function uses janitor::make_clean_names and as a result is a bit slow.
 }

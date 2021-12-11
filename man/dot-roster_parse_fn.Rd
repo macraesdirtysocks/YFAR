@@ -4,10 +4,12 @@
 \alias{.roster_parse_fn}
 \title{parse return from roster resource}
 \usage{
-.roster_parse_fn(x)
+.roster_parse_fn(x, ...)
 }
 \arguments{
 \item{x}{list passed on from .roster_resource_fn}
+
+\item{...}{arguments passed on to purrr::pluck}
 }
 \description{
 helper function called by y_rosters.  this function calls .player_parse_fn helper.

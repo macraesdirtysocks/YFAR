@@ -29,7 +29,9 @@ Imports:
     tibble,
     rlang,
     magrittr,
-    glue (>= 1.4.2)
+    glue (>= 1.4.2),
+    lubridate,
+    kableExtra
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
 Remotes: 

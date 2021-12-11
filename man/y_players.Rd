@@ -9,6 +9,7 @@ y_players(
   token_name = NULL,
   start = 0,
   number_of_players = 100,
+  debug = FALSE,
   ...
 )
 }
@@ -17,14 +18,16 @@ y_players(
 
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 
-\item{start}{Return start number}
+\item{start}{Where to start the uris i.e. 50}
 
-\item{number_of_players}{Count of players to return}
+\item{number_of_players}{Number of players}
 
-\item{...}{arguments sort and status passed onto internal .uri_gen_func}
+\item{debug}{Returns a list of data uri call and content.  Useful for debugging.}
+
+\item{...}{URI filter arguments (as characters) passed onto internal .uri_gen_func.}
 }
 \value{
-a list
+a list or tibble
 }
 \description{
 This function is not intended to get all players in a league.  To get all players in your league use the

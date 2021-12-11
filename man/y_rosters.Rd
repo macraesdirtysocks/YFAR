@@ -4,14 +4,16 @@
 \alias{y_rosters}
 \title{Get roster data for a Yahoo Fantasy League.}
 \usage{
-y_rosters(id = NULL, token_name = NULL, date = NULL)
+y_rosters(id = NULL, token_name = NULL, date = NULL, debug = FALSE)
 }
 \arguments{
-\item{id}{league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
+\item{id}{League id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
 
-\item{token_name}{assigned object name used when creating token with `y_create_token()`.}
+\item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
 
-\item{date}{date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.}
+\item{date}{Date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.}
+
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
 a list

@@ -4,7 +4,7 @@
 \alias{y_team_stats}
 \title{Get team level stats for scoring categories}
 \usage{
-y_team_stats(id = NULL, token_name = NULL, week = "current")
+y_team_stats(id = NULL, token_name = NULL, week = "current", debug = FALSE)
 }
 \arguments{
 \item{id}{league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
@@ -13,6 +13,8 @@ y_team_stats(id = NULL, token_name = NULL, week = "current")
 
 \item{week}{week of fantasy season to return.  Accepts 3 arguments `current`, `NULL`, `a number`.
 `current` by default returns current week, null returns aggregated season stats, number returns stats for that week.}
+
+\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
 a list

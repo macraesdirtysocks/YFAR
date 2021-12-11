@@ -13,7 +13,7 @@ y_matchups(team_id = NULL, token_name = NULL, week = NULL, debug = FALSE)
 
 \item{week}{the week of fantasy season to return. Default NULL will return all weeks of season.}
 
-\item{debug}{Print uri and page counts to console as functions runs.  Useful for debugging.}
+\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
 a tibble if debug = FALSE or a list if debug = TRUE

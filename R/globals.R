@@ -16,6 +16,8 @@ utils::globalVariables(
         "timestamp",
         "start",
         "end",
-        "type"
+        "type",
+        "display_name",
+        "winner_team_key"
     )
 )

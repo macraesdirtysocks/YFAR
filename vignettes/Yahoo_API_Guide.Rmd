@@ -1,18 +1,12 @@
 ---
 title: "Yahoo_API_Guide"
-output: 
-  prettydoc::html_pretty:
-    theme: cayman
+output:
+  github_document:
 vignette: >
   %\VignetteIndexEntry{Yahoo_API_Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-```{r, echo = FALSE, include = FALSE}
-library(kableExtra)
-library(prettydoc)
-```
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -187,8 +181,7 @@ mlb_game_ID = c(12,39,74,98,113,147,171,195,215,238,268,253),
 pmlb_game_ID = c("--",44,73,99,114,148,172,196,216,"--","--","--"), 
 nba_game_ID = c(16,67,95,112,131,165,187,211,234,249,304,265), 
 nhl_game_ID = c(15,64,94,111,130,164,186,210,233,248,303,263)
-) %>% 
-  knitr::kable(align = "r")
+)
 ```
 
 ### HTTP Operations Supported
@@ -257,13 +250,7 @@ Sample = c(
   "NFL position types: http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/position_types",
   "NFL roster positions: http://fantasysports.yahooapis.com/fantasy/v2/game/nfl/roster_positions"
 )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em") %>% 
-  column_spec(4, bold = TRUE, width = "30em")
+)
 ```
 
 ### Sample XML
@@ -316,12 +303,7 @@ Sample = c(
 "all games for user: http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games",
 "nfl and mlb games for user: http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=nfl,mlb"
 )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
+)
 ```
 
 Any sub-resource valid for a game is a valid sub-resource under the games collection.
@@ -365,12 +347,7 @@ data.frame(
   Sample = c(
     "all teams for user: http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/teams"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "20em") %>%
-  column_spec(2, bold = TRUE, width = "40em") %>% 
-  column_spec(3, bold = TRUE, width = "40em")
+)
 ```
 
 ## League resource
@@ -460,13 +437,7 @@ data.frame(
     "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/draftresults",
     "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/transactions"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
-  
+)
 ```
 
 
@@ -527,11 +498,7 @@ data.frame(
   Sample = c(
     "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=223.l.431"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em")
+)
 ```
 
 
@@ -597,7 +564,7 @@ Multiple sub-resources can be extracted from team in the same URI using a format
 ### Sub-resources
 
 *Default sub-resource: metadata*
-```{r}
+```{r, }
 data.frame(
   Name = c(
     "metadata",
@@ -634,14 +601,7 @@ data.frame(
     "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/draftresults",
     "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/matchups;weeks=1,3,6"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em") %>% 
-  column_spec(4, bold = TRUE, width = "30em")
-
+)
 ```
 
 
@@ -1023,13 +983,7 @@ data.frame(
   Sample = c(
     "http://fantasysports.yahooapis.com/fantasy/v2/team/223.l.431.t.9/roster/players"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em") %>% 
-  column_spec(4, bold = TRUE, width = "30em")
+)
 ```
 
 ### Sample XML
@@ -1972,13 +1926,7 @@ data.frame(
     "The percentage of leagues in which Drew Brees was owned in the 2009 game: http://fantasysports.yahooapis.com/fantasy/v2/player/223.p.5479/percent_owned",
     "Yahoo! fantasy draft information for Drew Brees in 2009: http://fantasysports.yahooapis.com/fantasy/v2/player/223.p.5479/draft_analysis"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em") %>% 
-  column_spec(4, bold = TRUE, width = "30em")
+)
 ```
 
 
@@ -2198,12 +2146,7 @@ data.frame(
     "http://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=223.l.431.t.1,223.l.431.t.2/players",
     "http://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=223.p.5479,223.p.1025"
     )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
+)
 ```
 
 
@@ -2272,12 +2215,7 @@ data.frame(
     "/players;count=5"
     
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
+)
 ```
 
 ## Transaction resource
@@ -2627,12 +2565,7 @@ data.frame(
     "http://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=223.l.431,223.l.21821/transactions",
     "http://fantasysports.yahooapis.com/fantasy/v2/league/223.l.431/transactions;types=waiver,pending_trade;team_key=223.l.431.t.1"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
+)
 ```
 
 Any sub-resource valid for a transaction is a valid sub-resource under the transactions collection.
@@ -2685,12 +2618,7 @@ data.frame(
     "You can only use these options when also providing the team_key, ie /transactions;team_key=257.l.193.t.1;type=waiver",
     "/transactions;count=5"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
+)
 ```
 
 
@@ -2883,13 +2811,7 @@ data.frame(
     "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=223/leagues",
     "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=223/teams"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em") %>% 
-  column_spec(4, bold = TRUE, width = "30em")
+)
 ```
 
 ## Users collection
@@ -2919,12 +2841,7 @@ data.frame(
   Sample = c(
     "http://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1"
   )
-) %>% 
-  knitr::kable() %>% 
-  kable_styling(font_size = 8) %>% 
-  column_spec(1, bold = TRUE, width = "30em") %>%
-  column_spec(2, bold = TRUE, width = "30em") %>% 
-  column_spec(3, bold = TRUE, width = "30em")
+)
 ```
 
 Any sub-resource valid for a user is a valid sub-resource under the users collection.

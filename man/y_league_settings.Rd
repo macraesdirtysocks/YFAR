@@ -4,12 +4,14 @@
 \alias{y_league_settings}
 \title{Get specific league settings from Yahoo! Fantasy API.}
 \usage{
-y_league_settings(league_id = NULL, token_name = NULL)
+y_league_settings(league_id = NULL, token_name = NULL, debug = FALSE)
 }
 \arguments{
 \item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
 
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
+
+\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
 a list
