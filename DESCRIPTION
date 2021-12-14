@@ -31,7 +31,7 @@ Imports:
     magrittr,
     glue (>= 1.4.2),
     lubridate,
-    kableExtra
+    progress
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
 Remotes: 

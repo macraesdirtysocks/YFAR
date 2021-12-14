@@ -861,13 +861,13 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .player_parse_fn <- function(x) {
 
-        df <-
-            x %>%
-            purrr::keep(purrr::is_list) %>%
-            purrr::compact() %>%
-            purrr::map(unlist, recursive = TRUE) %>%
-            purrr::map( ~ purrr::set_names(.x, janitor::make_clean_names(names(.x)))) %>%
-            purrr::flatten_df()
+    df <-
+        x %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::compact() %>%
+        purrr::map(unlist, recursive = TRUE) %>%
+        purrr::map(~ purrr::set_names(.x, janitor::make_clean_names(names(.x)))) %>%
+        purrr::flatten_df()
 
         return(df)
 

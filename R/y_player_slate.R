@@ -236,12 +236,20 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
     if(!debug){
 
-        cat("parsing", length(resp_list$resp_200), "responses", "\n")
+        player_list <- resp_list$resp_200 %>% purrr::flatten()
+
+        cat("parsing", length(resp_list$resp_200), "responses...", "\n")
+
+        pb <- progress::progress_bar$new(total = length(player_list))
+
+        player_parse <- function(x){
+            pb$tick()
+            df <- .player_parse_fn(x)
+            return(df)
+        }
 
         df <-
-            resp_list$resp_200 %>%
-            purrr::flatten() %>%
-            purrr::map_df(.player_parse_fn)
+            purrr::map_df(player_list, player_parse)
 
         return(df)
     }

@@ -4,21 +4,26 @@
 \alias{y_rosters}
 \title{Get roster data for a Yahoo Fantasy League.}
 \usage{
-y_rosters(id = NULL, token_name = NULL, date = NULL, debug = FALSE)
+y_rosters(id = NULL, token_name = NULL, game_date = NULL, debug = FALSE)
 }
 \arguments{
 \item{id}{League id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
 
 \item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
 
-\item{date}{Date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.}
+\item{game_date}{Date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.}
 
 \item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
-a list
+a list or tibble
 }
 \description{
 Supply a team or league id to the function to retrieve roster data.  If a date
 is supplied the roster data for that date will be returned.
+}
+\details{
+Function accepts a vector of dates and can be mapped over for multiple teams
+
+Function is memoised
 }
