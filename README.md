@@ -19,8 +19,7 @@ You will notice this in some of the uri’s as `use_login=1`.
 
 ## Installation
 
-You can fork YFAR from github repo
-[YFAR](https://github.com/macraesdirtysocks/YFAR) with:
+devtools::install\_github(“<https://github.com/macraesdirtysocks/YFAR>”)
 
 The Yahoo Fantasy API uses Oauth2.0 for authentication. This means to
 use the functions in this package you will need a client id and client
@@ -79,13 +78,3 @@ your token to get the data:
 Returns a tibble with the data about the teams in the league.
 
 `teams_in_my_league <- y_teams(league_id, my_token)`
-
-## Known limitations, issues and future work
-
-1.  Incompatible data types when binding rows. Errors in the api result
-    in incompatible data types for binding rows. Right now the easiest
-    was to solve this problem is to convert all columns to data type
-    character.  
-    It would be nice to keep proper data types.
-    
-    `Error: "Can't combine <integer> and <character>"`

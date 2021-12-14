@@ -236,9 +236,9 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
     if(!debug){
 
-        player_list <- resp_list$resp_200 %>% purrr::flatten()
-
         cat("parsing", length(resp_list$resp_200), "responses...", "\n")
+
+        player_list <- resp_list$resp_200 %>% purrr::flatten()
 
         pb <- progress::progress_bar$new(total = length(player_list))
 
