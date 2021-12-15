@@ -4,12 +4,10 @@
 \alias{.team_meta_func}
 \title{team_meta_data}
 \usage{
-.team_meta_func(x, ...)
+.team_meta_func(x)
 }
 \arguments{
 \item{x}{parsed content from response object}
-
-\item{...}{arguments passed onto purrr::pluck}
 }
 \description{
 helper function called by y_ functions to parse team meta data

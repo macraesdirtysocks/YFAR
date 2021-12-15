@@ -10,6 +10,6 @@
 \item{x}{parsed content from response object}
 }
 \description{
-helper function called by y_standings to parse team standings response
+helper function called by y_matchups to parse team standings response
 }
 \keyword{internal}

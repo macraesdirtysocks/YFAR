@@ -52,8 +52,8 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
     count <- 25
 
     while (count == 25) {
-        #..............................uri...............................
 
+        #..............................uri...............................
 
         uri <-
             .uri_gen_func(

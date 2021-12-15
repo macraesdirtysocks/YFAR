@@ -37,9 +37,11 @@ y_transactions <- function(id = NULL, token_name = NULL, count = NULL, transacti
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-    params <- list(
-        glue::glue("count={count}"),
-        glue::glue("type={transaction_type}")) %>%
+    params <-
+        list(
+            glue::glue("count={count}"),
+            glue::glue("type={transaction_type}")
+            ) %>%
         purrr::flatten_chr() %>%
         glue::glue_collapse(sep = ";")
 

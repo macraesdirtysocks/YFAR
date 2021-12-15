@@ -590,59 +590,24 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-#....................TEAM META DATA FUNCTION.....................
-
-
 #' team_meta_data
 #'
 #' helper function called by y_ functions to parse team meta data
 #'
 #' @param x parsed content from response object
-#' @param ... arguments passed onto purrr::pluck
 #'
 #' @keywords internal
-.team_meta_func <- function(x, ...) {
-        team_info <-
-            x %>%
-            purrr::pluck(...) %>%
-            purrr::compact() %>%
-            purrr::flatten() %>%
-            purrr::discard(purrr::is_list) %>%
-            purrr::modify(as.character) %>%
-            dplyr::bind_rows() %>%
-            tidyr::nest(team_info = -c(team_key, team_id, name))
+.team_meta_func <- function(x) {
 
-        team_logo <-
-            x %>%
-            purrr::pluck(...) %>%
-            purrr::compact() %>%
-            purrr::flatten() %>%
-            purrr::pluck("team_logos") %>%
-            rlang::squash() %>%
-            dplyr::bind_rows() %>%
-            tidyr::nest(team_logo = dplyr::everything())
-
-        roster_adds <-
-            x %>%
-            purrr::pluck(...) %>%
-            purrr::compact() %>%
-            purrr::flatten() %>%
-            purrr::pluck("roster_adds") %>%
-            rlang::squash() %>%
-            dplyr::bind_rows() %>%
-            tidyr::nest(roster_adds = dplyr::everything())
-
-        managers <-
-            x %>%
-            purrr::pluck(...) %>%
-            purrr::compact() %>%
-            purrr::flatten() %>%
-            purrr::pluck("managers", 1, "manager") %>%
-            rlang::squash() %>%
-            dplyr::bind_rows() %>%
-            tidyr::nest(manager_info = dplyr::everything())
-
-        df <- dplyr::bind_cols(team_info, team_logo, roster_adds, managers)
+    df <-
+        x %>%
+        purrr::pluck("team", 1) %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::compact() %>%
+        purrr::map_depth(1, unlist, recursive = TRUE) %>%
+        purrr::map_depth(2, as.character) %>%
+        purrr::map(~ purrr::set_names(.x, janitor::make_clean_names(names(.x)))) %>%
+        purrr::flatten_df()
 
     return(df)
 }
@@ -661,58 +626,47 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 #' stats_data_func
 #'
-#' helper function called by y_standings to parse team standings response
+#' helper function called by y_matchups to parse team standings response
 #'
 #' @param x parsed content from response object
 #'
 #' @keywords internal
 .stats_data_func <- function(x) {
 
+    team_name <-
+        x %>%
+        purrr::pluck("team", 1) %>%
+        magrittr::extract(1:3) %>%
+        purrr::flatten_df()
+
     stats_count <-
         x %>%
-        purrr::pluck(2, "team_stats", "stats") %>%
-        purrr::flatten() %>%
-        purrr::modify_depth(2, as.character) %>%
+        purrr::pluck("team", 2, "team_stats", "stats") %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::map(purrr::pluck, "stat") %>%
+        purrr::map_depth(3, as.character) %>%
         purrr::map_df(purrr::flatten_df) %>%
-        tidyr::nest(stat_count = dplyr::everything())
+        # # convert stat id numbers to display name i.e. stat 1 = G
+        dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+        dplyr::select(display_name, value) %>%
+        tidyr::pivot_wider(names_from = display_name,
+                           values_from = value,
+                           names_prefix = "count_"
+                           )
 
     team_points <-
         x %>%
-        purrr::pluck(2, "team_points") %>%
-        purrr::modify_depth(1, as.character) %>%
+        purrr::pluck("team", 2, "team_points") %>%
+        magrittr::extract("total") %>%
+        purrr::set_names("point_total") %>%
+        purrr::map_df(as.character)
+
+    team_remaining_games <-
+        x %>%
+        purrr::pluck("team", 2, "team_remaining_games", "total") %>%
         purrr::flatten_df()
 
-    team_standings <-
-        x %>%
-        purrr::pluck(3, "team_standings") %>%
-        purrr::discard(purrr::is_list) %>%
-        purrr::modify_depth(1, as.character) %>%
-        purrr::flatten_df()
-
-    outcome_totals <-
-        x %>%
-        purrr::pluck(3, "team_standings", "outcome_totals") %>%
-        purrr::modify_depth(1, as.character) %>%
-        purrr::flatten_df() %>%
-        tidyr::nest(outcome_totals = dplyr::everything())
-
-    divison_outcome_totals <-
-        x %>%
-        purrr::pluck(3, "team_standings", "divisional_outcome_totals") %>%
-        purrr::modify_depth(1, as.character) %>%
-        purrr::flatten_df() %>%
-        tidyr::nest(divisonal_outcome_totals = dplyr::everything())
-
-    df <-
-        dplyr::bind_cols(
-            stats_count,
-            team_points,
-            team_standings,
-            outcome_totals,
-            divison_outcome_totals
-        )
-
-    return(df)
+    df <- dplyr::bind_cols(team_name, team_points, team_remaining_games, stats_count)
 
 }
 
@@ -949,6 +903,56 @@ return(stats)
         dplyr::bind_cols(transaction_meta, players)
 
     return(df)
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                                MATCHUP PARSE                             ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' Parse matchup subresource
+#'
+#' Called by y_matchups
+#'
+#' @param x input
+#'
+#' @return a tibble or list
+#' @keywords internal
+.matchup_parse_fn <- function(x) {
+
+    matchup_meta <-
+        x %>%
+        purrr::keep(purrr::is_atomic) %>%
+        purrr::map(as.character) %>%
+        dplyr::bind_cols()
+
+    stat_winners <-
+        x %>%
+        purrr::pluck("stat_winners") %>%
+        purrr::flatten_df() %>%
+        ##convert stat id numbers to display name i.e. stat 1 = G
+        dplyr::left_join(.yahoo_hockey_stat_categories(), by = "stat_id") %>%
+        dplyr::select(display_name, winner_team_key) %>%
+        tidyr::pivot_wider(names_from = display_name,
+                           values_from = winner_team_key,
+                           names_prefix = "winner_")
+
+    matchup_team_data <-
+        x %>%
+        purrr::pluck("0", "teams") %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::map(.stats_data_func) %>%
+        dplyr::bind_rows()
+
+    df <-
+        dplyr::bind_cols(matchup_meta, stat_winners, matchup_team_data)
+
+    return(df)
+
 }
 
 
