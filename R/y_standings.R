@@ -66,81 +66,76 @@ y_standings <- function(league_id = NULL, token_name = NULL, debug = FALSE) {
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                  EMPTY LIST                              ----
+    ##                                PARSE FUNCTION                            ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    standings_list <- list(
-        team_meta = NULL,
-        team_points = NULL,
-        team_standings = NULL,
-        outcomes = NULL
-    )
+    standings_parse <- function(x){
 
+        team_meta <-
+            x %>%
+            purrr::pluck(1) %>%
+            magrittr::extract(1:3) %>%
+            purrr::flatten_df()
 
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                PARSE CONTENT                             ----
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        team_stats <-
+            x %>%
+            purrr::pluck(2, "team_stats", "stats") %>%
+            purrr::flatten_df() %>%
+            dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+            dplyr::select("display_name", "value") %>%
+            tidyr::pivot_wider(
+                id_cols = display_name,
+                names_from = display_name,
+                values_from = value)
 
+        team_points <-
+            x %>%
+            purrr::pluck(2, "team_points") %>%
+            purrr::flatten_df()
 
-    #............................TEAM META...........................
+        standings <-
+            x %>%
+            purrr::pluck(3, "team_standings") %>%
+            purrr::keep(purrr::negate(purrr::is_list)) %>%
+            dplyr::bind_cols()
 
-    standings_list$team_meta <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, 1) %>%
-        purrr::map(magrittr::extract, 1:3) %>%
-        purrr::map_df(dplyr::bind_cols)
+        outcomes <-
+            x %>%
+            purrr::pluck(3, "team_standings", "outcome_totals") %>%
+            dplyr::bind_cols()
 
+        df <- dplyr::bind_cols(team_meta, team_points, standings, outcomes, team_stats)
 
-    #..........................TEAM POINTS...........................
+        return(df)
 
-
-    standings_list$team_points <-
-        r_parsed %>%
-        purrr::map_df(purrr::pluck, 2, "team_points")
-
-
-    #.........................TEAM STANDINGS.........................
-
-
-    standings_list$team_standings <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, 3, "team_standings") %>%
-        purrr::map_df(purrr::keep, purrr::negate(purrr::is_list))
-
-
-    #............................OUTCOMES............................
-
-
-    standings_list$outcomes <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, 3, "team_standings") %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::map(unlist) %>%
-        purrr::map_depth(2, as.character, .ragged = TRUE) %>%
-        purrr::map_df(dplyr::bind_rows)
+    }
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                      DF                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    if(!debug){
 
     df <-
-        purrr::reduce(standings_list, dplyr::bind_cols)
+        purrr::map_df(r_parsed, standings_parse)
+
+    return(df)
+
+    }
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                    RETURN                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    if(!debug){return(df)}
 
     data_list <-
         structure(
             list(
+                response = r,
                 content = r_parsed,
-                uri = uri,
-                data = df
+                uri = uri
             ),
             class = "yahoo_fantasy_api")
 

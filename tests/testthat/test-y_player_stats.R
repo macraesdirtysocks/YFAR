@@ -1,4 +1,4 @@
-context("Get game data")
+context("Get player stats")
 library(YFAR)
 
 with_mock_api({
@@ -6,19 +6,19 @@ with_mock_api({
 
     uri <-
         "https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=411.p.6369/stats;type=date;date=2021-12-10?format=json"
-    r <- .y_get_response(uri = uri)
+    r <- purrr::map(uri, .y_get_response)
 
     # test response uri matches desired uri
-    testthat::expect_identical(r$url, uri)
+    testthat::expect_identical(r[[1]][["url"]], uri)
 
     # test that r is a response class
-    testthat::expect_s3_class(r, class = "response")
+    testthat::expect_s3_class(r[[1]], class = "response")
 
     # test that response is json format
-    testthat::expect_identical(httr::http_type(r), "application/json")
+    testthat::expect_identical(httr::http_type(r[[1]]), "application/json")
 
     # test that response is not an error
-    testthat::expect_identical(httr::status_code(r), 200L)
+    testthat::expect_identical(httr::status_code(r[[1]]), 200L)
 
     r_parsed <-
         purrr::map(r, .y_parse_response, "fantasy_content", "players")

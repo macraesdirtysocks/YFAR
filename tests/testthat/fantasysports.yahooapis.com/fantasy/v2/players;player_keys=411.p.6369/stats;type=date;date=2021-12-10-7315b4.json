@@ -1,7 +1,7 @@
 {
     "fantasy_content": {
         "xml:lang": "en-US",
-        "yahoo:uri": "/fantasy/v2/players;player_keys=411.p.6369/stats;type=date;date=2021-12-09",
+        "yahoo:uri": "/fantasy/v2/players;player_keys=411.p.6369/stats;type=date;date=2021-12-10",
         "players": {
             "0": {
                 "player": [
@@ -79,133 +79,133 @@
                         "player_stats": {
                             "0": {
                                 "coverage_type": "date",
-                                "date": "2021-12-09"
+                                "date": "2021-12-10"
                             },
                             "stats": [
                                 {
                                     "stat": {
                                         "stat_id": "0",
-                                        "value": "1"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "29",
-                                        "value": "1"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "1",
-                                        "value": "2"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "2",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "3",
-                                        "value": "2"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "4",
-                                        "value": "-1"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "5",
-                                        "value": "4"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "6",
-                                        "value": "2"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "7",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "8",
-                                        "value": "2"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "9",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "10",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "11",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "12",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "13",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "14",
-                                        "value": "6"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "15",
-                                        "value": ".333"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "16",
-                                        "value": "18"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "17",
-                                        "value": "15"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "31",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 },
                                 {
                                     "stat": {
                                         "stat_id": "32",
-                                        "value": "0"
+                                        "value": "-"
                                     }
                                 }
                             ]
@@ -215,7 +215,7 @@
             },
             "count": 1
         },
-        "time": "12.871980667114ms",
+        "time": "22.554874420166ms",
         "copyright": "Data provided by Yahoo! and STATS, LLC",
         "refresh_rate": "60"
     }
