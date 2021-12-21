@@ -10,10 +10,7 @@
 #' @return a tibble or list
 #' @export
 y_player_stats <-
-    function(players = NULL,
-             token_name = NULL,
-             game_date = NULL,
-             debug = FALSE) {
+    function(players = NULL, token_name = NULL, game_date = NULL, debug = FALSE) {
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                  ARGUMENTS                               ----

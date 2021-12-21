@@ -320,18 +320,20 @@
 #'
 #' Send GET request to YAHOO! api
 #'
-#' @param x league_id supplied to y function
-#' @param y api_token value assign by y_create_token()
+#' @param uri URI being queried
+#' @param token_name Oauth token value assign by y_create_token()
 #'
 #' @keywords internal
-.y_get_response <- function(x, y) {
+.y_get_response <- function(uri = NULL, token_name = NULL) {
+
+    api_token = token_name
 
     r <- httr::RETRY(verb = "GET",
                      terminate_on = c(401),
-                     url = x,
+                     url = uri,
                    httr::add_headers(
                        Authorization = stringr::str_c("Bearer",
-                                                      y$credentials$access_token, sep = " ")
+                                                      api_token$credentials$access_token, sep = " ")
                    ))
 
     return(r)
@@ -430,6 +432,42 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 }
 
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                                Y GAMES PARSE                             ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#' Parse games resource
+#'
+#' @param x input list
+#'
+#' @return a tibble
+#' @keywords internal
+.y_games_parse <- function(x){
+
+    game_meta <-
+        x %>%
+        purrr::pluck(1) %>%
+        purrr::set_names(., nm = .col_name_change_fn(., "game")) %>%
+        dplyr::bind_cols()
+
+    game_leagues <-
+        x %>%
+        purrr::pluck(2, "leagues") %>%
+        purrr::map(purrr::pluck, "league") %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::map_depth(2, ~ purrr::set_names(.x, nm = .col_name_change_fn(.x, "league"))) %>%
+        purrr::map_df(unlist, recursive = TRUE)
+
+    df <-
+        dplyr::bind_cols(game_meta, game_leagues, .name_repair = janitor::make_clean_names)
+
+    return(df)
+}
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -933,13 +971,13 @@ return(stats)
     stat_winners <-
         x %>%
         purrr::pluck("stat_winners") %>%
+        purrr::map_depth(3, as.character) %>%
         purrr::flatten_df() %>%
         ##convert stat id numbers to display name i.e. stat 1 = G
         dplyr::left_join(.yahoo_hockey_stat_categories(), by = "stat_id") %>%
-        dplyr::select(display_name, winner_team_key) %>%
+        dplyr::select(display_name, 2) %>%
         tidyr::pivot_wider(names_from = display_name,
-                           values_from = winner_team_key,
-                           names_prefix = "winner_")
+                           values_from = 2)
 
     matchup_team_data <-
         x %>%
@@ -1216,3 +1254,28 @@ return(stats)
         class = c("tbl_df", "tbl", "data.frame"),
         row.names = c(NA, -46L)
     )}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                            .COL_NAME_CHANGE_FN                           ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Prefix column names
+#'
+#' Used internally for prefixing resource and subresource names to column names.
+#'
+#' @param x String to detect in column names. Passed to `names()`.
+#' @param y Prefix string
+#'
+#' @return a sting
+#' @keywords internals
+.col_name_change_fn <- function(x, y){
+
+    ifelse(grepl(y, names(x)), names(x), paste(y, names(x), sep = "_"))
+}
+

@@ -21,9 +21,9 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-    api_token <- token_name
     resource <- "league"
     subresource <- "players"
+    api_token <- token_name
 
 
     #...........................empty list...........................

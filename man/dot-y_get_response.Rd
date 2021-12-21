@@ -4,12 +4,12 @@
 \alias{.y_get_response}
 \title{y_get_response}
 \usage{
-.y_get_response(x, y)
+.y_get_response(uri = NULL, token_name = NULL)
 }
 \arguments{
-\item{x}{league_id supplied to y function}
+\item{uri}{URI being queried}
 
-\item{y}{api_token value assign by y_create_token()}
+\item{token_name}{Oauth token value assign by y_create_token()}
 }
 \description{
 Send GET request to YAHOO! api

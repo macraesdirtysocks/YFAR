@@ -50,14 +50,14 @@ y_matchups <-
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         r <-
-            .y_get_response(uri, api_token)
+            purrr::map(uri, .y_get_response, api_token)
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                   CONTENT                                ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         r_parsed <-
-            .y_parse_response(r, "fantasy_content")
+            purrr::map(r, .y_parse_response, "fantasy_content")
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,10 +72,11 @@ y_matchups <-
 
         preprocess <-
             r_parsed %>%
-            purrr::pluck("team", 2, "matchups") %>%
-            purrr::map(purrr::pluck, "matchup") %>%
-            purrr::keep(purrr::is_list) %>%
-            purrr::compact()
+            purrr::map(purrr::pluck, "team", 2, "matchups") %>%
+            purrr::map_depth(2, purrr::pluck, "matchup") %>%
+            purrr::map(purrr::keep, purrr::is_list) %>%
+            purrr::compact() %>%
+            purrr::flatten()
 
 
         #........................subset preprocess.......................

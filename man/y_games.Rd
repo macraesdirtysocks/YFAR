@@ -4,10 +4,12 @@
 \alias{y_games}
 \title{Get all Yahoo! Fantasy hockey meta data.}
 \usage{
-y_games(token_name = NULL, debug = FALSE)
+y_games(token_name = NULL, quiet = FALSE, debug = FALSE)
 }
 \arguments{
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
+
+\item{quiet}{Toggle function messages.}
 
 \item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }

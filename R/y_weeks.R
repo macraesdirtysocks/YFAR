@@ -59,49 +59,32 @@ y_weeks <- memoise::memoise(function(game_id = NULL, token_name = NULL, debug = 
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                  EMPTY LIST                              ----
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-    game_week_list <-
-        list(
-            league_meta = NULL,
-            game_weeks = NULL
-            )
-
-
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                PARSE CONTENT                             ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                      DF                                  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    #..........................league meta...........................
+    if(!debug){
 
-
-    game_week_list$league_meta =
+    league_meta <-
         r_parsed %>%
         purrr::pluck(1) %>%
         dplyr::bind_rows()
 
-
-    #...........................game weeks...........................
-
-
-    game_week_list$game_weeks =
+    game_weeks <-
         r_parsed %>%
         purrr::pluck(2, "game_weeks") %>%
         purrr::map(purrr::pluck, "game_week") %>%
         purrr::map_df(dplyr::bind_rows) %>%
         dplyr::mutate(matchup_length = difftime(end, start))
 
-
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                      DF                                  ----
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
     df <-
-        dplyr::bind_cols(game_week_list$game_weeks, game_week_list$league_meta)
+        dplyr::bind_cols(game_weeks, league_meta)
+
+    return(df)
+    }
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -112,16 +95,13 @@ y_weeks <- memoise::memoise(function(game_id = NULL, token_name = NULL, debug = 
     data_list <-
         structure(
             list(
-                content = r_parsed,
+                response = r,
                 uri = uri,
-                data_list = game_week_list,
-                data = df
+                content = r_parsed
             ),
             class = "yahoo_fantasy_api")
 
-    if(debug){return(data_list)}
-
-    return(df)
+    return(data_list)
 
 }
 )
