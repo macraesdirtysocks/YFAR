@@ -31,36 +31,6 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
-##                              Y_VALIDATE_TOKEN                            ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#' y_validate_token
-#'
-#' @param token_name name used when assigning value of `y_create_token()`
-#'
-#' @return a string
-.y_token_validate <- function(token_name){
-
-    api_token <- token_name
-
-    token_status <- httr::http_error(httr::GET(api_token[["endpoint"]][["authorize"]]))
-
-    if(token_status == TRUE) {
-
-        stop(message("token needs refresh, use my_token$refresh() and try again"))
-
-    } else {
-
-        print("token still valid")
-    }
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
 ##                            TOKEN COUNT FUNCTION                          ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

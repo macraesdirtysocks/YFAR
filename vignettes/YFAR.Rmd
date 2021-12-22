@@ -10,6 +10,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 > **BEFORE BEGINNING**
 >
 > This vignette assumes user has created and registered an app with the YDN
@@ -27,9 +28,9 @@ library(YFAR)
 library(dplyr)
 ```
 
-# Getting started
+*WooHoo!, finally an R package to get fantasy data from Yahoo!*
 
-WooHoo!, finally an R package that get fantasy data from Yahoo!  
+# Getting started
 
 I registered an app at YDN and have my key and secret.  Whats now? How do I start using this package?
 
@@ -61,8 +62,8 @@ The token has some features which can help if you are getting http errors, speci
 - Some of these include:
   - `my_token$can_refresh()` - check if token is refreshable
   - `my_token$refresh()` - refresh token
-  - `my_token$validate()` - check token validity, this doesn't work for me so I made one, see next item
-  - `y_validate_token` - YFAR function for checking token validity.  Returns a string message.
+  
+After creating your token you should not need to run `y_create_toke()` again.  You cna just keep refreshing your exisiting token.
   
 Now whenever you call a function you supply this value to the argument `token_name`.
 
@@ -73,6 +74,8 @@ Now you can retrieve the general data from all the games you have participated i
 ### y_games
 
 Here's where you get to use your token for the first time.
+
+Get your games
 
 ```{r Get Games, eval=FALSE}
 my_games <- y_games(my_token)
@@ -1692,4 +1695,61 @@ Multiple teams with multiple weeks
     purrr::map_df(teams, y_matchups, yahoo_token, week = c(1, 8))
 
 ## y_standings
+
+Get standings data
+
+```{r, eval=FALSE}
+standings <- y_standings("411.l.1239", my_token)
+```
+
+```{r, echo=FALSE}
+standings <- 
+  structure(list(team_key = c("411.l.1239.t.2", "411.l.1239.t.11", 
+"411.l.1239.t.12", "411.l.1239.t.7", "411.l.1239.t.5", "411.l.1239.t.1", 
+"411.l.1239.t.10", "411.l.1239.t.8", "411.l.1239.t.4", "411.l.1239.t.6", 
+"411.l.1239.t.9", "411.l.1239.t.3"), team_id = c("2", "11", "12", 
+"7", "5", "1", "10", "8", "4", "6", "9", "3"), name = c("Doughty Sanchez", 
+"rmdz", "Kenora Thistles II", "Dominik's Dandy Team", "Old Fashioned", 
+"Shoe's Extraordinary Team", "Windlords", "Tim's Top-Notch Team", 
+"MxPx", "MapleBuds Cmbk Kids !", "Renegades", "Ballinchef31"), 
+    coverage_type = c("season", "season", "season", "season", 
+    "season", "season", "season", "season", "season", "season", 
+    "season", "season"), season = c("2021", "2021", "2021", "2021", 
+    "2021", "2021", "2021", "2021", "2021", "2021", "2021", "2021"
+    ), total = c("127", "117", "115", "107", "99", "99", "98", 
+    "97", "97", "88", "83", "73"), rank = c("1", "2", "3", "4", 
+    "5", "6", "7", "8", "9", "10", "11", "12"), playoff_seed = c("1", 
+    "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), 
+    wins = c("58", "53", "51", "49", "45", "45", "44", "46", 
+    "44", "38", "35", "30"), losses = c("31", "36", "36", "42", 
+    "46", "46", "46", "49", "47", "50", "52", "57"), ties = c("11", 
+    "11", "13", "9", "9", "9", "10", "5", "9", "12", "13", "13"
+    ), percentage = c(".635", ".585", ".575", ".535", ".495", 
+    ".495", ".490", ".485", ".485", ".440", ".415", ".365"), 
+    g = c("87", "104", "82", "103", "88", "94", "89", "96", "81", 
+    "104", "74", "64"), a = c("143", "153", "154", "164", "161", 
+    "175", "147", "177", "132", "182", "142", "159"), x = c("20", 
+    "54", "18", "42", "36", "38", "32", "38", "-9", "62", "41", 
+    "2"), ppp = c("69", "84", "76", "75", "76", "88", "71", "74", 
+    "63", "80", "47", "82"), sog = c("701", "900", "902", "909", 
+    "899", "872", "872", "875", "857", "959", "714", "704"), 
+    hit = c("362", "423", "437", "358", "383", "475", "360", 
+    "319", "335", "348", "243", "227"), w = c("31", "30", "22", 
+    "28", "15", "18", "31", "25", "35", "16", "28", "24"), ga = c("112", 
+    "148", "115", "143", "109", "119", "105", "128", "159", "104", 
+    "106", "100"), gaa = c("2.11", "2.50", "2.53", "2.70", "2.69", 
+    "2.98", "2.38", "2.78", "2.78", "3.09", "2.54", "2.52"), 
+    sv = c("1460", "1553", "1290", "1565", "1248", "1187", "1168", 
+    "1258", "1653", "902", "1156", "1104"), sa = c("1572", "1701", 
+    "1405", "1708", "1357", "1306", "1273", "1386", "1812", "1006", 
+    "1262", "1204"), sv_percent = c(".929", ".913", ".918", ".916", 
+    ".920", ".909", ".918", ".908", ".912", ".897", ".916", ".917"
+    ), sho = c("8", "7", "3", "3", "5", "4", "2", "1", "2", "0", 
+    "2", "0")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
+-12L))
+```
+
+```{r}
+standings
+```
 
