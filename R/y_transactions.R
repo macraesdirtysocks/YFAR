@@ -40,8 +40,7 @@ y_transactions <- function(id = NULL, token_name = NULL, count = NULL, transacti
     params <-
         list(
             glue::glue("count={count}"),
-            glue::glue("type={transaction_type}")
-            ) %>%
+            glue::glue("type={transaction_type}")) %>%
         purrr::flatten_chr() %>%
         glue::glue_collapse(sep = ";")
 
@@ -49,13 +48,7 @@ y_transactions <- function(id = NULL, token_name = NULL, count = NULL, transacti
     uri <-
         httr::modify_url(
             url = "https://fantasysports.yahooapis.com",
-            path = paste(
-                "fantasy/v2",
-                resource,
-                id,
-                subresource,
-                sep = "/"
-            ),
+            path = paste("fantasy/v2", resource, id, subresource,sep = "/"),
             params = params,
             query = "format=json"
         )
@@ -67,7 +60,7 @@ y_transactions <- function(id = NULL, token_name = NULL, count = NULL, transacti
 
 
     r <-
-        .y_get_response(uri, api_token)
+        .y_get_response(uri, yahoo_token)
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

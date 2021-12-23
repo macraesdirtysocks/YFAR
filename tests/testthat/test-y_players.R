@@ -1,4 +1,4 @@
-context("Get player slate")
+context("Get top 10 players sorted by goals")
 library(YFAR)
 
 with_mock_api({
@@ -6,19 +6,22 @@ with_mock_api({
 
         uri <-
             .uri_gen_func(
-                start = 0,
-                number_of_players = 25,
+                number_of_players = 10,
                 resp_len = 25,
                 league_id = "411.l.1239",
                 resource = "league",
-                subresource = "players"
+                subresource = "players",
+                sort = 1L,
+                status = "ALL",
+                start = 0
             )
 
 
         # testthat uri is built as expected
-        testthat::expect_identical(uri, "https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/players;start=0;count=25?format=json")
+        testthat::expect_identical(uri, "https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/players;sort=1;status=ALL;start=0;count=10?format=json")
 
-        r <- .y_get_response(uri)
+        r <-
+            .y_get_response(uri)
 
         # test response uri matches desired uri
         testthat::expect_identical(r$url, uri)
@@ -34,11 +37,25 @@ with_mock_api({
 
         # get content
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", "league", 2, "players") %>%
-            purrr::flatten()
+            .y_parse_response(r, "fantasy_content", "league", 2, "players")
 
         # parse function
-        df <- purrr::map_df(r_parsed, .player_parse_fn)
+        df <-
+            r_parsed %>%
+            purrr::flatten() %>%
+            purrr::map(.player_parse_fn) %>%
+            # add in rank column which is not included in the response
+            purrr::set_names(nm = seq_along(.)) %>%
+            purrr::imap(~purrr::prepend(.x, list("rank" = .y))) %>%
+            purrr::map_df(dplyr::bind_cols)
+
+        #....................remove duplicate players....................
+
+        df <-
+            df %>%
+            dplyr::group_by(player_id) %>%
+            dplyr::slice_head(n = 1) %>%
+            dplyr::ungroup()
 
 
         # test that df is a tibble
@@ -46,14 +63,15 @@ with_mock_api({
 
         # expected colnames
         x <-
-            c("player_key", "player_id", "name_full", "name_first", "name_last",
-              "name_ascii_first", "name_ascii_last", "editorial_player_key",
+            c("rank", "player_key", "player_id", "name_full", "name_first",
+              "name_last", "name_ascii_first", "name_ascii_last", "editorial_player_key",
               "editorial_team_key", "editorial_team_full_name", "editorial_team_abbr",
               "uniform_number", "display_position", "headshot_url", "headshot_size",
               "image_url", "is_undroppable", "position_type", "primary_position",
               "eligible_positions_position", "eligible_positions_position_2",
-              "status", "status_full", "injury_note", "on_disabled_list", "eligible_positions_position_3",
-              "has_player_notes", "player_notes_last_timestamp")
+              "has_player_notes", "player_notes_last_timestamp", "has_recent_player_notes",
+              "status", "status_full", "injury_note", "on_disabled_list", "eligible_positions_position_3"
+            )
 
 
         # test that colnames of the df match expected

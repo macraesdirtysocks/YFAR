@@ -235,11 +235,14 @@
 #' @export
 .uri_gen_func <- function(resp_len = 25, league_id, resource, subresource, start, number_of_players, ...){
 
+    # Params as list
     uri_params <- list(...)
 
+    # Takes params list and makes element name the param and the element value the param value.
+    # i.e. list(count = 5) gets converted to "count=5".
     uri_params <-
         if(!purrr::is_empty(uri_params)) {
-            paste(names(uri_params), purrr::map_chr(uri_params, `[[`, 1), sep = "=",collapse = ";")
+            paste(names(uri_params), purrr::map_chr(uri_params, `[[`, 1), sep = "=", collapse = ";")
         } else{
             NULL
         }

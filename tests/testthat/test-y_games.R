@@ -7,6 +7,7 @@ testthat::test_that("request returns valid response and is parsed to a tibble",{
 
     uri <- "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json"
     r <- .y_get_response(uri = uri)
+
     testthat::expect_identical(r$url, uri)
     testthat::expect_s3_class(r, class = "response")
     testthat::expect_identical(httr::http_type(r), "application/json")

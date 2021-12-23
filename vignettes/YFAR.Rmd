@@ -195,9 +195,9 @@ weeks <- structure(list(week = c("1", "2", "3", "4", "5", "6", "7", "8",
 weeks
 ```
 
-Well that `y_weeks()` return wasn't exactly what I was hoping for.
+Well that return from `y_weeks()` wasn't exactly what I was hoping for.
 
-I know right? First we need to call some smaller functions to get the inputs for the exciting functions.
+I know right? First we need to call some smaller functions to get the inputs for the functions that do the heavy lifting.
 
 ## y_teams
 
@@ -319,7 +319,7 @@ league_settings$data[4]
 
 I want to see the current roster for each team in my league.
 
-To oetrieve the players which makeup a roster or rosters.  Accepts a team_key or league_key.
+To retrieve the players which makeup a roster or rosters.  Accepts a team_key or league_key.
 
 ### league rosters
 

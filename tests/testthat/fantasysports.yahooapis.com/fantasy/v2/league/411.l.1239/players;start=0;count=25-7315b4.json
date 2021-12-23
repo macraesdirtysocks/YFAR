@@ -11,9 +11,9 @@
                 "logo_url": "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png",
                 "draft_status": "postdraft",
                 "num_teams": 12,
-                "edit_key": "2021-12-20",
+                "edit_key": "2021-12-23",
                 "weekly_deadline": "intraday",
-                "league_update_timestamp": "1639985778",
+                "league_update_timestamp": "1640244104",
                 "scoring_type": "head",
                 "league_type": "public",
                 "renew": "",
@@ -492,9 +492,9 @@
                                 {
                                     "has_player_notes": 1
                                 },
-                                {
-                                    "has_recent_player_notes": 1
-                                },
+                                [
+
+                                ],
                                 {
                                     "player_notes_last_timestamp": 1639945503
                                 }
@@ -1402,15 +1402,15 @@
                                         }
                                     ]
                                 },
-                                {
-                                    "has_player_notes": 1
-                                },
                                 [
 
                                 ],
-                                {
-                                    "player_notes_last_timestamp": 1639320063
-                                }
+                                [
+
+                                ],
+                                [
+
+                                ]
                             ]
                         ]
                     },
@@ -1473,15 +1473,15 @@
                                         }
                                     ]
                                 },
-                                {
-                                    "has_player_notes": 1
-                                },
                                 [
 
                                 ],
-                                {
-                                    "player_notes_last_timestamp": 1639268823
-                                }
+                                [
+
+                                ],
+                                [
+
+                                ]
                             ]
                         ]
                     },
@@ -1502,6 +1502,16 @@
                                         "ascii_first": "Brent",
                                         "ascii_last": "Burns"
                                     }
+                                },
+                                {
+                                    "status": "COVID-19",
+                                    "status_full": "Covid-19"
+                                },
+                                {
+                                    "injury_note": "Covid-19"
+                                },
+                                {
+                                    "on_disabled_list": "1"
                                 },
                                 {
                                     "editorial_player_key": "nhl.p.3358"
@@ -1541,15 +1551,18 @@
                                     "eligible_positions": [
                                         {
                                             "position": "D"
+                                        },
+                                        {
+                                            "position": "IR"
                                         }
                                     ]
                                 },
                                 {
                                     "has_player_notes": 1
                                 },
-                                {
-                                    "has_recent_player_notes": 1
-                                },
+                                [
+
+                                ],
                                 {
                                     "player_notes_last_timestamp": 1640024163
                                 }
@@ -1628,9 +1641,9 @@
                                 {
                                     "has_player_notes": 1
                                 },
-                                {
-                                    "has_recent_player_notes": 1
-                                },
+                                [
+
+                                ],
                                 {
                                     "player_notes_last_timestamp": 1639952097
                                 }
@@ -1945,7 +1958,7 @@
                 }
             }
         ],
-        "time": "36.543130874634ms",
+        "time": "44.847965240479ms",
         "copyright": "Data provided by Yahoo! and STATS, LLC",
         "refresh_rate": "60"
     }
