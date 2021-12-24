@@ -4,11 +4,11 @@ library(YFAR)
 with_mock_api({
     testthat::test_that("request returns valid response and is parsed to a tibble",{
 
-        resource <- "team"
+        resource <- "league"
         subresource <- "transactions"
-        id <- "411.l.1239.t.1"
-        count <- 5
-        transaction_type <- "add"
+        id <- "411.l.1239"
+        count <- 1
+        transaction_type <- "drop"
 
 
         # Build params
@@ -17,12 +17,12 @@ with_mock_api({
             list(
                 glue::glue("count={count}"),
                 glue::glue("type={transaction_type}")
-                ) %>%
+            ) %>%
             purrr::flatten_chr() %>%
             glue::glue_collapse(sep = ";")
 
         # testthat params is a string of length 1
-        testthat::expect_identical(params, "count=5;type=add")
+        testthat::expect_identical(params, "count=1;type=drop")
 
         # Build uri
         uri <-
@@ -34,9 +34,9 @@ with_mock_api({
             )
 
         # testthat uri is built as expected
-        testthat::expect_identical(uri, "https://fantasysports.yahooapis.com/fantasy/v2/team/411.l.1239.t.1/transactions;count=5;type=add?format=json")
+        testthat::expect_identical(uri, "https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/transactions;count=1;type=drop?format=json")
 
-        # Get
+
         r <- .y_get_response(uri = uri)
 
         # test response uri matches desired uri
@@ -72,13 +72,13 @@ with_mock_api({
         # expected colnames
         x <-
             c("transaction_key", "transaction_id", "type", "status", "timestamp",
-              "player_key", "player_id", "name_full", "name_first", "name_last",
-              "name_ascii_first", "name_ascii_last", "editorial_team_abbr",
+              "faab_bid", "player_key", "player_id", "name_full", "name_first",
+              "name_last", "name_ascii_first", "name_ascii_last", "editorial_team_abbr",
               "display_position", "position_type", "transaction_data_type",
               "transaction_data_source_type", "transaction_data_destination_type",
               "transaction_data_destination_team_key", "transaction_data_destination_team_name",
-              "transaction_data_source_team_key", "transaction_data_source_team_name",
-              "faab_bid")
+              "transaction_data_source_team_key", "transaction_data_source_team_name"
+            )
 
 
         # test that colnames of the df match expected

@@ -158,10 +158,9 @@ y_team_stats <- function(id = NULL, token_name = NULL, week = "current", debug =
         data_list <-
             structure(
                 list(
+                    response = r,
                     content = r_parsed,
-                    uri = uri,
-                    data_parsed = team_stats_list,
-                    df = df
+                    uri = uri
                 ),
                 class = "yahoo_fantasy_api"
             )

@@ -1,0 +1,140 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/league/411.l.1239/transactions;count=1;type=drop",
+        "league": [
+            {
+                "league_key": "411.l.1239",
+                "league_id": "1239",
+                "name": "Yahoo Public 1239",
+                "url": "https://hockey.fantasysports.yahoo.com/hockey/1239",
+                "logo_url": "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png",
+                "draft_status": "postdraft",
+                "num_teams": 12,
+                "edit_key": "2021-12-23",
+                "weekly_deadline": "intraday",
+                "league_update_timestamp": "1640244104",
+                "scoring_type": "head",
+                "league_type": "public",
+                "renew": "",
+                "renewed": "",
+                "iris_group_chat_id": "",
+                "allow_add_to_dl_extra_pos": 0,
+                "is_pro_league": "0",
+                "is_cash_league": "0",
+                "current_week": 11,
+                "start_week": "1",
+                "start_date": "2021-10-12",
+                "end_week": "24",
+                "end_date": "2022-04-29",
+                "game_code": "nhl",
+                "season": "2021"
+            },
+            {
+                "transactions": {
+                    "0": {
+                        "transaction": [
+                            {
+                                "transaction_key": "411.l.1239.tr.223",
+                                "transaction_id": "223",
+                                "type": "add/drop",
+                                "status": "successful",
+                                "timestamp": "1640074132",
+                                "faab_bid": "1"
+                            },
+                            {
+                                "players": {
+                                    "0": {
+                                        "player": [
+                                            [
+                                                {
+                                                    "player_key": "411.p.5626"
+                                                },
+                                                {
+                                                    "player_id": "5626"
+                                                },
+                                                {
+                                                    "name": {
+                                                        "full": "Alex Killorn",
+                                                        "first": "Alex",
+                                                        "last": "Killorn",
+                                                        "ascii_first": "Alex",
+                                                        "ascii_last": "Killorn"
+                                                    }
+                                                },
+                                                {
+                                                    "editorial_team_abbr": "TB"
+                                                },
+                                                {
+                                                    "display_position": "LW,RW"
+                                                },
+                                                {
+                                                    "position_type": "P"
+                                                }
+                                            ],
+                                            {
+                                                "transaction_data": [
+                                                    {
+                                                        "type": "add",
+                                                        "source_type": "waivers",
+                                                        "destination_type": "team",
+                                                        "destination_team_key": "411.l.1239.t.11",
+                                                        "destination_team_name": "rmdz"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "1": {
+                                        "player": [
+                                            [
+                                                {
+                                                    "player_key": "411.p.4961"
+                                                },
+                                                {
+                                                    "player_id": "4961"
+                                                },
+                                                {
+                                                    "name": {
+                                                        "full": "Taylor Hall",
+                                                        "first": "Taylor",
+                                                        "last": "Hall",
+                                                        "ascii_first": "Taylor",
+                                                        "ascii_last": "Hall"
+                                                    }
+                                                },
+                                                {
+                                                    "editorial_team_abbr": "Bos"
+                                                },
+                                                {
+                                                    "display_position": "LW"
+                                                },
+                                                {
+                                                    "position_type": "P"
+                                                }
+                                            ],
+                                            {
+                                                "transaction_data": {
+                                                    "type": "drop",
+                                                    "source_type": "team",
+                                                    "source_team_key": "411.l.1239.t.11",
+                                                    "source_team_name": "rmdz",
+                                                    "destination_type": "waivers"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "count": 2
+                                }
+                            }
+                        ]
+                    },
+                    "count": 1
+                }
+            }
+        ],
+        "time": "81.406831741333ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}
