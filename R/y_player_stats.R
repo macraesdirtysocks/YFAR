@@ -20,6 +20,9 @@ y_player_stats <-
         resource <- "players"
         subresource <- "stats"
         players <- glue::glue_collapse(players, sep = ",")
+        game_date <-
+            ifelse(is.null(game_date), Sys.Date(), game_date) %>%
+            as.Date(origin = "1970-01-01")
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

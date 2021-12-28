@@ -54,7 +54,7 @@ y_rosters <- memoise::memoise(
 
 
         r <-
-            purrr::map(uri, .y_get_response, yahoo_token)
+            purrr::map(uri, .y_get_response, api_token)
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

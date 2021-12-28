@@ -26,6 +26,10 @@ knitr::opts_chunk$set(
 ```{r setup, message=FALSE}
 library(YFAR)
 library(dplyr)
+library(usethis)
+library(httptest)
+
+
 ```
 
 *WooHoo!, finally an R package to get fantasy data from Yahoo!*
@@ -46,25 +50,25 @@ First a token is created using the KEY and SECRET given to you by the YDN.
   
 ```{r Create token, eval=FALSE}
 
-my_token <- y_create_token(my_key = `KEY`, my_secret = `SECRET`, app_name = "my_scraper")
+my_token <- y_create_token(my_key = "KEY", my_secret = "SECRET", app_name = "my_scraper")
 
 ```
 
 Alright I did that but what exactly happened?
 
-- This will create :  
+- This will create :
   - Token2.0 object.
   - Creates a file `.httr-oauth` which allows token refreshing.
-  - If using version control will add `.httr-oauth` to `.gitignore`.  
-    
+  - If using version control will add `.httr-oauth` to `.gitignore`.
+
 The token has some features which can help if you are getting http errors, specifically 401.
 
 - Some of these include:
   - `my_token$can_refresh()` - check if token is refreshable
   - `my_token$refresh()` - refresh token
-  
-After creating your token you should not need to run `y_create_toke()` again.  You cna just keep refreshing your exisiting token.
-  
+
+After creating your token you should not need to run `y_create_toke()` again.  You can just keep refreshing your existing token.
+
 Now whenever you call a function you supply this value to the argument `token_name`.
 
 ## Get Game Info
@@ -77,42 +81,30 @@ Here's where you get to use your token for the first time.
 
 Get your games
 
-```{r Get Games, eval=FALSE}
-my_games <- y_games(my_token)
-```
-
-```{r Sample y_games return, echo=FALSE}
-
-my_games <- structure(
-  list(
-    meta_game_key = c("376", "376", "303", "321", "341", "352"),
-    meta_game_id = c("376", "376", "303", "321", "341", "352"),
-    meta_name = c("Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey"),
-    meta_code = c("nhl", "nhl", "nhl", "nhl", "nhl", "nhl"),
-    meta_type = c("full", "full", "full", "full", "full", "full"),
-    league_key = c(
-      "376.l.33xx",
-      "376.l.91xxx",
-      "303.l.64xxx",
-      "321.l.35xxx",
-      "341.l.16xxx",
-      "352.l.53xx"
-    ),
-    league_id = c("33xx", "91xxx", "64xxx", "35xxx", "16xxx", "53xx")
-  ),
-  row.names = c(NA, -6L),
-  class = c("tbl_df", "tbl", "data.frame") 
-)
+```{r, echo=FALSE}
+my_token <-
+    structure(
+        list(),
+        class = "Token2.0, Token, R6")
 
 ```
 
-Here's what the head of my_games will look like.  It will have more columns and rows, this is just an example.
-
-```{r, eval=TRUE}
-my_games
+```{r, include=FALSE}
+httptest::with_mock_api({
+  games <- y_games(my_token)
+})
 ```
 
-**The league_key and league_id are what will be used to tell the functions from which leagues you want data**  
+```{r, eval = FALSE}
+
+games <- y_games(my_token)
+```
+
+```{r}
+games
+```
+
+**The league_key and league_id are what will be used to tell the functions from which leagues you want data**
 
 For the examples here-on-in I'll use the league_key for a Yahoo! Public Fantasy Hockey League.
 
@@ -130,65 +122,14 @@ Use `y_weeks()` to get the match-up schedule for a game.  Here only the game key
 
 411 denotes 2021 Hockey
 
-```{r y_weeks, eval=FALSE}
+```{r y_weeks, include=FALSE}
+with_mock_api({
 weeks <- y_weeks(411, my_token)
+})
 ```
 
-```{r y_weeks return, echo = FALSE}
-weeks <- structure(list(week = c("1", "2", "3", "4", "5", "6", "7", "8", 
-"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", 
-"20", "21", "22", "23", "24"), display_name = c("1", "2", "3", 
-"4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", 
-"16", "17", "18", "19", "20", "21", "22", "23", "24"), start = c("2021-10-12", 
-"2021-10-18", "2021-10-25", "2021-11-01", "2021-11-08", "2021-11-15", 
-"2021-11-22", "2021-11-29", "2021-12-06", "2021-12-13", "2021-12-20", 
-"2022-01-03", "2022-01-10", "2022-01-17", "2022-01-24", "2022-01-31", 
-"2022-02-28", "2022-03-07", "2022-03-14", "2022-03-21", "2022-03-28", 
-"2022-04-04", "2022-04-11", "2022-04-18"), end = c("2021-10-17", 
-"2021-10-24", "2021-10-31", "2021-11-07", "2021-11-14", "2021-11-21", 
-"2021-11-28", "2021-12-05", "2021-12-12", "2021-12-19", "2022-01-02", 
-"2022-01-09", "2022-01-16", "2022-01-23", "2022-01-30", "2022-02-27", 
-"2022-03-06", "2022-03-13", "2022-03-20", "2022-03-27", "2022-04-03", 
-"2022-04-10", "2022-04-17", "2022-04-29"), matchup_length = structure(c(5, 
-6, 6, 6, 6, 6, 6, 6, 6, 6, 13, 6, 6, 6, 6, 27, 6, 6, 6, 6, 6, 
-6, 6, 11), class = "difftime", units = "days"), game_key = c("411", 
-"411", "411", "411", "411", "411", "411", "411", "411", "411", 
-"411", "411", "411", "411", "411", "411", "411", "411", "411", 
-"411", "411", "411", "411", "411"), game_id = c("411", "411", 
-"411", "411", "411", "411", "411", "411", "411", "411", "411", 
-"411", "411", "411", "411", "411", "411", "411", "411", "411", 
-"411", "411", "411", "411"), name = c("Hockey", "Hockey", "Hockey", 
-"Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey", 
-"Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey", 
-"Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey", "Hockey"
-), code = c("nhl", "nhl", "nhl", "nhl", "nhl", "nhl", "nhl", 
-"nhl", "nhl", "nhl", "nhl", "nhl", "nhl", "nhl", "nhl", "nhl", 
-"nhl", "nhl", "nhl", "nhl", "nhl", "nhl", "nhl", "nhl"), type = c("full", 
-"full", "full", "full", "full", "full", "full", "full", "full", 
-"full", "full", "full", "full", "full", "full", "full", "full", 
-"full", "full", "full", "full", "full", "full", "full"), url = c("https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey", "https://hockey.fantasysports.yahoo.com/hockey", 
-"https://hockey.fantasysports.yahoo.com/hockey"), season = c("2021", 
-"2021", "2021", "2021", "2021", "2021", "2021", "2021", "2021", 
-"2021", "2021", "2021", "2021", "2021", "2021", "2021", "2021", 
-"2021", "2021", "2021", "2021", "2021", "2021", "2021"), is_registration_over = c(0L, 
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-0L, 0L, 0L, 0L, 0L, 0L, 0L), is_game_over = c(0L, 0L, 0L, 0L, 
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-0L, 0L, 0L, 0L), is_offseason = c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-0L)), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--24L))
+```{r, eval=FALSE}
+weeks <- y_weeks(411, my_token)
 ```
 
 ```{r}
@@ -203,54 +144,18 @@ I know right? First we need to call some smaller functions to get the inputs for
 
 Retrieve data about teams in the league.  It may be handy to run this function upfront as it will return a column named `team_key` which can be used to get data for specific teams.
 
-```{r y_teams, eval=FALSE}
-y_teams(league_id = "411.l.1239", token_name = my_token)
+```{r y_teams, include=FALSE}
+with_mock_api({
+league_teams <- y_teams(league_id = "411.l.1239", token_name = my_token)
+})
 ```
 
-```{r y_teams return, echo=FALSE}
-structure(list(team_key = c("411.l.1239.t.1", "411.l.1239.t.2", 
-"411.l.1239.t.3", "411.l.1239.t.4", "411.l.1239.t.5", "411.l.1239.t.6"
-), team_id = c("1", "2", "3", "4", "5", "6"), name = c("Shoe's Extraordinary Team", 
-"Doughty Sanchez", "Ballinchef31", "MxPx", "Old Fashioned", "MapleBuds Cmbk Kids !"
-), url = c("https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/2", "https://hockey.fantasysports.yahoo.com/hockey/1239/3", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/4", "https://hockey.fantasysports.yahoo.com/hockey/1239/5", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/6"), waiver_priority = c("12", 
-"2", "3", "11", "6", "1"), faab_balance = c("82", "85", "100", 
-"72", "100", "65"), number_of_moves = c("12", "7", "1", "21", 
-"9", "18"), number_of_trades = c("0", "0", "0", "0", "0", "0"
-), league_scoring_type = c("head", "head", "head", "head", "head", 
-"head"), draft_position = c("2", "8", "7", "9", "3", "12"), has_draft_grade = c("0", 
-"0", "0", "0", "0", "0"), team_size = c("large", "large", "large", 
-"large", "large", "large"), team_url = c("https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png", "https://s.yimg.com/cv/apiv2/default/nhl/nhl_4.png", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/56477871475_fd560a.png", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/619f24703b38cebecb2c56f5255e3123b8c13ebed82143e13d9fc2e8d5dc5a7d.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/25017684030_de54f4f91f.gif"
-), manager_info = structure(list(structure(list(manager_id = "1", 
-    nickname = "--hidden--", guid = "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    felo_score = "936", felo_tier = "diamond"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame")), structure(list(
-    manager_id = "2", nickname = "--hidden--", guid = "KIFYUJWDLJG34ZM42WLVBMO2TI", 
-    felo_score = "766", felo_tier = "gold"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame")), structure(list(
-    manager_id = "11", nickname = "--hidden--", guid = "KAGOI2BDEF5BGLKAXJW2QE5MAU", 
-    felo_score = "932", felo_tier = "diamond"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame")), structure(list(
-    manager_id = "12", nickname = "--hidden--", guid = "LVFKRYYIDPAE7O4CLBSAVCNYWA", 
-    felo_score = "644", felo_tier = "silver"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame")), structure(list(
-    manager_id = "3", nickname = "--hidden--", guid = "D7UMT2KFVY7RYWJL35JLCG4DI4", 
-    felo_score = "582", felo_tier = "bronze"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame")), structure(list(
-    manager_id = "4", nickname = "--hidden--", guid = "FXQSH3RVOMMFHGWFLQUCQMNNMU", 
-    felo_score = "830", felo_tier = "platinum"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame"))), ptype = structure(list(
-    manager_id = character(0), nickname = character(0), guid = character(0), 
-    felo_score = character(0), felo_tier = character(0)), class = c("tbl_df", 
-"tbl", "data.frame"), row.names = integer(0)), class = c("vctrs_list_of", 
-"vctrs_vctr", "list"))), row.names = c(NA, -6L), class = c("tbl_df", 
-"tbl", "data.frame"))
+```{r, eval=FALSE}
+league_teams <- y_teams(league_id = "411.l.1239", token_name = my_token)
+```
+
+```{r}
+league_teams
 ```
 
 > team keys can be supplied to a lot functions to get team specific data.
@@ -259,979 +164,89 @@ structure(list(team_key = c("411.l.1239.t.1", "411.l.1239.t.2",
 
 Retrieving the settings for a league will return a nested tibble of values
 
-```{r League Settings, eval=FALSE}
-y_league_settings(league_id = "411.l.1239", my_token)
-"411.l.1239 is a head league, returning league settings"
+```{r League Settings, include=FALSE}
+with_mock_api({
+  league_settings <- y_league_settings(league_id = "411.l.1239", my_token)
+})
 ```
 
-```{r League Settings Return, echo = FALSE}
-
-league_settings <- 
-  structure(list(info = c("league_meta", "league_settings", "roster_positions", 
-"stat_categories"), data = list(structure(list(league_key = "411.l.1239", 
-    league_id = "1239", name = "Yahoo Public 1239", url = "https://hockey.fantasysports.yahoo.com/hockey/1239", 
-    logo_url = "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png", 
-    draft_status = "postdraft", num_teams = 12L, edit_key = "2021-11-30", 
-    weekly_deadline = "intraday", league_update_timestamp = "1638256846", 
-    scoring_type = "head", league_type = "public", renew = "", 
-    renewed = "", iris_group_chat_id = "", allow_add_to_dl_extra_pos = 0L, 
-    is_pro_league = "0", is_cash_league = "0", current_week = 8L, 
-    start_week = "1", start_date = "2021-10-12", end_week = "24", 
-    end_date = "2022-04-29", game_code = "nhl", season = "2021"), class = c("tbl_df", 
-"tbl", "data.frame"), row.names = c(NA, -1L)), structure(list(
-    draft_type = "live", is_auction_draft = "0", scoring_type = "head", 
-    uses_playoff = "1", has_playoff_consolation_games = TRUE, 
-    playoff_start_week = "22", uses_playoff_reseeding = 1L, uses_lock_eliminated_teams = 1L, 
-    num_playoff_teams = "6", num_playoff_consolation_teams = 6L, 
-    has_multiweek_championship = 0L, waiver_type = "FR", waiver_rule = "continuous", 
-    uses_faab = "1", draft_time = "1633626000", draft_pick_time = "60", 
-    post_draft_players = "W", max_teams = "12", waiver_time = "2", 
-    trade_end_date = "2022-03-09", trade_ratify_type = "vote", 
-    trade_reject_time = "2", player_pool = "ALL", cant_cut_list = "yahoo", 
-    draft_together = 0L, sendbird_channel_url = "", max_weekly_adds = "4"), class = c("tbl_df", 
-"tbl", "data.frame"), row.names = c(NA, -1L)), structure(list(
-    position = c("C", "LW", "RW", "D", "G", "BN", "IR"), position_type = c("P", 
-    "P", "P", "P", "G", NA, NA), count = c("2", "2", "2", "4", 
-    "2", "4", "2"), is_starting_position = c("1", "1", "1", "1", 
-    "1", "0", "0")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--7L)), structure(list(stat_id = c(1L, 2L, 4L, 8L, 14L, 31L, 19L, 
-22L, 23L, 25L, 24L, 26L, 27L), enabled = c("1", "1", "1", "1", 
-"1", "1", "1", "1", "1", "1", "1", "1", "1"), name = c("Goals", 
-"Assists", "Plus/Minus", "Powerplay Points", "Shots on Goal", 
-"Hits", "Wins", "Goals Against", "Goals Against Average", "Saves", 
-"Shots Against", "Save Percentage", "Shutouts"), display_name = c("G", 
-"A", "+/-", "PPP", "SOG", "HIT", "W", "GA", "GAA", "SV", "SA", 
-"SV%", "SHO"), sort_order = c("1", "1", "1", "1", "1", "1", "1", 
-"0", "0", "1", "1", "1", "1"), position_type = c("P", "P", "P", 
-"P", "P", "P", "G", "G", "G", "G", "G", "G", "G"), stat_position_types = c("P", 
-"P", "P", "P", "P", "P", "G", "G", "G", "G", "G", "G", "G")), class = c("tbl_df", 
-"tbl", "data.frame"), row.names = c(NA, -13L)))), row.names = c(NA, 
--4L), class = c("tbl_df", "tbl", "data.frame"))
-
-
+```{r, eval=FALSE}
+league_settings <- y_league_settings(league_id = "411.l.1239", my_token)
 ```
 
+```{r}
+league_settings
+```
+
+Pluck an element to view the tibble.  
 ```{r League Settings Stat Categories}
 league_settings$data[4]
 ```
 
-## y_rosters
+## y_team_stats
 
-I want to see the current roster for each team in my league.
+A league id will return team stats for the current week.
 
-To retrieve the players which makeup a roster or rosters.  Accepts a team_key or league_key.
-
-### league rosters
-
-Here a league key is supplied and a tibble with the current roster for each team is returned
-
-```{r Rosters, eval=FALSE}
-y_rosters(id = "411.l.1239", token_name = my_token)
+```{r, include=FALSE}
+httptest::with_mock_api(
+  team_stats_current_week <- y_team_stats(id = "411.l.1239", my_token)
+)
 ```
-
-```{r Roster Return, echo=FALSE}
-
-structure(list(team_key = c("411.l.1239.t.8", "411.l.1239.t.9", 
-"411.l.1239.t.7", "411.l.1239.t.9", "411.l.1239.t.1"), team_id = c("8", 
-"9", "7", "9", "1"), team_name = c("Tim's Top-Notch Team", "Renegades", 
-"Dominik's Dandy Team", "Renegades", "Shoe's Extraordinary Team"
-), team_url = c("https://hockey.fantasysports.yahoo.com/hockey/1239/8", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/9", "https://hockey.fantasysports.yahoo.com/hockey/1239/7", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/9", "https://hockey.fantasysports.yahoo.com/hockey/1239/1"
-), waiver_priority = c("7", "4", "9", "4", "12"), faab_balance = c("96", 
-"30", "76", "30", "82"), number_of_moves = c("1", "11", "11", 
-"11", "12"), number_of_trades = c("0", "0", "0", "0", "0"), league_scoring_type = c("head", 
-"head", "head", "head", "head"), draft_position = c("1", "5", 
-"6", "5", "2"), has_draft_grade = c("0", "0", "0", "0", "0"), 
-    team_logo_1.size = c("large", "large", "large", "large", 
-    "large"), team_logo_1.url = c("https://s.yimg.com/cv/apiv2/default/nhl/nhl_5_t.png", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/36842499730_74925a.jpg", 
-    "https://s.yimg.com/cv/apiv2/default/nhl/nhl_12_d.png", "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/36842499730_74925a.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
-    ), coverage_type = c("week", "week", "week", "week", "week"
-    ), coverage_value = c("8", "8", "8", "8", "8"), value = c("0", 
-    "0", "1", "0", "1"), manager_1.manager_id = c("8", "9", "7", 
-    "9", "1"), manager_1.nickname = c("--hidden--", "--hidden--", 
-    "--hidden--", "--hidden--", "--hidden--"), manager_1.guid = c("LPVMG4RHRVYSZ3MIEP5GIRHCUM", 
-    "BWWYDYQZIE2BFSZ2IIUGDM2IOE", "FKXENDFAUIZYI5HTEZWOW7UZTU", 
-    "BWWYDYQZIE2BFSZ2IIUGDM2IOE", "KOSXQIEKZPXPGVTDOYXJM7NTM4"
-    ), manager_1.felo_score = c("588", "674", "727", "674", "936"
-    ), manager_1.felo_tier = c("bronze", "silver", "gold", "silver", 
-    "diamond"), roster_coverage_type = c("date", "date", "date", 
-    "date", "date"), roster_date = c("2021-11-30", "2021-11-30", 
-    "2021-11-30", "2021-11-30", "2021-11-30"), roster_is_editable = c("0", 
-    "0", "0", "0", "0"), roster_minimum_games.coverage_type = c("week", 
-    "week", "week", "week", "week"), roster_minimum_games.coverage_value = c("8", 
-    "8", "8", "8", "8"), roster_minimum_games.value = c("0", 
-    "1", "1", "1", "1"), roster_player_key = c("411.p.5696", 
-    "411.p.7493", "411.p.6005", "411.p.5699", "411.p.6369"), 
-    roster_player_id = c("5696", "7493", "6005", "5699", "6369"
-    ), roster_name.full = c("Tom Wilson", "Alex Iafallo", "Shea Theodore", 
-    "Andrei Vasilevskiy", "Leon Draisaitl"), roster_name.first = c("Tom", 
-    "Alex", "Shea", "Andrei", "Leon"), roster_name.last = c("Wilson", 
-    "Iafallo", "Theodore", "Vasilevskiy", "Draisaitl"), roster_name.ascii_first = c("Tom", 
-    "Alex", "Shea", "Andrei", "Leon"), roster_name.ascii_last = c("Wilson", 
-    "Iafallo", "Theodore", "Vasilevskiy", "Draisaitl"), roster_editorial_player_key = c("nhl.p.5696", 
-    "nhl.p.7493", "nhl.p.6005", "nhl.p.5699", "nhl.p.6369"), 
-    roster_editorial_team_key = c("nhl.t.23", "nhl.t.8", "nhl.t.58", 
-    "nhl.t.20", "nhl.t.6"), roster_editorial_team_full_name = c("Washington Capitals", 
-    "Los Angeles Kings", "Vegas Golden Knights", "Tampa Bay Lightning", 
-    "Edmonton Oilers"), roster_editorial_team_abbr = c("Was", 
-    "LA", "VGK", "TB", "Edm"), roster_uniform_number = c("43", 
-    "19", "27", "88", "29"), roster_display_position = c("RW", 
-    "LW", "D", "G", "C,LW"), roster_headshot.url = c("https://s.yimg.com/iu/api/res/1.2/eR35UeAPz.6aWt29uhdv6Q--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/5696.png", 
-    "https://s.yimg.com/iu/api/res/1.2/AHs4AxrJ9vBR_YaqBjvXhw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11262019/7493.png", 
-    "https://s.yimg.com/iu/api/res/1.2/bzrgz9vFkgR6bbefrPX2Eg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/6005.png", 
-    "https://s.yimg.com/iu/api/res/1.2/78_6NpQ6LxLvvJihLGeTxQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10292021/5699.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png"
-    ), roster_headshot.size = c("small", "small", "small", "small", 
-    "small"), roster_image_url = c("https://s.yimg.com/iu/api/res/1.2/eR35UeAPz.6aWt29uhdv6Q--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/5696.png", 
-    "https://s.yimg.com/iu/api/res/1.2/AHs4AxrJ9vBR_YaqBjvXhw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11262019/7493.png", 
-    "https://s.yimg.com/iu/api/res/1.2/bzrgz9vFkgR6bbefrPX2Eg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/6005.png", 
-    "https://s.yimg.com/iu/api/res/1.2/78_6NpQ6LxLvvJihLGeTxQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10292021/5699.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png"
-    ), roster_is_undroppable = c("0", "0", "0", "1", "1"), roster_position_type = c("P", 
-    "P", "P", "G", "P"), roster_primary_position = c("RW", "LW", 
-    "D", "G", "C"), roster_eligible_positions.position_1 = c("RW", 
-    "LW", "D", "G", "C"), roster_status = c(NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_), roster_status_full = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), roster_injury_note = c(NA_character_, NA_character_, NA_character_, 
-    NA_character_, NA_character_), roster_on_disabled_list = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), roster_eligible_positions.position_2 = c(NA, NA, NA, NA, 
-    "LW"), roster_eligible_positions.position_3 = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), roster_has_player_notes = c("1", NA, "1", "1", "1"), roster_player_notes_last_timestamp = c("1637558550", 
-    NA, "1637628539", "1638137068", "1637821700"), roster_has_recent_player_notes = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), roster_selected_position.coverage_type = c("date", "date", 
-    "date", "date", "date"), roster_selected_position.date = c("2021-11-30", 
-    "2021-11-30", "2021-11-30", "2021-11-30", "2021-11-30"), 
-    roster_selected_position.position = c("RW", "LW", "D", "G", 
-    "LW"), roster_selected_position.is_flex = c("0", "0", "0", 
-    "0", "0")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--5L))
-```
-
-### Team Roster
-
-Alternatively supplying a team key will return the current roster for that team.
-
-```{r y_roster team, eval=FALSE}
-team_roster <- y_rosters(id = "411.l.1239.t.1", token_name = yahoo_token)
-```
-
-```{r y_roster team return, echo=FALSE}
-team_roster <- structure(list(team_key = c("411.l.1239.t.1", "411.l.1239.t.1", 
-"411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1"
-), team_id = c("1", "1", "1", "1", "1", "1"), team_name = c("Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team"), team_url = c("https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1"), waiver_priority = c(12L, 
-12L, 12L, 12L, 12L, 12L), faab_balance = c("82", "82", "82", 
-"82", "82", "82"), number_of_moves = c("12", "12", "12", "12", 
-"12", "12"), number_of_trades = c(0L, 0L, 0L, 0L, 0L, 0L), league_scoring_type = c("head", 
-"head", "head", "head", "head", "head"), draft_position = c(2L, 
-2L, 2L, 2L, 2L, 2L), has_draft_grade = c(0L, 0L, 0L, 0L, 0L, 
-0L), team_logo_1.size = c("large", "large", "large", "large", 
-"large", "large"), team_logo_1.url = c("https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
-), coverage_type = c("week", "week", "week", "week", "week", 
-"week"), coverage_value = c(8L, 8L, 8L, 8L, 8L, 8L), value = c("1", 
-"1", "1", "1", "1", "1"), manager_1.manager_id = c("1", "1", 
-"1", "1", "1", "1"), manager_1.nickname = c("--hidden--", "--hidden--", 
-"--hidden--", "--hidden--", "--hidden--", "--hidden--"), manager_1.guid = c("KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-"KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-"KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4"), 
-    manager_1.felo_score = c("936", "936", "936", "936", "936", 
-    "936"), manager_1.felo_tier = c("diamond", "diamond", "diamond", 
-    "diamond", "diamond", "diamond"), roster_coverage_type = c("date", 
-    "date", "date", "date", "date", "date"), roster_date = c("2021-11-30", 
-    "2021-11-30", "2021-11-30", "2021-11-30", "2021-11-30", "2021-11-30"
-    ), roster_is_editable = c(0L, 0L, 0L, 0L, 0L, 0L), roster_minimum_games.coverage_type = c("week", 
-    "week", "week", "week", "week", "week"), roster_minimum_games.coverage_value = c("8", 
-    "8", "8", "8", "8", "8"), roster_minimum_games.value = c("1", 
-    "1", "1", "1", "1", "1"), roster_player_key = c("411.p.3980", 
-    "411.p.6448", "411.p.7083", "411.p.6369", "411.p.6890", "411.p.3351"
-    ), roster_player_id = c("3980", "6448", "7083", "6369", "6890", 
-    "3351"), roster_name.full = c("Jordan Staal", "Brayden Point", 
-    "Brandon Tanev", "Leon Draisaitl", "Troy Terry", "Dustin Brown"
-    ), roster_name.first = c("Jordan", "Brayden", "Brandon", 
-    "Leon", "Troy", "Dustin"), roster_name.last = c("Staal", 
-    "Point", "Tanev", "Draisaitl", "Terry", "Brown"), roster_name.ascii_first = c("Jordan", 
-    "Brayden", "Brandon", "Leon", "Troy", "Dustin"), roster_name.ascii_last = c("Staal", 
-    "Point", "Tanev", "Draisaitl", "Terry", "Brown"), roster_editorial_player_key = c("nhl.p.3980", 
-    "nhl.p.6448", "nhl.p.7083", "nhl.p.6369", "nhl.p.6890", "nhl.p.3351"
-    ), roster_editorial_team_key = c("nhl.t.7", "nhl.t.20", "nhl.t.59", 
-    "nhl.t.6", "nhl.t.25", "nhl.t.8"), roster_editorial_team_full_name = c("Carolina Hurricanes", 
-    "Tampa Bay Lightning", "Seattle Kraken", "Edmonton Oilers", 
-    "Anaheim Ducks", "Los Angeles Kings"), roster_editorial_team_abbr = c("Car", 
-    "TB", "Sea", "Edm", "Anh", "LA"), roster_uniform_number = c("11", 
-    "21", "13", "29", "19", "23"), roster_display_position = c("C", 
-    "C,RW", "LW,RW", "C,LW", "RW", "RW"), roster_headshot.url = c("https://s.yimg.com/iu/api/res/1.2/VEFE0a7ueOsxDI4khB7QhQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272021/3980.png", 
-    "https://s.yimg.com/iu/api/res/1.2/Oq_CWS7thSzhdzJxkUkNAQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11152021/6448.png", 
-    "https://s.yimg.com/iu/api/res/1.2/g9TlynFxlEdsl6P.gUjuKg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/7083.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png", 
-    "https://s.yimg.com/iu/api/res/1.2/H1vg._NvmxZyeDKXz2x.zg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11292021/6890.png", 
-    "https://s.yimg.com/iu/api/res/1.2/nQILQ.j2ICYx8lr8CcjOzA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3351.png"
-    ), roster_headshot.size = c("small", "small", "small", "small", 
-    "small", "small"), roster_image_url = c("https://s.yimg.com/iu/api/res/1.2/VEFE0a7ueOsxDI4khB7QhQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272021/3980.png", 
-    "https://s.yimg.com/iu/api/res/1.2/Oq_CWS7thSzhdzJxkUkNAQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11152021/6448.png", 
-    "https://s.yimg.com/iu/api/res/1.2/g9TlynFxlEdsl6P.gUjuKg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/7083.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png", 
-    "https://s.yimg.com/iu/api/res/1.2/H1vg._NvmxZyeDKXz2x.zg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11292021/6890.png", 
-    "https://s.yimg.com/iu/api/res/1.2/nQILQ.j2ICYx8lr8CcjOzA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3351.png"
-    ), roster_is_undroppable = c("0", "1", "0", "1", "0", "0"
-    ), roster_position_type = c("P", "P", "P", "P", "P", "P"), 
-    roster_primary_position = c("C", "C", "LW", "C", "RW", "RW"
-    ), roster_eligible_positions.position_1 = c("C", "C", "LW", 
-    "C", "RW", "RW"), roster_status = c(NA, "NA", NA, NA, NA, 
-    NA), roster_status_full = c(NA, "Not Active", NA, NA, NA, 
-    NA), roster_injury_note = c(NA, "Upper Body", NA, NA, NA, 
-    NA), roster_eligible_positions.position_2 = c(NA, "RW", "RW", 
-    "LW", NA, NA), roster_has_player_notes = c(NA, "1", NA, "1", 
-    "1", "1"), roster_player_notes_last_timestamp = c(NA, "1637702492", 
-    NA, "1637821700", "1637675587", "1637510107"), roster_has_recent_player_notes = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), roster_on_disabled_list = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), roster_eligible_positions.position_3 = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), roster_selected_position.coverage_type = c("date", 
-    "date", "date", "date", "date", "date"), roster_selected_position.date = c("2021-11-30", 
-    "2021-11-30", "2021-11-30", "2021-11-30", "2021-11-30", "2021-11-30"
-    ), roster_selected_position.position = c("C", "C", "LW", 
-    "LW", "RW", "RW"), roster_selected_position.is_flex = c("0", 
-    "0", "0", "0", "0", "0")), row.names = c(NA, -6L), class = c("tbl_df", 
-"tbl", "data.frame"))
-
-```
-
-```{r}
-team_roster
-```
-
-### Date
-
-A date argument can be supplied 
-
-```{r team roster with date, eval=FALSE}
-team_1_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = yahoo_token, date = "2021-10-12")
-```
-
-```{r team roster with date return, echo=FALSE}
-team_1_roster_w_date <- 
-  structure(list(team_key = c("411.l.1239.t.1", "411.l.1239.t.1", 
-"411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-"411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-"411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-"411.l.1239.t.1", "411.l.1239.t.1"), team_id = c("1", "1", "1", 
-"1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"
-), team_name = c("Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team"), team_url = c("https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1"), waiver_priority = c(12L, 
-12L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 12L, 
-12L, 12L), faab_balance = c("82", "82", "82", "82", "82", "82", 
-"82", "82", "82", "82", "82", "82", "82", "82", "82", "82"), 
-    number_of_moves = c("12", "12", "12", "12", "12", "12", "12", 
-    "12", "12", "12", "12", "12", "12", "12", "12", "12"), number_of_trades = c(0L, 
-    0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L
-    ), league_scoring_type = c("head", "head", "head", "head", 
-    "head", "head", "head", "head", "head", "head", "head", "head", 
-    "head", "head", "head", "head"), draft_position = c(2L, 2L, 
-    2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L), 
-    has_draft_grade = c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-    0L, 0L, 0L, 0L, 0L, 0L), team_logo_1.size = c("large", "large", 
-    "large", "large", "large", "large", "large", "large", "large", 
-    "large", "large", "large", "large", "large", "large", "large"
-    ), team_logo_1.url = c("https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-    "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
-    ), coverage_type = c("week", "week", "week", "week", "week", 
-    "week", "week", "week", "week", "week", "week", "week", "week", 
-    "week", "week", "week"), coverage_value = c(8L, 8L, 8L, 8L, 
-    8L, 8L, 8L, 8L, 8L, 8L, 8L, 8L, 8L, 8L, 8L, 8L), value = c("1", 
-    "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", 
-    "1", "1", "1"), manager_1.manager_id = c("1", "1", "1", "1", 
-    "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"
-    ), manager_1.nickname = c("--hidden--", "--hidden--", "--hidden--", 
-    "--hidden--", "--hidden--", "--hidden--", "--hidden--", "--hidden--", 
-    "--hidden--", "--hidden--", "--hidden--", "--hidden--", "--hidden--", 
-    "--hidden--", "--hidden--", "--hidden--"), manager_1.guid = c("KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4"), manager_1.felo_score = c("936", 
-    "936", "936", "936", "936", "936", "936", "936", "936", "936", 
-    "936", "936", "936", "936", "936", "936"), manager_1.felo_tier = c("diamond", 
-    "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", 
-    "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", 
-    "diamond", "diamond", "diamond"), roster_coverage_type = c("date", 
-    "date", "date", "date", "date", "date", "date", "date", "date", 
-    "date", "date", "date", "date", "date", "date", "date"), 
-    roster_date = c("2021-10-12", "2021-10-12", "2021-10-12", 
-    "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", 
-    "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", 
-    "2021-10-12", "2021-10-12", "2021-10-12"), roster_is_editable = c(0L, 
-    0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L
-    ), roster_minimum_games.coverage_type = c("week", "week", 
-    "week", "week", "week", "week", "week", "week", "week", "week", 
-    "week", "week", "week", "week", "week", "week"), roster_minimum_games.coverage_value = c("1", 
-    "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", 
-    "1", "1", "1"), roster_minimum_games.value = c("5", "5", 
-    "5", "5", "5", "5", "5", "5", "5", "5", "5", "5", "5", "5", 
-    "5", "5"), roster_player_key = c("411.p.6448", "411.p.3638", 
-    "411.p.5053", "411.p.5691", "411.p.7528", "411.p.5120", "411.p.4503", 
-    "411.p.7905", "411.p.6367", "411.p.3614", "411.p.6369", "411.p.8641", 
-    "411.p.7886", "411.p.6445", "411.p.3782", "411.p.6744"), 
-    roster_player_id = c("6448", "3638", "5053", "5691", "7528", 
-    "5120", "4503", "7905", "6367", "3614", "6369", "8641", "7886", 
-    "6445", "3782", "6744"), roster_name.full = c("Brayden Point", 
-    "Evgeni Malkin", "Bryan Rust", "Filip Forsberg", "Nick Suzuki", 
-    "Brendan Gallagher", "John Carlson", "Quinn Hughes", "Aaron Ekblad", 
-    "Mark Giordano", "Leon Draisaitl", "Alexis Lafreniere", "Kevin Lankinen", 
-    "Elvis Merzlikins", "Carey Price", "Jack Eichel"), roster_name.first = c("Brayden", 
-    "Evgeni", "Bryan", "Filip", "Nick", "Brendan", "John", "Quinn", 
-    "Aaron", "Mark", "Leon", "Alexis", "Kevin", "Elvis", "Carey", 
-    "Jack"), roster_name.last = c("Point", "Malkin", "Rust", 
-    "Forsberg", "Suzuki", "Gallagher", "Carlson", "Hughes", "Ekblad", 
-    "Giordano", "Draisaitl", "Lafreniere", "Lankinen", "Merzlikins", 
-    "Price", "Eichel"), roster_name.ascii_first = c("Brayden", 
-    "Evgeni", "Bryan", "Filip", "Nick", "Brendan", "John", "Quinn", 
-    "Aaron", "Mark", "Leon", "Alexis", "Kevin", "Elvis", "Carey", 
-    "Jack"), roster_name.ascii_last = c("Point", "Malkin", "Rust", 
-    "Forsberg", "Suzuki", "Gallagher", "Carlson", "Hughes", "Ekblad", 
-    "Giordano", "Draisaitl", "Lafreniere", "Lankinen", "Merzlikins", 
-    "Price", "Eichel"), roster_status = c("IR", "IR-LT", "IR", 
-    NA, NA, NA, NA, NA, NA, "IR", NA, NA, NA, NA, "IR-LT", "IR-LT"
-    ), roster_status_full = c("Injured Reserve", "Injured Reserve", 
-    "Injured Reserve", NA, NA, NA, NA, NA, NA, "Injured Reserve", 
-    NA, NA, NA, NA, "Injured Reserve", "Injured Reserve"), roster_injury_note = c("Upper Body", 
-    "Knee", "Lower Body", NA, NA, NA, NA, NA, NA, "Covid-19", 
-    NA, NA, NA, NA, "Knee", "Neck"), roster_on_disabled_list = c("1", 
-    "1", "1", NA, NA, NA, NA, NA, NA, "1", NA, NA, NA, NA, "1", 
-    "1"), roster_editorial_player_key = c("nhl.p.6448", "nhl.p.3638", 
-    "nhl.p.5053", "nhl.p.5691", "nhl.p.7528", "nhl.p.5120", "nhl.p.4503", 
-    "nhl.p.7905", "nhl.p.6367", "nhl.p.3614", "nhl.p.6369", "nhl.p.8641", 
-    "nhl.p.7886", "nhl.p.6445", "nhl.p.3782", "nhl.p.6744"), 
-    roster_editorial_team_key = c("nhl.t.20", "nhl.t.16", "nhl.t.16", 
-    "nhl.t.27", "nhl.t.10", "nhl.t.10", "nhl.t.23", "nhl.t.22", 
-    "nhl.t.26", "nhl.t.59", "nhl.t.6", "nhl.t.13", "nhl.t.4", 
-    "nhl.t.29", "nhl.t.10", "nhl.t.58"), roster_editorial_team_full_name = c("Tampa Bay Lightning", 
-    "Pittsburgh Penguins", "Pittsburgh Penguins", "Nashville Predators", 
-    "Montreal Canadiens", "Montreal Canadiens", "Washington Capitals", 
-    "Vancouver Canucks", "Florida Panthers", "Seattle Kraken", 
-    "Edmonton Oilers", "New York Rangers", "Chicago Blackhawks", 
-    "Columbus Blue Jackets", "Montreal Canadiens", "Vegas Golden Knights"
-    ), roster_editorial_team_abbr = c("TB", "Pit", "Pit", "Nsh", 
-    "Mon", "Mon", "Was", "Van", "Fla", "Sea", "Edm", "NYR", "Chi", 
-    "Cls", "Mon", "VGK"), roster_uniform_number = c("21", "71", 
-    "17", "9", "14", "11", "74", "43", "5", "5", "29", "13", 
-    "32", "90", "31", "9"), roster_display_position = c("C,RW", 
-    "C", "LW,RW", "LW", "C,RW", "RW", "D", "D", "D", "D", "C,LW", 
-    "LW", "G", "G", "G", "C"), roster_headshot.url = c("https://s.yimg.com/iu/api/res/1.2/Oq_CWS7thSzhdzJxkUkNAQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11152021/6448.png", 
-    "https://s.yimg.com/iu/api/res/1.2/glmnvbdFYsfjDYA4wJEtFw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/03092021/3638.png", 
-    "https://s.yimg.com/iu/api/res/1.2/wmBhg4utyUxMavyzKz7gnw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/5053.1.png", 
-    "https://s.yimg.com/iu/api/res/1.2/lFKl9Jth.gZSZVY0rfXG7g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11022021/5691.png", 
-    "https://s.yimg.com/iu/api/res/1.2/nGZzoOEzWxVGQhJYIDGsSw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/7528.png", 
-    "https://s.yimg.com/iu/api/res/1.2/83potp4_9ED70oxqnxdLsQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/5120.png", 
-    "https://s.yimg.com/iu/api/res/1.2/Lyv2nHZsPYnGkx9od8nVmg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/4503.png", 
-    "https://s.yimg.com/iu/api/res/1.2/j61hka6waSk6HBOg2djGHw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11172021/7905.png", 
-    "https://s.yimg.com/iu/api/res/1.2/SqYNh6nZhApUjr0F5bARUA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/6367.png", 
-    "https://s.yimg.com/iu/api/res/1.2/YMJ7LhspnH90fCCuWRlV0w--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3614.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png", 
-    "https://s.yimg.com/iu/api/res/1.2/iGliKNPX_055Nu9G_VzgBg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/8641.png", 
-    "https://s.yimg.com/iu/api/res/1.2/ZyHB2AQhAoBevOzohNNyFA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11192021/7886.png", 
-    "https://s.yimg.com/iu/api/res/1.2/5wiqV8CHJJqUpUaA_Gjs9A--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11192021/6445.png", 
-    "https://s.yimg.com/iu/api/res/1.2/fUnfHETacWgJGN9Tv0O7lg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3782.png", 
-    "https://s.yimg.com/iu/api/res/1.2/lc0qCu.a.f1AIOe0oByQXQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/6744.png"
-    ), roster_headshot.size = c("small", "small", "small", "small", 
-    "small", "small", "small", "small", "small", "small", "small", 
-    "small", "small", "small", "small", "small"), roster_image_url = c("https://s.yimg.com/iu/api/res/1.2/Oq_CWS7thSzhdzJxkUkNAQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11152021/6448.png", 
-    "https://s.yimg.com/iu/api/res/1.2/glmnvbdFYsfjDYA4wJEtFw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/03092021/3638.png", 
-    "https://s.yimg.com/iu/api/res/1.2/wmBhg4utyUxMavyzKz7gnw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/5053.1.png", 
-    "https://s.yimg.com/iu/api/res/1.2/lFKl9Jth.gZSZVY0rfXG7g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11022021/5691.png", 
-    "https://s.yimg.com/iu/api/res/1.2/nGZzoOEzWxVGQhJYIDGsSw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/7528.png", 
-    "https://s.yimg.com/iu/api/res/1.2/83potp4_9ED70oxqnxdLsQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/5120.png", 
-    "https://s.yimg.com/iu/api/res/1.2/Lyv2nHZsPYnGkx9od8nVmg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/4503.png", 
-    "https://s.yimg.com/iu/api/res/1.2/j61hka6waSk6HBOg2djGHw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11172021/7905.png", 
-    "https://s.yimg.com/iu/api/res/1.2/SqYNh6nZhApUjr0F5bARUA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/6367.png", 
-    "https://s.yimg.com/iu/api/res/1.2/YMJ7LhspnH90fCCuWRlV0w--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3614.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png", 
-    "https://s.yimg.com/iu/api/res/1.2/iGliKNPX_055Nu9G_VzgBg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/8641.png", 
-    "https://s.yimg.com/iu/api/res/1.2/ZyHB2AQhAoBevOzohNNyFA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11192021/7886.png", 
-    "https://s.yimg.com/iu/api/res/1.2/5wiqV8CHJJqUpUaA_Gjs9A--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11192021/6445.png", 
-    "https://s.yimg.com/iu/api/res/1.2/fUnfHETacWgJGN9Tv0O7lg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3782.png", 
-    "https://s.yimg.com/iu/api/res/1.2/lc0qCu.a.f1AIOe0oByQXQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/6744.png"
-    ), roster_is_undroppable = c("1", "0", "0", "0", "0", "0", 
-    "1", "0", "0", "0", "1", "0", "0", "0", "0", "0"), roster_position_type = c("P", 
-    "P", "P", "P", "P", "P", "P", "P", "P", "P", "P", "P", "G", 
-    "G", "G", "P"), roster_primary_position = c("C", "C", "LW", 
-    "LW", "C", "RW", "D", "D", "D", "D", "C", "LW", "G", "G", 
-    "G", "C"), roster_eligible_positions.position_1 = c("C", 
-    "C", "LW", "LW", "C", "RW", "D", "D", "D", "D", "C", "LW", 
-    "G", "G", "G", "C"), roster_eligible_positions.position_2 = c("RW", 
-    "IR", "RW", NA, "RW", NA, NA, NA, NA, "IR", "LW", NA, NA, 
-    NA, "IR", "IR"), roster_eligible_positions.position_3 = c("IR", 
-    NA, "IR", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
-    NA), roster_has_player_notes = c("1", "1", "1", "1", NA, 
-    NA, "1", NA, "1", "1", "1", NA, "1", "1", "1", NA), roster_player_notes_last_timestamp = c("1637702492", 
-    "1638307015", "1638215481", "1638113910", NA, NA, "1638132859", 
-    NA, "1637839541", "1637970565", "1637821700", NA, "1637969778", 
-    "1638298586", "1638225091", NA), roster_has_recent_player_notes = c(NA, 
-    "1", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "1", NA, 
-    NA), roster_selected_position.coverage_type = c("date", "date", 
-    "date", "date", "date", "date", "date", "date", "date", "date", 
-    "date", "date", "date", "date", "date", "date"), roster_selected_position.date = c("2021-10-12", 
-    "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", 
-    "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", 
-    "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12", "2021-10-12"
-    ), roster_selected_position.position = c("C", "C", "LW", 
-    "LW", "RW", "RW", "D", "D", "D", "D", "BN", "BN", "G", "G", 
-    "BN", "IR"), roster_selected_position.is_flex = c("0", "0", 
-    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
-    "0", "0")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--16L))
-```
-
-```{r}
-team_1_roster_w_date
-```
-
-### Examples
-
-#### Multiple dates
-
-Map over multiple dates
-
-```{r map over multiple dates, eval=FALSE}
-
-# create a date sequence from fantasy week 1 using return from `y_weeks()`
-week_1 <- seq.Date(from = lubridate::ymd(weeks$start[1]), to = lubridate::ymd(weeks$end[1]), by = 1)
-
-# map over the date sequence to get roster for those dates
-purrr::map_df(.x = week_1, .f = y_rosters, id = "411.l.1239.t.1", token_name = yahoo_token)
-```
-
-#### Multiple teams
-
-You can map over multiple teams.  Here team 1 and 2 are returned in a list.
 
 ```{r, eval=FALSE}
-rosters_2 <- purrr::map(c("411.l.1239.t.1", "411.l.1239.t.2"), y_rosters, token_name = yahoo_token, debug = FALSE)
-```
-
-```{r, echo=FALSE}
-rosters_2 <- 
-  list(structure(list(team_key = c("411.l.1239.t.1", "411.l.1239.t.1", 
-"411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1"
-), team_id = c("1", "1", "1", "1", "1", "1"), name = c("Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team", "Shoe's Extraordinary Team", 
-"Shoe's Extraordinary Team", "Shoe's Extraordinary Team"), url = c("https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1", "https://hockey.fantasysports.yahoo.com/hockey/1239/1", 
-"https://hockey.fantasysports.yahoo.com/hockey/1239/1"), team_logos_team_logo_size = c("large", 
-"large", "large", "large", "large", "large"), team_logos_team_logo_url = c("https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg", 
-"https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
-), waiver_priority = c("12", "12", "12", "12", "12", "12"), faab_balance = c("82", 
-"82", "82", "82", "82", "82"), number_of_moves = c("13", "13", 
-"13", "13", "13", "13"), number_of_trades = c("0", "0", "0", 
-"0", "0", "0"), roster_adds_coverage_type = c("week", "week", 
-"week", "week", "week", "week"), roster_adds_coverage_value = c("9", 
-"9", "9", "9", "9", "9"), roster_adds_value = c("0", "0", "0", 
-"0", "0", "0"), league_scoring_type = c("head", "head", "head", 
-"head", "head", "head"), draft_position = c("2", "2", "2", "2", 
-"2", "2"), has_draft_grade = c("0", "0", "0", "0", "0", "0"), 
-    managers_manager_manager_id = c("1", "1", "1", "1", "1", 
-    "1"), managers_manager_nickname = c("--hidden--", "--hidden--", 
-    "--hidden--", "--hidden--", "--hidden--", "--hidden--"), 
-    managers_manager_guid = c("KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4", 
-    "KOSXQIEKZPXPGVTDOYXJM7NTM4", "KOSXQIEKZPXPGVTDOYXJM7NTM4"
-    ), managers_manager_felo_score = c("930", "930", "930", "930", 
-    "930", "930"), managers_manager_felo_tier = c("diamond", 
-    "diamond", "diamond", "diamond", "diamond", "diamond"), coverage_type = c("date", 
-    "date", "date", "date", "date", "date"), date = c("2021-12-11", 
-    "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11"
-    ), is_editable = c(0L, 0L, 0L, 0L, 0L, 0L), player_key = c("411.p.3980", 
-    "411.p.6726", "411.p.7083", "411.p.6369", "411.p.6890", "411.p.3351"
-    ), player_id = c("3980", "6726", "7083", "6369", "6890", 
-    "3351"), name_full = c("Jordan Staal", "Evan Rodrigues", 
-    "Brandon Tanev", "Leon Draisaitl", "Troy Terry", "Dustin Brown"
-    ), name_first = c("Jordan", "Evan", "Brandon", "Leon", "Troy", 
-    "Dustin"), name_last = c("Staal", "Rodrigues", "Tanev", "Draisaitl", 
-    "Terry", "Brown"), name_ascii_first = c("Jordan", "Evan", 
-    "Brandon", "Leon", "Troy", "Dustin"), name_ascii_last = c("Staal", 
-    "Rodrigues", "Tanev", "Draisaitl", "Terry", "Brown"), editorial_player_key = c("nhl.p.3980", 
-    "nhl.p.6726", "nhl.p.7083", "nhl.p.6369", "nhl.p.6890", "nhl.p.3351"
-    ), editorial_team_key = c("nhl.t.7", "nhl.t.16", "nhl.t.59", 
-    "nhl.t.6", "nhl.t.25", "nhl.t.8"), editorial_team_full_name = c("Carolina Hurricanes", 
-    "Pittsburgh Penguins", "Seattle Kraken", "Edmonton Oilers", 
-    "Anaheim Ducks", "Los Angeles Kings"), editorial_team_abbr = c("Car", 
-    "Pit", "Sea", "Edm", "Anh", "LA"), uniform_number = c("11", 
-    "9", "13", "29", "19", "23"), display_position = c("C", "C,RW", 
-    "LW,RW", "C,LW", "RW", "RW"), headshot_url = c("https://s.yimg.com/iu/api/res/1.2/VEFE0a7ueOsxDI4khB7QhQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272021/3980.png", 
-    "https://s.yimg.com/iu/api/res/1.2/ek7a7GHY_lIufgfFv0ZIUA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/6726.png", 
-    "https://s.yimg.com/iu/api/res/1.2/g9TlynFxlEdsl6P.gUjuKg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/7083.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png", 
-    "https://s.yimg.com/iu/api/res/1.2/H1vg._NvmxZyeDKXz2x.zg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11292021/6890.png", 
-    "https://s.yimg.com/iu/api/res/1.2/nQILQ.j2ICYx8lr8CcjOzA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3351.png"
-    ), headshot_size = c("small", "small", "small", "small", 
-    "small", "small"), image_url = c("https://s.yimg.com/iu/api/res/1.2/VEFE0a7ueOsxDI4khB7QhQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272021/3980.png", 
-    "https://s.yimg.com/iu/api/res/1.2/ek7a7GHY_lIufgfFv0ZIUA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/6726.png", 
-    "https://s.yimg.com/iu/api/res/1.2/g9TlynFxlEdsl6P.gUjuKg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/7083.png", 
-    "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png", 
-    "https://s.yimg.com/iu/api/res/1.2/H1vg._NvmxZyeDKXz2x.zg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11292021/6890.png", 
-    "https://s.yimg.com/iu/api/res/1.2/nQILQ.j2ICYx8lr8CcjOzA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3351.png"
-    ), is_undroppable = c("0", "0", "0", "1", "0", "0"), position_type = c("P", 
-    "P", "P", "P", "P", "P"), primary_position = c("C", "C", 
-    "LW", "C", "RW", "RW"), eligible_positions_position = c("C", 
-    "C", "LW", "C", "RW", "RW"), selected_position_coverage_type = c("date", 
-    "date", "date", "date", "date", "date"), selected_position_date = c("2021-12-11", 
-    "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11"
-    ), selected_position_position = c("C", "C", "LW", "LW", "RW", 
-    "RW"), selected_position_is_flex = c("0", "0", "0", "0", 
-    "0", "0"), eligible_positions_position_2 = c(NA, "RW", "RW", 
-    "LW", NA, NA), has_player_notes = c(NA, NA, NA, "1", "1", 
-    "1"), player_notes_last_timestamp = c(NA, NA, NA, "1639112059", 
-    "1638340175", "1638395821"), status = c(NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), status_full = c(NA_character_, NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_), injury_note = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), has_recent_player_notes = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), starting_status_coverage_type = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), starting_status_date = c(NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), starting_status_is_starting = c(NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), on_disabled_list = c(NA_character_, NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_), eligible_positions_position_3 = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), coverage_type_2 = c("week", "week", "week", 
-    "week", "week", "week"), coverage_value = c(9L, 9L, 9L, 9L, 
-    9L, 9L), value = c("3", "3", "3", "3", "3", "3")), row.names = c(NA, 
--6L), class = c("tbl_df", "tbl", "data.frame")), structure(list(
-    team_key = c("411.l.1239.t.2", "411.l.1239.t.2", "411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.2", "411.l.1239.t.2"), team_id = c("2", 
-    "2", "2", "2", "2", "2"), name = c("Doughty Sanchez", "Doughty Sanchez", 
-    "Doughty Sanchez", "Doughty Sanchez", "Doughty Sanchez", 
-    "Doughty Sanchez"), url = c("https://hockey.fantasysports.yahoo.com/hockey/1239/2", 
-    "https://hockey.fantasysports.yahoo.com/hockey/1239/2", "https://hockey.fantasysports.yahoo.com/hockey/1239/2", 
-    "https://hockey.fantasysports.yahoo.com/hockey/1239/2", "https://hockey.fantasysports.yahoo.com/hockey/1239/2", 
-    "https://hockey.fantasysports.yahoo.com/hockey/1239/2"), 
-    team_logos_team_logo_size = c("large", "large", "large", 
-    "large", "large", "large"), team_logos_team_logo_url = c("https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png", 
-    "https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png", "https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png", 
-    "https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png", "https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png", 
-    "https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png"), waiver_priority = c("2", 
-    "2", "2", "2", "2", "2"), faab_balance = c("85", "85", "85", 
-    "85", "85", "85"), number_of_moves = c("7", "7", "7", "7", 
-    "7", "7"), number_of_trades = c("0", "0", "0", "0", "0", 
-    "0"), roster_adds_coverage_type = c("week", "week", "week", 
-    "week", "week", "week"), roster_adds_coverage_value = c("9", 
-    "9", "9", "9", "9", "9"), roster_adds_value = c("0", "0", 
-    "0", "0", "0", "0"), league_scoring_type = c("head", "head", 
-    "head", "head", "head", "head"), draft_position = c("8", 
-    "8", "8", "8", "8", "8"), has_draft_grade = c("0", "0", "0", 
-    "0", "0", "0"), managers_manager_manager_id = c("2", "2", 
-    "2", "2", "2", "2"), managers_manager_nickname = c("--hidden--", 
-    "--hidden--", "--hidden--", "--hidden--", "--hidden--", "--hidden--"
-    ), managers_manager_guid = c("KIFYUJWDLJG34ZM42WLVBMO2TI", 
-    "KIFYUJWDLJG34ZM42WLVBMO2TI", "KIFYUJWDLJG34ZM42WLVBMO2TI", 
-    "KIFYUJWDLJG34ZM42WLVBMO2TI", "KIFYUJWDLJG34ZM42WLVBMO2TI", 
-    "KIFYUJWDLJG34ZM42WLVBMO2TI"), managers_manager_felo_score = c("777", 
-    "777", "777", "777", "777", "777"), managers_manager_felo_tier = c("gold", 
-    "gold", "gold", "gold", "gold", "gold"), coverage_type = c("date", 
-    "date", "date", "date", "date", "date"), date = c("2021-12-11", 
-    "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11"
-    ), is_editable = c(0L, 0L, 0L, 0L, 0L, 0L), player_key = c("411.p.6758", 
-    "411.p.3788", "411.p.7902", "411.p.6480", "411.p.5096", "411.p.5639"
-    ), player_id = c("6758", "3788", "7902", "6480", "5096", 
-    "5639"), name_full = c("Mathew Barzal", "Anze Kopitar", "Brady Tkachuk", 
-    "Viktor Arvidsson", "Zach Hyman", "Reilly Smith"), name_first = c("Mathew", 
-    "Anze", "Brady", "Viktor", "Zach", "Reilly"), name_last = c("Barzal", 
-    "Kopitar", "Tkachuk", "Arvidsson", "Hyman", "Smith"), name_ascii_first = c("Mathew", 
-    "Anze", "Brady", "Viktor", "Zach", "Reilly"), name_ascii_last = c("Barzal", 
-    "Kopitar", "Tkachuk", "Arvidsson", "Hyman", "Smith"), editorial_player_key = c("nhl.p.6758", 
-    "nhl.p.3788", "nhl.p.7902", "nhl.p.6480", "nhl.p.5096", "nhl.p.5639"
-    ), editorial_team_key = c("nhl.t.12", "nhl.t.8", "nhl.t.14", 
-    "nhl.t.8", "nhl.t.6", "nhl.t.58"), editorial_team_full_name = c("New York Islanders", 
-    "Los Angeles Kings", "Ottawa Senators", "Los Angeles Kings", 
-    "Edmonton Oilers", "Vegas Golden Knights"), editorial_team_abbr = c("NYI", 
-    "LA", "Ott", "LA", "Edm", "VGK"), uniform_number = c("13", 
-    "11", "7", "33", "18", "19"), display_position = c("C", "C", 
-    "LW", "LW,RW", "LW,RW", "RW"), headshot_url = c("https://s.yimg.com/iu/api/res/1.2/NLpuWlSsI7ULeVUpsfAtLg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11112021/6758.png", 
-    "https://s.yimg.com/iu/api/res/1.2/4ylSAGQHDbYiYmqA5kx3jQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3788.png", 
-    "https://s.yimg.com/iu/api/res/1.2/WOijaC7dPEIb2o9IrP3muw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11272019/7902.png", 
-    "https://s.yimg.com/iu/api/res/1.2/jDc4.5K_fqSnMgmmN8.L2w--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/6480.png", 
-    "https://s.yimg.com/iu/api/res/1.2/dzHFPIluwUWoxMCLgy5gzw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/5096.png", 
-    "https://s.yimg.com/iu/api/res/1.2/UxyErIa546yzLFgAMa9xMA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/5639.png"
-    ), headshot_size = c("small", "small", "small", "small", 
-    "small", "small"), image_url = c("https://s.yimg.com/iu/api/res/1.2/NLpuWlSsI7ULeVUpsfAtLg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11112021/6758.png", 
-    "https://s.yimg.com/iu/api/res/1.2/4ylSAGQHDbYiYmqA5kx3jQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3788.png", 
-    "https://s.yimg.com/iu/api/res/1.2/WOijaC7dPEIb2o9IrP3muw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11272019/7902.png", 
-    "https://s.yimg.com/iu/api/res/1.2/jDc4.5K_fqSnMgmmN8.L2w--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/6480.png", 
-    "https://s.yimg.com/iu/api/res/1.2/dzHFPIluwUWoxMCLgy5gzw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/5096.png", 
-    "https://s.yimg.com/iu/api/res/1.2/UxyErIa546yzLFgAMa9xMA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/5639.png"
-    ), is_undroppable = c("0", "0", "1", "0", "0", "0"), position_type = c("P", 
-    "P", "P", "P", "P", "P"), primary_position = c("C", "C", 
-    "LW", "LW", "LW", "RW"), eligible_positions_position = c("C", 
-    "C", "LW", "LW", "LW", "RW"), has_player_notes = c("1", NA, 
-    "1", "1", "1", NA), player_notes_last_timestamp = c("1638798534", 
-    NA, "1638849242", "1638856088", "1638425096", NA), selected_position_coverage_type = c("date", 
-    "date", "date", "date", "date", "date"), selected_position_date = c("2021-12-11", 
-    "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11", "2021-12-11"
-    ), selected_position_position = c("C", "C", "LW", "LW", "RW", 
-    "RW"), selected_position_is_flex = c("0", "0", "0", "0", 
-    "0", "0"), eligible_positions_position_2 = c(NA, NA, NA, 
-    "RW", "RW", NA), status = c(NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), status_full = c(NA_character_, NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_), injury_note = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), has_recent_player_notes = c(NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_, 
-    NA_character_), on_disabled_list = c(NA_character_, NA_character_, 
-    NA_character_, NA_character_, NA_character_, NA_character_
-    ), coverage_type_2 = c("week", "week", "week", "week", "week", 
-    "week"), coverage_value = c(9L, 9L, 9L, 9L, 9L, 9L), value = c("4", 
-    "4", "4", "4", "4", "4")), row.names = c(NA, -6L), class = c("tbl_df", 
-"tbl", "data.frame")))
+team_stats_current_week <- y_team_stats(id = "411.l.1239", my_token)
 ```
 
 ```{r}
-rosters_2
+team_stats_current_week
 ```
 
-#### Multiple Teams and Dates
-
-    purrr::map_df(
-    .x = c("411.l.1239.t.1", "411.l.1239.t.1"), 
-    .f = y_rosters, 
-    token_name = yahoo_token, 
-    game_date = c("2021-12-01", "2021-12-02"), 
-    debug = FALSE)
-    
-## y_player_stats
-
-Let's see some player stats! To get stats for players using player keys. 
-
-Here's a basic example using Leon Draisaitl.
-
-```{r y_player_stats, eval=FALSE}
-draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token) %>%
-  dplyr::select(g:sog)
+Set week to NULL returns season stats
+```{r, include=FALSE}
+httptest::with_mock_api(
+  team_stats_season <- y_team_stats(id = "411.l.1239", my_token, week = NULL)
+)
 ```
-
-```{r, echo=FALSE}
-draisaitl_stats <- 
-  structure(list(g = "21", a = "22", p = "43", x = "15", pim = "14", 
-    ppg = "11", ppa = "6", ppp = "17", shg = "1", sha = "0", 
-    shp = "1", gwg = "6", gtg = "-", sog = "83"), row.names = c(NA, 
--1L), class = c("tbl_df", "tbl", "data.frame"))
-```
-
-```{r}
-draisaitl_stats
-```
-
-Well that's bs why can't I just use the player's name!? Where did you get that player key number anyways?
-
-  - The player key can be found using:
-      - `y_player_slate()`
-      - `y_players()`
-      - `y_rosters()`
-      
-Here's an example from the public league.
 
 ```{r, eval=FALSE}
-players <- y_rosters(id = "411.l.1239.t.1", token_name = my_token) %>% 
-  dplyr::select(player_key, name_full)
-```
-
-```{r, echo=FALSE}
-players <- 
-  structure(list(player_key = c("411.p.3980", "411.p.7528", "411.p.7083", 
-"411.p.6369", "411.p.6890", "411.p.3351", "411.p.6367", "411.p.4503", 
-"411.p.7905", "411.p.5039", "411.p.4687", "411.p.6726", "411.p.5958", 
-"411.p.6445", "411.p.4003", "411.p.4589", "411.p.6448", "411.p.3782"
-), name_full = c("Jordan Staal", "Nick Suzuki", "Brandon Tanev", 
-"Leon Draisaitl", "Troy Terry", "Dustin Brown", "Aaron Ekblad", 
-"John Carlson", "Quinn Hughes", "Radko Gudas", "Nazem Kadri", 
-"Evan Rodrigues", "Nick Jensen", "Elvis Merzlikins", "Semyon Varlamov", 
-"Jake Allen", "Brayden Point", "Carey Price")), row.names = c(NA, 
--18L), class = c("tbl_df", "tbl", "data.frame"))
+team_stats_season <- y_team_stats(id = "411.l.1239", my_token, week = NULL)
 ```
 
 ```{r}
-players
+team_stats_season
 ```
 
-OK so what? I have to write down those numbers and run this function for each player? 
-
-Nope! `y_player_stats()` can take a vector of player keys.  Here's how using our roster from the last example.
+Or select a week
+```{r, inlcude=FALSE}
+httptest::with_mock_api(
+  week_5_team_stats <- y_team_stats(id = "411.l.1239", my_token, week = 5)
+)
+```
 
 ```{r, eval=FALSE}
-my_player_stats <- 
-  y_player_stats(players = players$player_key, token_name = my_token) %>%
-  dplyr::select(name_full, g:sog)
-```
-
-```{r, echo=FALSE}
-my_player_stats <- 
-  structure(list(name_full = c("Jordan Staal", "Nick Suzuki", "Brandon Tanev", 
-"Leon Draisaitl", "Troy Terry", "Dustin Brown", "Aaron Ekblad", 
-"John Carlson", "Quinn Hughes", "Radko Gudas", "Nazem Kadri", 
-"Evan Rodrigues", "Nick Jensen", "Elvis Merzlikins", "Semyon Varlamov", 
-"Jake Allen", "Brayden Point", "Carey Price"), g = c("2", "6", 
-"8", "21", "15", "3", "8", "6", "2", "0", "11", "8", "3", NA, 
-NA, NA, "7", NA), a = c("6", "12", "5", "22", "11", "6", "15", 
-"18", "19", "6", "23", "10", "6", NA, NA, NA, "6", NA), p = c("8", 
-"18", "13", "43", "26", "9", "23", "24", "21", "6", "34", "18", 
-"9", NA, NA, NA, "13", NA), x = c("1", "-9", "2", "15", "3", 
-"-1", "19", "8", "4", "8", "7", "5", "20", NA, NA, NA, "2", NA
-), pim = c("8", "8", "13", "14", "8", "8", "10", "4", "14", "26", 
-"30", "0", "2", NA, NA, NA, "7", NA), ppg = c("1", "3", "2", 
-"11", "4", "0", "2", "3", "0", "0", "5", "2", "0", NA, NA, NA, 
-"1", NA), ppa = c("0", "3", "0", "6", "3", "0", "6", "5", "10", 
-"0", "7", "0", "0", NA, NA, NA, "3", NA), ppp = c("1", "6", "2", 
-"17", "7", "0", "8", "8", "10", "0", "12", "2", "0", NA, NA, 
-NA, "4", NA), shg = c("0", "1", "1", "1", "0", "0", "0", "0", 
-"0", "0", "0", "0", "0", NA, NA, NA, "0", NA), sha = c("0", "0", 
-"0", "0", "0", "0", "0", "1", "1", "0", "0", "0", "0", NA, NA, 
-NA, "0", NA), shp = c("0", "1", "1", "1", "0", "0", "0", "1", 
-"1", "0", "0", "0", "0", NA, NA, NA, "0", NA), gwg = c("0", "2", 
-"2", "6", "3", "0", "1", "1", "0", "0", "1", "1", "0", NA, NA, 
-NA, "2", NA), gtg = c("-", "-", "-", "-", "-", "-", "-", "-", 
-"-", "-", "-", "-", "-", NA, NA, NA, "-", NA), sog = c("43", 
-"58", "45", "83", "54", "78", "84", "56", "58", "40", "69", "82", 
-"38", NA, NA, NA, "38", NA)), row.names = c(NA, -18L), class = c("tbl_df", 
-"tbl", "data.frame"))
+week_5_team_stats <- y_team_stats(id = "411.l.1239", my_token, week = 5)
 ```
 
 ```{r}
-my_player_stats
-```
-
-Don't worry about the NA's in the goalie stats.  I'm only showing you skater stats.
-
-OK well that's pretty good but what if I only want stats for my players from yesterday?
-
-```{r, eval=FALSE}
-yesterday_stats <- 
-  y_player_stats(
-    players = players$player_key,
-    token_name = yahoo_token,
-    date = Sys.Date() - 1
-  ) %>%
-  dplyr::select(name_full, g:sog)
-```
-
-```{r, echo=FALSE}
-yesterday_stats <- 
-  structure(list(name_full = c("Jordan Staal", "Nick Suzuki", "Brandon Tanev", 
-"Leon Draisaitl", "Troy Terry", "Dustin Brown", "Aaron Ekblad", 
-"John Carlson", "Quinn Hughes", "Radko Gudas", "Nazem Kadri", 
-"Evan Rodrigues", "Nick Jensen", "Elvis Merzlikins", "Semyon Varlamov", 
-"Jake Allen", "Brayden Point", "Carey Price"), g = c("-", "-", 
-"-", "-", "-", "-", "-", "-", "0", "-", "1", "-", "-", NA, NA, 
-NA, "-", NA), a = c("-", "-", "-", "-", "-", "-", "-", "-", "1", 
-"-", "2", "-", "-", NA, NA, NA, "-", NA), p = c("-", "-", "-", 
-"-", "-", "-", "-", "-", "1", "-", "3", "-", "-", NA, NA, NA, 
-"-", NA), x = c("-", "-", "-", "-", "-", "-", "-", "-", "0", 
-"-", "4", "-", "-", NA, NA, NA, "-", NA), pim = c("-", "-", "-", 
-"-", "-", "-", "-", "-", "0", "-", "0", "-", "-", NA, NA, NA, 
-"-", NA), ppg = c("-", "-", "-", "-", "-", "-", "-", "-", "0", 
-"-", "0", "-", "-", NA, NA, NA, "-", NA), ppa = c("-", "-", "-", 
-"-", "-", "-", "-", "-", "1", "-", "0", "-", "-", NA, NA, NA, 
-"-", NA), ppp = c("-", "-", "-", "-", "-", "-", "-", "-", "1", 
-"-", "0", "-", "-", NA, NA, NA, "-", NA), shg = c("-", "-", "-", 
-"-", "-", "-", "-", "-", "0", "-", "0", "-", "-", NA, NA, NA, 
-"-", NA), sha = c("-", "-", "-", "-", "-", "-", "-", "-", "0", 
-"-", "0", "-", "-", NA, NA, NA, "-", NA), shp = c("-", "-", "-", 
-"-", "-", "-", "-", "-", "0", "-", "0", "-", "-", NA, NA, NA, 
-"-", NA), gwg = c("-", "-", "-", "-", "-", "-", "-", "-", "0", 
-"-", "0", "-", "-", NA, NA, NA, "-", NA), gtg = c("-", "-", "-", 
-"-", "-", "-", "-", "-", "0", "-", "0", "-", "-", NA, NA, NA, 
-"-", NA), sog = c("-", "-", "-", "-", "-", "-", "-", "-", "4", 
-"-", "1", "-", "-", NA, NA, NA, "-", NA)), row.names = c(NA, 
--18L), class = c("tbl_df", "tbl", "data.frame"))
-```
-
-```{r}
-yesterday_stats
-```
-
-And can it get my players stats for week 7?  Yes! You can supply a vector of dates to `y_player_stats()`
-
-Using y_weeks we can find the start and end date for week 7.
-
-```{r, eval=FALSE}
-week_7 <- 
-  y_weeks(411, yahoo_token) %>%
-  dplyr::filter(week == 7) %>%
-  dplyr::select(start, end)
-```
-
-```{r, echo=FALSE}
-week_7 <- 
-  structure(list(start = "2021-11-22"), row.names = c(NA, -1L), class = c("tbl_df", 
-"tbl", "data.frame"))
-```
-
-And create a date sequence
-
-```{r week 7 date sequence, eval=FALSE}
-week_7
-
-week_7_dates <- 
-  seq.Date(from = as.Date(week_7$start), 
-           to = as.Date(week_7$end), 
-           by = 1)
-```
-
-Week 7 player record count
-
-```{r week 7 player count, eval=FALSE}
-week_7_stats <-
-  y_player_stats(
-    players = players$player_key,
-    token_name = yahoo_token,
-    game_date = week_7_dates
-  ) %>%
-  dplyr::count(name_full)
-  
-```
-
-```{r week 7 player record return, echo=FALSE}
-structure(list(name_full = c("Aaron Ekblad", "Brandon Tanev", 
-"Brayden Point", "Carey Price", "Dustin Brown", "Elvis Merzlikins", 
-"Evan Rodrigues", "Jake Allen", "John Carlson", "Jordan Staal", 
-"Leon Draisaitl", "Nazem Kadri", "Nick Jensen", "Nick Suzuki", 
-"Quinn Hughes", "Radko Gudas", "Semyon Varlamov", "Troy Terry"
-), n = c(7L, 7L, 7L, 7L, 7L, 7L, 7L, 7L, 7L, 7L, 7L, 7L, 7L, 
-7L, 7L, 7L, 7L, 7L)), class = c("tbl_df", "tbl", "data.frame"
-), row.names = c(NA, -18L))
-```
-
-```{r week 7 player 1, eval=FALSE}
-week_7_stats %>% 
-  dplyr::select(name_full, g:sog) %>%
-  dplyr::group_by(name_full) %>%
-  dplyr::group_split() %>%
-  purrr::pluck(1)
-```
-
-```{r week 7 player 1 return, echo=FALSE}
-  structure(list(name_full = c("Aaron Ekblad", "Aaron Ekblad", 
-"Aaron Ekblad", "Aaron Ekblad", "Aaron Ekblad", "Aaron Ekblad", 
-"Aaron Ekblad"), g = c("-", "-", "1", "-", "0", "0", "-"), a = c("-", 
-"-", "1", "-", "0", "0", "-"), p = c("-", "-", "2", "-", "0", 
-"0", "-"), x = c("-", "-", "0", "-", "0", "-1", "-"), pim = c("-", 
-"-", "4", "-", "0", "0", "-"), ppg = c("-", "-", "0", "-", "0", 
-"0", "-"), ppa = c("-", "-", "1", "-", "0", "0", "-"), ppp = c("-", 
-"-", "1", "-", "0", "0", "-"), shg = c("-", "-", "0", "-", "0", 
-"0", "-"), sha = c("-", "-", "0", "-", "0", "0", "-"), shp = c("-", 
-"-", "0", "-", "0", "0", "-"), gwg = c("-", "-", "1", "-", "0", 
-"0", "-"), gtg = c("-", "-", "0", "-", "0", "0", "-"), sog = c("-", 
-"-", "4", "-", "1", "5", "-")), class = c("tbl_df", "tbl", "data.frame"
-), row.names = c(NA, -7L))
+week_5_team_stats
 ```
 
 ## y_transactions
 
 I want to see all the moves made in my league this year. Can I do that?
 
-Use `y_transactions` to retrieve transactions for a league or team. 
+Use `y_transactions` to retrieve transactions for a league or team.
 
 > Note :
 >
 > waiver claims are special transaction not covered by `y_transactions`
 >
 
+Return all non-waiver transactions from a league
 ```{r, eval=FALSE}
-all_transactions <- 
-  y_transactions(id = "411.l.1239", token_name = my_token) %>% 
-  head()
-```
-
-```{r, echo=FALSE}
-all_transactions <- structure(list(transaction_key = c("411.l.1239.tr.195", "411.l.1239.tr.195", 
-"411.l.1239.tr.194", "411.l.1239.tr.194", "411.l.1239.tr.193", 
-"411.l.1239.tr.192"), transaction_id = c("195", "195", "194", 
-"194", "193", "192"), type = c("add/drop", "add/drop", "add/drop", 
-"add/drop", "add", "add/drop"), status = c("successful", "successful", 
-"successful", "successful", "successful", "successful"), timestamp = structure(c(1639123728, 
-1639123728, 1639123728, 1639123728, 1639037341, 1639037341), tzone = "", class = c("POSIXct", 
-"POSIXt")), player_key = c("411.p.3979", "411.p.5375", "411.p.5988", 
-"411.p.6377", "411.p.5371", "411.p.6402"), player_id = c("3979", 
-"5375", "5988", "6377", "5371", "6402"), name_full = c("Erik Johnson", 
-"Jamie Oleksiak", "Bo Horvat", "Kevin Fiala", "Jonas Brodin", 
-"Ivan Barbashev"), name_first = c("Erik", "Jamie", "Bo", "Kevin", 
-"Jonas", "Ivan"), name_last = c("Johnson", "Oleksiak", "Horvat", 
-"Fiala", "Brodin", "Barbashev"), name_ascii_first = c("Erik", 
-"Jamie", "Bo", "Kevin", "Jonas", "Ivan"), name_ascii_last = c("Johnson", 
-"Oleksiak", "Horvat", "Fiala", "Brodin", "Barbashev"), editorial_team_abbr = c("Col", 
-"Sea", "Van", "Min", "Min", "StL"), display_position = c("D", 
-"D", "C", "LW,RW", "D", "C,LW,RW"), position_type = c("P", "P", 
-"P", "P", "P", "P"), transaction_data_type = c("add", "drop", 
-"add", "drop", "add", "add"), transaction_data_source_type = c("waivers", 
-"team", "waivers", "team", "waivers", "waivers"), transaction_data_destination_type = c("team", 
-"waivers", "team", "waivers", "team", "team"), transaction_data_destination_team_key = c("411.l.1239.t.4", 
-NA, "411.l.1239.t.12", NA, "411.l.1239.t.7", "411.l.1239.t.6"
-), transaction_data_destination_team_name = c("MxPx", NA, "Kenora Thistles II", 
-NA, "Dominik's Dandy Team", "MapleBuds Cmbk Kids !"), transaction_data_source_team_key = c(NA, 
-"411.l.1239.t.4", NA, "411.l.1239.t.12", NA, NA), transaction_data_source_team_name = c(NA, 
-"MxPx", NA, "Kenora Thistles II", NA, NA), faab_bid = c(NA, NA, 
-"1", "1", NA, NA)), row.names = c(NA, -6L), class = c("tbl_df", 
-"tbl", "data.frame"))
-  
-```
-
-```{r}
-all_transactions
+# Not run
+all_transactions <-
+  y_transactions(id = "411.l.1239", token_name = my_token)
 ```
 
   - Arguments count and transaction_type can be supplied filter the return:
@@ -1245,47 +260,18 @@ all_transactions
 
 Here are the last 5 transactions for team 1.
 
-```{r team transactions count 5, eval=FALSE}
-team_trans <- y_transactions(id = "411.l.1239.t.1", token_name = yahoo_token, count = 5)
+```{r team transactions count 5, include=FALSE}
+with_mock_api({
+  team_trans <- y_transactions(id = "411.l.1239.t.1", token_name = my_token, count = 5)
+})
 ```
 
-```{r team trans return, echo = FALSE}
-
-team_trans <- 
-  structure(list(transaction_key = c("411.l.1239.tr.176", "411.l.1239.tr.163", 
-"411.l.1239.tr.159", "411.l.1239.tr.158", "411.l.1239.tr.141", 
-"411.l.1239.tr.141"), transaction_id = c("176", "163", "159", 
-"158", "141", "141"), type = c("add", "drop", "add", "drop", 
-"add/drop", "add/drop"), status = c("successful", "successful", 
-"successful", "successful", "successful", "successful"), timestamp = structure(c(1638518932, 
-1638326233, 1638259729, 1638232255, 1637482124, 1637482124), class = c("POSIXct", 
-"POSIXt"), tzone = ""), player_key = c("411.p.4003", "411.p.5053", 
-"411.p.6726", "411.p.6744", "411.p.3351", "411.p.5120"), player_id = c("4003", 
-"5053", "6726", "6744", "3351", "5120"), name_full = c("Semyon Varlamov", 
-"Bryan Rust", "Evan Rodrigues", "Jack Eichel", "Dustin Brown", 
-"Brendan Gallagher"), name_first = c("Semyon", "Bryan", "Evan", 
-"Jack", "Dustin", "Brendan"), name_last = c("Varlamov", "Rust", 
-"Rodrigues", "Eichel", "Brown", "Gallagher"), name_ascii_first = c("Semyon", 
-"Bryan", "Evan", "Jack", "Dustin", "Brendan"), name_ascii_last = c("Varlamov", 
-"Rust", "Rodrigues", "Eichel", "Brown", "Gallagher"), editorial_team_abbr = c("NYI", 
-"Pit", "Pit", "VGK", "LA", "Mon"), display_position = c("G", 
-"LW,RW", "C,RW", "C", "RW", "RW"), position_type = c("G", "P", 
-"P", "P", "P", "P"), transaction_data_type = c("add", "drop", 
-"add", "drop", "add", "drop"), transaction_data_source_type = c("waivers", 
-"team", "waivers", "team", "waivers", "team"), transaction_data_destination_type = c("team", 
-"waivers", "team", "waivers", "team", "waivers"), transaction_data_destination_team_key = c("411.l.1239.t.1", 
-NA, "411.l.1239.t.1", NA, "411.l.1239.t.1", NA), transaction_data_destination_team_name = c("Shoe's Extraordinary Team", 
-NA, "Shoe's Extraordinary Team", NA, "Shoe's Extraordinary Team", 
-NA), transaction_data_source_team_key = c(NA, "411.l.1239.t.1", 
-NA, "411.l.1239.t.1", NA, "411.l.1239.t.1"), transaction_data_source_team_name = c(NA, 
-"Shoe's Extraordinary Team", NA, "Shoe's Extraordinary Team", 
-NA, "Shoe's Extraordinary Team"), faab_bid = c(NA, NA, NA, NA, 
-"2", "2")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--6L))
+```{r, eval=FALSE}
+team_trans <- y_transactions(id = "411.l.1239.t.1", token_name = my_token, count = 5)
 ```
 
 ```{r}
-team_trans %>% 
+team_trans %>%
   select(type, timestamp, name_full)
 ```
 
@@ -1296,7 +282,7 @@ The last 10 transactions in the league.
 The last trade in the league.
 
     y_transactions(id = "411.l.1239", token_name = my_token, count = 1, transaction_type = "trade")
-    
+
 Unfortunately as of right now you can filter by date or sort with this function.
 
 ## y_players vs y_player_slate
@@ -1321,7 +307,7 @@ Used to get all the players that exist in your league.  This function includes a
 >
 
 ```{r y_player_slate, eval=FALSE}
-
+# Not run
 all_players_in_my_league <- y_player_slate(league_id = "411.l.1239", token_name = my_token)
 ```
 
@@ -1329,120 +315,78 @@ all_players_in_my_league <- y_player_slate(league_id = "411.l.1239", token_name 
 
 To get a slice of the players in your league.  By default returns 100 players sorted by "AR"
 
-```{r basic y_players, eval=FALSE}
-
+```{r basic y_players, include=FALSE}
+with_mock_api({
 players <- y_players("411.l.1239", token_name = my_token)
+})
+```
 
+```{r, eval=FALSE}
+players <- y_players("411.l.1239", token_name = my_token)
+```
+
+```{r}
+players
 ```
 
 Pass filters as ... arguments to customize your return.
 
-- Valid filters : 
+- Valid filters :
   - position (Valid player positions, e.g. "C")
   - status
-    - A (all available players), 
-    - FA (free agents only), 
-    - W (waivers only), 
-    - T (all taken players), 
-    - K (keepers only) 
+    - A (all available players),
+    - FA (free agents only),
+    - W (waivers only),
+    - T (all taken players),
+    - K (keepers only)
   - search (player name e.g. /players;search=smith)
-  - sort 
-    - {stat_id} (valid stat in your league e.g. sort by goals {/sort="1"}), 
-    - NAME (last, first), 
-    - OR (overall rank), 
-    - AR (actual rank), 
+  - sort
+    - {stat_id} (valid stat in your league e.g. sort by goals {/sort="1"}),
+    - NAME (last, first),
+    - OR (overall rank),
+    - AR (actual rank),
     - PTS (fantasy points)
     - start (Any integer 0 or greater e.g. /players;start=25)
     - count (Any integer b/t 0 & 25 /players;count=5)
 
 Top 10 players by actual rank ("AR")
-```{r y_players top 10, eval=FALSE}
+```{r y_players top 10, include=FALSE}
+with_mock_api({
+top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "AR", status = "ALL", debug = FALSE)
+})
+```
 
+
+```{r, eval=FALSE}
 top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "AR", status = "ALL", debug = FALSE)
 ```
 
-```{r y_players top 10 return, echo=FALSE}
-
-top_10_ar_players <- 
-  structure(list(player_key = c("411.p.3637", "411.p.4687", "411.p.4947", 
-"411.p.4971", "411.p.5984", "411.p.6024"), player_id = c("3637", 
-"4687", "4947", "4971", "5984", "6024"), name.full = c("Alex Ovechkin", 
-"Nazem Kadri", "Jacob Markstrom", "Jack Campbell", "Elias Lindholm", 
-"Tristan Jarry"), name.first = c("Alex", "Nazem", "Jacob", "Jack", 
-"Elias", "Tristan"), name.last = c("Ovechkin", "Kadri", "Markstrom", 
-"Campbell", "Lindholm", "Jarry"), name.ascii_first = c("Alex", 
-"Nazem", "Jacob", "Jack", "Elias", "Tristan"), name.ascii_last = c("Ovechkin", 
-"Kadri", "Markstrom", "Campbell", "Lindholm", "Jarry"), editorial_player_key = c("nhl.p.3637", 
-"nhl.p.4687", "nhl.p.4947", "nhl.p.4971", "nhl.p.5984", "nhl.p.6024"
-), editorial_team_key = c("nhl.t.23", "nhl.t.17", "nhl.t.3", 
-"nhl.t.21", "nhl.t.3", "nhl.t.16"), editorial_team_full_name = c("Washington Capitals", 
-"Colorado Avalanche", "Calgary Flames", "Toronto Maple Leafs", 
-"Calgary Flames", "Pittsburgh Penguins"), editorial_team_abbr = c("Was", 
-"Col", "Cgy", "Tor", "Cgy", "Pit"), uniform_number = c("8", "91", 
-"25", "36", "28", "35"), display_position = c("LW", "C", "G", 
-"G", "C,RW", "G"), headshot.url = c("https://s.yimg.com/iu/api/res/1.2/RAlVyomr4R07w8FkHfhTvQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3637.png", 
-"https://s.yimg.com/iu/api/res/1.2/xwGbQ_m8aWDHg5tA5FBqpg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/4687.png", 
-"https://s.yimg.com/iu/api/res/1.2/2c42dKbOmLWo8xODG9.BAw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/4947.png", 
-"https://s.yimg.com/iu/api/res/1.2/xJwap_x4ui_MHkvTcenuzw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11012021/4971.png", 
-"https://s.yimg.com/iu/api/res/1.2/MNLJJR2s8bz.5Kuahpvpgw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/5984.png", 
-"https://s.yimg.com/iu/api/res/1.2/5q_Cu2WrvAqGD7OY3RLS6Q--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/6024.png"
-), headshot.size = c("small", "small", "small", "small", "small", 
-"small"), image_url = c("https://s.yimg.com/iu/api/res/1.2/RAlVyomr4R07w8FkHfhTvQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3637.png", 
-"https://s.yimg.com/iu/api/res/1.2/xwGbQ_m8aWDHg5tA5FBqpg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/4687.png", 
-"https://s.yimg.com/iu/api/res/1.2/2c42dKbOmLWo8xODG9.BAw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/4947.png", 
-"https://s.yimg.com/iu/api/res/1.2/xJwap_x4ui_MHkvTcenuzw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11012021/4971.png", 
-"https://s.yimg.com/iu/api/res/1.2/MNLJJR2s8bz.5Kuahpvpgw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/5984.png", 
-"https://s.yimg.com/iu/api/res/1.2/5q_Cu2WrvAqGD7OY3RLS6Q--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11182021/6024.png"
-), is_undroppable = c("1", "0", "0", "0", "0", "0"), position_type = c("P", 
-"P", "G", "G", "P", "G"), primary_position = c("LW", "C", "G", 
-"G", "C", "G"), eligible_positions.position_1 = c("LW", "C", 
-"G", "G", "C", "G"), has_player_notes = c("1", "1", "1", "1", 
-"1", "1"), player_notes_last_timestamp = c("1637973471", "1638417398", 
-"1638511955", "1638417082", "1637729802", "1638425187"), eligible_positions.position_2 = c(NA, 
-NA, NA, NA, "RW", NA), has_recent_player_notes = c(NA, NA, "1", 
-NA, NA, NA)), row.names = c(NA, -6L), class = c("tbl_df", "tbl", 
-"data.frame"))
-
-```
-
 ```{r}
-head(top_10_ar_players)
+top_10_ar_players
 ```
 
 Top 10 players sorted by goals (stat="1")
 
-```{r y_players top 10 goals, eval=FALSE}
-
-# top 10 players by stat 
-
-top_10_ar_players <- 
-  y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "1", status = "ALL", debug = FALSE) %>% 
-  select(1:4)
+```{r y_players top 10 goals, include=FALSE}
+with_mock_api({
+  top_10_ar_players <-
+  y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "1", status = "ALL", debug = FALSE)
+})
 ```
 
-```{r y_players top 10 goals return, echo=FALSE}
-
-top_10_ar_players <- 
-  structure(list(rank = c("2", "5", "9", "1", "6", "8", "7", "3", 
-"4", "10"), player_key = c("411.p.3637", "411.p.4699", "411.p.6057", 
-"411.p.6369", "411.p.6743", "411.p.6759", "411.p.6890", "411.p.6908", 
-"411.p.7109", "411.p.7147"), player_id = c("3637", "4699", "6057", 
-"6369", "6743", "6759", "6890", "6908", "7109", "7147"), name_full = c("Alex Ovechkin", 
-"Chris Kreider", "Jake Guentzel", "Leon Draisaitl", "Connor McDavid", 
-"Kyle Connor", "Troy Terry", "Andrew Mangiapane", "Auston Matthews", 
-"Alex DeBrincat")), row.names = c(NA, -10L), class = c("tbl_df", 
-"tbl", "data.frame"))
+```{r, eval=FALSE}
+top_10_ar_players <-
+  y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "1", status = "ALL", debug = FALSE)
 ```
 
-```{r print y_players top 10 goals, echo=TRUE}
+```{r}
 top_10_ar_players
 ```
 
 ## y_draft_results
 
 Takes a league or team id.
-
-```{r y_draft_results, eval=FALSE,}
+```{r y_draft_results, eval=FALSE}
 
 league_draft <- y_draft_results("411.l.1239", token_name = my_token, debug = FALSE)
 
@@ -1451,36 +395,43 @@ or
 team_draft <- y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE)
 ```
 
-```{r}
-team_draft <- 
-  structure(list(pick = c(2L, 23L, 26L, 47L, 50L, 71L, 74L, 95L, 
-98L, 119L, 122L, 143L, 146L, 167L, 170L, 191L), round = 1:16, 
-    team_key = c("411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1"), player_key = c("411.p.6369", "411.p.6448", 
-    "411.p.4503", "411.p.7905", "411.p.6367", "411.p.6744", "411.p.3782", 
-    "411.p.7886", "411.p.7528", "411.p.5053", "411.p.5691", "411.p.3614", 
-    "411.p.3638", "411.p.5120", "411.p.8641", "411.p.6445")), class = c("tbl_df", 
-"tbl", "data.frame"), row.names = c(NA, -16L))
+```{r, include=FALSE}
+with_mock_api({
+  team_draft <- y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE)
+})
 ```
 
-```{r, echo=TRUE}
+Here's the draft for team 1
+```{r, eval=FALSE}
+team_draft <- y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE)
+```
+
+```{r}
 team_draft
 ```
 
 The Yahoo! API doesn't return player names with this call but can be used with `y_players()` or `y_rosters()`
 
-### Example
+### Examples
 
 See which players drafted by a team are still currently on the team's roster.
 
-```{r, eval=FALSE}
-
-remaining_players <- 
+```{r, include=FALSE}
+with_mock_api({
+remaining_players <-
   dplyr::inner_join(
-    y_rosters(id = "411.l.1239.t.1", yahoo_token, debug = FALSE),
+    y_rosters(id = "411.l.1239.t.1", my_token, debug = FALSE),
+    y_draft_results(id = "411.l.1239.t.1", my_token, debug = FALSE),
+    by = "player_key"
+  ) %>%
+  dplyr::select("name_full")
+})
+```
+
+```{r, eval=FALSE}
+remaining_players <-
+  dplyr::inner_join(
+    y_rosters(id = "411.l.1239.t.1", my_token, debug = FALSE),
     y_draft_results(id = "411.l.1239.t.1", my_token, debug = FALSE),
     by = "player_key"
   ) %>%
@@ -1488,268 +439,282 @@ remaining_players <-
 ```
 
 ```{r}
-remaining_players <-
-  structure(list(name_full = c("Leon Draisaitl", "Nick Suzuki", 
-"Aaron Ekblad", "John Carlson", "Quinn Hughes", "Elvis Merzlikins", 
-"Brayden Point", "Carey Price")), row.names = c(NA, -8L), class = c("tbl_df", 
-"tbl", "data.frame"))
-```
-
-```{r, echo=TRUE}
 remaining_players
 ```
 
 ## y_matchups
 
-How do I see my matchups?
-
-```{r y_matchup, eval=FALSE}
-# Returns past and current matchups
-my_matchups <- y_matchups("411.l.1239.t.1", yahoo_token)
+How do I see my matchups? Default arguments return past and current matchups
+```{r y_matchup, include=FALSE}
+with_mock_api({
+my_matchups <- y_matchups("411.l.1239.t.1", my_token)
+})
 ```
 
-```{r y_matchup return, echo=FALSE}
-my_matchups <- structure(list(week = c("1", "1", "2", "2", "3", "3", "4", "4", 
-"5", "5", "6", "6", "7", "7", "8", "8", "9", "9", "10", "10"), 
-    week_start = c("2021-10-12", "2021-10-12", "2021-10-18", 
-    "2021-10-18", "2021-10-25", "2021-10-25", "2021-11-01", "2021-11-01", 
-    "2021-11-08", "2021-11-08", "2021-11-15", "2021-11-15", "2021-11-22", 
-    "2021-11-22", "2021-11-29", "2021-11-29", "2021-12-06", "2021-12-06", 
-    "2021-12-13", "2021-12-13"), week_end = c("2021-10-17", "2021-10-17", 
-    "2021-10-24", "2021-10-24", "2021-10-31", "2021-10-31", "2021-11-07", 
-    "2021-11-07", "2021-11-14", "2021-11-14", "2021-11-21", "2021-11-21", 
-    "2021-11-28", "2021-11-28", "2021-12-05", "2021-12-05", "2021-12-12", 
-    "2021-12-12", "2021-12-19", "2021-12-19"), status = c("postevent", 
-    "postevent", "postevent", "postevent", "postevent", "postevent", 
-    "postevent", "postevent", "postevent", "postevent", "postevent", 
-    "postevent", "postevent", "postevent", "postevent", "postevent", 
-    "postevent", "postevent", "midevent", "midevent"), is_playoffs = c("0", 
-    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
-    "0", "0", "0", "0", "0", "0", "0"), is_consolation = c("0", 
-    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
-    "0", "0", "0", "0", "0", "0", "0"), is_tied = c("0", "0", 
-    "0", "0", "0", "0", "0", "0", "1", "1", "0", "0", "0", "0", 
-    "0", "0", "0", "0", NA, NA), winner_team_key = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.5", "411.l.1239.t.5", NA, 
-    NA, "411.l.1239.t.7", "411.l.1239.t.7", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.9", "411.l.1239.t.9", "411.l.1239.t.10", 
-    "411.l.1239.t.10", NA, NA), winner_g = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.6", 
-    "411.l.1239.t.6", "411.l.1239.t.7", "411.l.1239.t.7", "411.l.1239.t.8", 
-    "411.l.1239.t.8", NA, NA, "411.l.1239.t.10", "411.l.1239.t.10", 
-    "411.l.1239.t.1", "411.l.1239.t.1"), winner_a = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.3", "411.l.1239.t.3", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.6", 
-    "411.l.1239.t.6", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.9", "411.l.1239.t.9", "411.l.1239.t.10", 
-    "411.l.1239.t.10", "411.l.1239.t.1", "411.l.1239.t.1"), winner_x = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.6", 
-    "411.l.1239.t.6", "411.l.1239.t.7", "411.l.1239.t.7", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.11", "411.l.1239.t.11"), 
-    winner_ppp = c("411.l.1239.t.2", "411.l.1239.t.2", "411.l.1239.t.3", 
-    "411.l.1239.t.3", "411.l.1239.t.1", "411.l.1239.t.1", NA, 
-    NA, "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", NA, 
-    NA, "411.l.1239.t.10", "411.l.1239.t.10", "411.l.1239.t.1", 
-    "411.l.1239.t.1"), winner_sog = c("411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.5", "411.l.1239.t.5", "411.l.1239.t.6", "411.l.1239.t.6", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.8", "411.l.1239.t.8", 
-    "411.l.1239.t.9", "411.l.1239.t.9", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1"), winner_hit = c("411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.5", "411.l.1239.t.5", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1"), winner_w = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.4", 
-    "411.l.1239.t.4", "411.l.1239.t.5", "411.l.1239.t.5", NA, 
-    NA, "411.l.1239.t.7", "411.l.1239.t.7", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.9", "411.l.1239.t.9", "411.l.1239.t.10", 
-    "411.l.1239.t.10", NA, NA), winner_gaa = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.4", 
-    "411.l.1239.t.4", "411.l.1239.t.5", "411.l.1239.t.5", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.7", "411.l.1239.t.7", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.9", "411.l.1239.t.9", "411.l.1239.t.10", 
-    "411.l.1239.t.10", "411.l.1239.t.1", "411.l.1239.t.1"), winner_sv_percent = c("411.l.1239.t.2", 
-    "411.l.1239.t.2", "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.4", 
-    "411.l.1239.t.4", "411.l.1239.t.5", "411.l.1239.t.5", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.7", "411.l.1239.t.7", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.9", "411.l.1239.t.9", "411.l.1239.t.10", 
-    "411.l.1239.t.10", "411.l.1239.t.1", "411.l.1239.t.1"), winner_sho = c(NA, 
-    NA, "411.l.1239.t.1", "411.l.1239.t.1", "411.l.1239.t.1", 
-    "411.l.1239.t.1", "411.l.1239.t.5", "411.l.1239.t.5", NA, 
-    NA, NA, NA, "411.l.1239.t.1", "411.l.1239.t.1", NA, NA, NA, 
-    NA, NA, NA), team_key = c("411.l.1239.t.1", "411.l.1239.t.2", 
-    "411.l.1239.t.1", "411.l.1239.t.3", "411.l.1239.t.1", "411.l.1239.t.4", 
-    "411.l.1239.t.1", "411.l.1239.t.5", "411.l.1239.t.1", "411.l.1239.t.6", 
-    "411.l.1239.t.1", "411.l.1239.t.7", "411.l.1239.t.1", "411.l.1239.t.8", 
-    "411.l.1239.t.1", "411.l.1239.t.9", "411.l.1239.t.1", "411.l.1239.t.10", 
-    "411.l.1239.t.1", "411.l.1239.t.11"), team_id = c("1", "2", 
-    "1", "3", "1", "4", "1", "5", "1", "6", "1", "7", "1", "8", 
-    "1", "9", "1", "10", "1", "11"), name = c("Shoe's Extraordinary Team", 
-    "Doughty Sanchez", "Shoe's Extraordinary Team", "Ballinchef31", 
-    "Shoe's Extraordinary Team", "MxPx", "Shoe's Extraordinary Team", 
-    "Old Fashioned", "Shoe's Extraordinary Team", "MapleBuds Cmbk Kids !", 
-    "Shoe's Extraordinary Team", "Dominik's Dandy Team", "Shoe's Extraordinary Team", 
-    "Tim's Top-Notch Team", "Shoe's Extraordinary Team", "Renegades", 
-    "Shoe's Extraordinary Team", "Windlords", "Shoe's Extraordinary Team", 
-    "rmdz"), point_total = c("2", "7", "8", "2", "7", "3", "3", 
-    "6", "4", "4", "4", "5", "8", "2", "2", "5", "3", "6", "7", 
-    "1"), remaining_games = c(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-    0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 29L, 22L), live_games = c(0L, 
-    0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 
-    0L, 0L, 2L, 1L), completed_games = c(38L, 29L, 43L, 41L, 
-    51L, 47L, 43L, 42L, 50L, 49L, 49L, 44L, 47L, 44L, 46L, 51L, 
-    48L, 53L, 11L, 8L), count_g = c("7", "10", "9", "5", "13", 
-    "5", "13", "10", "10", "11", "9", "15", "9", "10", "11", 
-    "11", "8", "13", "2", "1"), count_a = c("10", "13", "12", 
-    "14", "14", "8", "30", "18", "19", "29", "24", "9", "16", 
-    "15", "18", "22", "13", "17", "8", "1"), count_x = c("2", 
-    "9", "-1", "-6", "7", "-15", "16", "-2", "-4", "20", "2", 
-    "9", "2", "-4", "8", "2", "9", "3", "-4", "1"), count_ppp = c("5", 
-    "9", "8", "11", "10", "4", "10", "10", "10", "8", "12", "5", 
-    "10", "6", "9", "9", "4", "11", "3", "1"), count_sog = c("76", 
-    "49", "77", "67", "88", "64", "89", "98", "102", "109", "91", 
-    "86", "91", "97", "84", "91", "103", "94", "26", "17"), count_hit = c("34", 
-    "26", "38", "30", "48", "37", "32", "42", "53", "34", "63", 
-    "30", "50", "30", "61", "27", "58", "31", "18", "8"), count_w = c("2", 
-    "5", "4", "3", "2", "4", "2", "3", "1", "1", "2", "4", "3", 
-    "1", "1", "4", "1", "6", "0", "0"), count_ga = c("10", "8", 
-    "10", "12", "18", "9", "10", "8", "10", "15", "10", "17", 
-    "11", "17", "18", "15", "14", "14", "4", "0"), count_gaa = c("2.09", 
-    "1.48", "2.24", "3.49", "3.01", "1.76", "2.75", "1.60", "3.00", 
-    "3.82", "3.30", "2.53", "2.76", "3.48", "3.38", "2.99", "3.73", 
-    "1.97", "4.05", NA), count_sv = c("123", "141", "121", "81", 
-    "191", "154", "89", "156", "99", "92", "81", "203", "150", 
-    "138", "170", "162", "103", "205", "35", "0"), count_sa = c("133", 
-    "149", "131", "93", "209", "163", "99", "164", "109", "107", 
-    "91", "220", "161", "155", "188", "177", "117", "219", "39", 
-    "0"), count_sv_percent = c(".925", ".946", ".924", ".871", 
-    ".914", ".945", ".899", ".951", ".908", ".860", ".890", ".923", 
-    ".932", ".890", ".904", ".915", ".880", ".936", ".897", NA
-    ), count_sho = c("0", "0", "1", "0", "1", "0", "1", "2", 
-    "0", "0", "0", "0", "1", "0", "0", "0", "0", "0", "0", "0"
-    )), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--20L))
+```{r, eval=FALSE}
+my_matchups <- y_matchups("411.l.1239.t.1", my_token)
 ```
 
-```{r y_matchup table}
+```{r}
 my_matchups
 ```
 
-Also takes a week argument
-
+Also takes a week argument. Return week 8 matchup.
 ```{r y_matchup week 8, eval=FALSE}
-# Returns week 8 matchup
-my_week_8_matchup <- y_matchups("411.l.1239.t.1", yahoo_token, week = 8)
+# Not run
+my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
 ```
 
-```{r y_matchup week 8 return, echo=FALSE}
-my_week_8_matchup <- structure(list(week = c("8", "8"), week_start = c("2021-11-29", 
-"2021-11-29"), week_end = c("2021-12-05", "2021-12-05"), status = c("postevent", 
-"postevent"), is_playoffs = c("0", "0"), is_consolation = c("0", 
-"0"), is_tied = c("0", "0"), winner_team_key = c("411.l.1239.t.9", 
-"411.l.1239.t.9"), winner_g = c(NA_character_, NA_character_), 
-    winner_a = c("411.l.1239.t.9", "411.l.1239.t.9"), winner_x = c("411.l.1239.t.1", 
-    "411.l.1239.t.1"), winner_ppp = c(NA_character_, NA_character_
-    ), winner_sog = c("411.l.1239.t.9", "411.l.1239.t.9"), winner_hit = c("411.l.1239.t.1", 
-    "411.l.1239.t.1"), winner_w = c("411.l.1239.t.9", "411.l.1239.t.9"
-    ), winner_gaa = c("411.l.1239.t.9", "411.l.1239.t.9"), winner_sv_percent = c("411.l.1239.t.9", 
-    "411.l.1239.t.9"), winner_sho = c(NA_character_, NA_character_
-    ), team_key = c("411.l.1239.t.1", "411.l.1239.t.9"), team_id = c("1", 
-    "9"), name = c("Shoe's Extraordinary Team", "Renegades"), 
-    point_total = c("2", "5"), remaining_games = c(0L, 0L), live_games = c(0L, 
-    0L), completed_games = c(46L, 51L), count_g = c("11", "11"
-    ), count_a = c("18", "22"), count_x = c("8", "2"), count_ppp = c("9", 
-    "9"), count_sog = c("84", "91"), count_hit = c("61", "27"
-    ), count_w = c("1", "4"), count_ga = c("18", "15"), count_gaa = c("3.38", 
-    "2.99"), count_sv = c("170", "162"), count_sa = c("188", 
-    "177"), count_sv_percent = c(".904", ".915"), count_sho = c("0", 
-    "0")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--2L))
-```
-
-```{r y_matchup week 8 table}
-my_week_8_matchup
-```
-
-### Example
+### Examples
 
 Multiple weeks
 
-    y_matchups("411.l.1239.t.1", yahoo_token, week = c(1, 8))
-    
+    y_matchups("411.l.1239.t.1", my_token, week = c(1, 8))
+
 Multiple teams
 
     teams <- c("411.l.1239.t.1", "411.l.1239.t.8")
-    
-    purrr::map_df(teams, y_matchups, yahoo_token, week = 1)
+
+    purrr::map_df(teams, y_matchups, my_token, week = 1)
 
 Multiple teams with multiple weeks
 
-    purrr::map_df(teams, y_matchups, yahoo_token, week = c(1, 8))
+    purrr::map_df(teams, y_matchups, my_token, week = c(1, 8))
 
 ## y_standings
 
 Get standings data
+```{r, include=FALSE}
+standings <- y_standings("411.l.1239", my_token)
+```
 
 ```{r, eval=FALSE}
 standings <- y_standings("411.l.1239", my_token)
 ```
 
-```{r, echo=FALSE}
-standings <- 
-  structure(list(team_key = c("411.l.1239.t.2", "411.l.1239.t.11", 
-"411.l.1239.t.12", "411.l.1239.t.7", "411.l.1239.t.5", "411.l.1239.t.1", 
-"411.l.1239.t.10", "411.l.1239.t.8", "411.l.1239.t.4", "411.l.1239.t.6", 
-"411.l.1239.t.9", "411.l.1239.t.3"), team_id = c("2", "11", "12", 
-"7", "5", "1", "10", "8", "4", "6", "9", "3"), name = c("Doughty Sanchez", 
-"rmdz", "Kenora Thistles II", "Dominik's Dandy Team", "Old Fashioned", 
-"Shoe's Extraordinary Team", "Windlords", "Tim's Top-Notch Team", 
-"MxPx", "MapleBuds Cmbk Kids !", "Renegades", "Ballinchef31"), 
-    coverage_type = c("season", "season", "season", "season", 
-    "season", "season", "season", "season", "season", "season", 
-    "season", "season"), season = c("2021", "2021", "2021", "2021", 
-    "2021", "2021", "2021", "2021", "2021", "2021", "2021", "2021"
-    ), total = c("127", "117", "115", "107", "99", "99", "98", 
-    "97", "97", "88", "83", "73"), rank = c("1", "2", "3", "4", 
-    "5", "6", "7", "8", "9", "10", "11", "12"), playoff_seed = c("1", 
-    "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"), 
-    wins = c("58", "53", "51", "49", "45", "45", "44", "46", 
-    "44", "38", "35", "30"), losses = c("31", "36", "36", "42", 
-    "46", "46", "46", "49", "47", "50", "52", "57"), ties = c("11", 
-    "11", "13", "9", "9", "9", "10", "5", "9", "12", "13", "13"
-    ), percentage = c(".635", ".585", ".575", ".535", ".495", 
-    ".495", ".490", ".485", ".485", ".440", ".415", ".365"), 
-    g = c("87", "104", "82", "103", "88", "94", "89", "96", "81", 
-    "104", "74", "64"), a = c("143", "153", "154", "164", "161", 
-    "175", "147", "177", "132", "182", "142", "159"), x = c("20", 
-    "54", "18", "42", "36", "38", "32", "38", "-9", "62", "41", 
-    "2"), ppp = c("69", "84", "76", "75", "76", "88", "71", "74", 
-    "63", "80", "47", "82"), sog = c("701", "900", "902", "909", 
-    "899", "872", "872", "875", "857", "959", "714", "704"), 
-    hit = c("362", "423", "437", "358", "383", "475", "360", 
-    "319", "335", "348", "243", "227"), w = c("31", "30", "22", 
-    "28", "15", "18", "31", "25", "35", "16", "28", "24"), ga = c("112", 
-    "148", "115", "143", "109", "119", "105", "128", "159", "104", 
-    "106", "100"), gaa = c("2.11", "2.50", "2.53", "2.70", "2.69", 
-    "2.98", "2.38", "2.78", "2.78", "3.09", "2.54", "2.52"), 
-    sv = c("1460", "1553", "1290", "1565", "1248", "1187", "1168", 
-    "1258", "1653", "902", "1156", "1104"), sa = c("1572", "1701", 
-    "1405", "1708", "1357", "1306", "1273", "1386", "1812", "1006", 
-    "1262", "1204"), sv_percent = c(".929", ".913", ".918", ".916", 
-    ".920", ".909", ".918", ".908", ".912", ".897", ".916", ".917"
-    ), sho = c("8", "7", "3", "3", "5", "4", "2", "1", "2", "0", 
-    "2", "0")), class = c("tbl_df", "tbl", "data.frame"), row.names = c(NA, 
--12L))
+```{r}
+standings
+```
+
+## y_rosters
+
+I want to see the current roster for each team in my league.
+
+To retrieve the players which makeup a roster or rosters.  Accepts a team_key or league_key.
+
+### league rosters
+
+Here a league key is supplied and a tibble with the current roster for each team is returned.
+```{r Rosters, eval=FALSE}
+# Not run
+rosters <- y_rosters(id = "411.l.1239", token_name = my_token)
+```
+
+### Team Roster
+
+Alternatively supplying a team key will return the current roster for that team.
+```{r y_roster team, include=FALSE}
+with_mock_api({
+team_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
+})
+```
+
+```{r, eval=FALSE}
+team_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 ```
 
 ```{r}
-standings
+team_roster
+```
+
+### Date
+
+A date argument can be supplied.
+```{r team roster with date, eval=FALSE}
+# Not run
+team_1_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token, date = "2021-10-12")
+```
+
+### Examples
+
+#### Multiple dates
+
+Map over multiple dates
+```{r map over multiple dates}
+# create a date sequence from fantasy week 1 using return from `y_weeks()`
+week_1 <- 
+  seq.Date(from = lubridate::ymd(weeks$start[1]), to = lubridate::ymd(weeks$end[1]), by = 1)
+```
+
+```{r, eval=FALSE}
+# map over the date sequence to get roster for those dates
+#Not run
+purrr::map_df(.x = week_1, .f = y_rosters, id = "411.l.1239.t.1", token_name = my_token)
+```
+
+#### Multiple teams
+
+You can map over multiple teams.  Here team 1 and 2 are returned in a list.
+
+    purrr::map(
+    c("411.l.1239.t.1", "411.l.1239.t.2"), 
+    y_rosters, 
+    token_name = my_token, 
+    debug = FALSE)
+
+#### Multiple Teams and Dates
+
+    purrr::map_df(
+    .x = c("411.l.1239.t.1", "411.l.1239.t.1"),
+    .f = y_rosters,
+    token_name = my_token,
+    game_date = c("2021-12-01", "2021-12-02"),
+    debug = FALSE)
+
+## y_player_stats
+
+Let's see some player stats! To get stats for players using player keys.
+
+Here's a basic example using Leon Draisaitl.
+
+```{r y_player_stats, include=FALSE}
+with_mock_api({
+draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token)
+})
+```
+
+```{r, eval=FALSE}
+draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token)
+```
+
+```{r}
+draisaitl_stats %>% 
+  dplyr::select(g:sog)
+```
+
+Well that's bs why can't I just use the player's name!? Where did you get that player key number anyways?
+
+  - The player key can be found using:
+      - `y_player_slate()`
+      - `y_players()`
+      - `y_rosters()`
+
+Here's an example from the public league.
+
+```{r, include=FALSE}
+with_mock_api({
+players <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
+})
+```
+
+```{r, eval=FALSE}
+players <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
+```
+
+```{r}
+players %>%
+  dplyr::select(player_key, name_full)
+```
+
+OK so what? I have to write down those numbers and run this function for each player?
+
+Nope! `y_player_stats()` can take a vector of player keys.  Here's how using our roster from the last example.
+
+```{r, include=FALSE}
+with_mock_api({
+  my_player_stats <- y_player_stats(players = players$player_key, token_name = my_token)
+})
+```
+
+```{r, eval=FALSE}
+my_player_stats <- y_player_stats(players = players$player_key, token_name = my_token)
+```
+
+```{r}
+my_player_stats %>% 
+  dplyr::select(name_full, g:sog)
+```
+
+Don't worry about the NA's in the goalie stats.  I'm only showing you skater stats.
+
+OK well that's pretty good but what if I only want stats for my players from yesterday?
+
+```{r, include=FALSE}
+with_mock_api({
+yesterday_stats <-
+  y_player_stats(
+    players = players$player_key,
+    token_name = my_token,
+    game_date = Sys.Date() - 1
+  )
+})
+```
+
+```{r, eval=FALSE}
+yesterday_stats <-
+  y_player_stats(
+    players = players$player_key,
+    token_name = my_token,
+    date = Sys.Date() - 1
+  )
+```
+
+```{r}
+yesterday_stats %>% 
+   dplyr::select(name_full, g:sog)
+```
+
+And can it get my players stats for week 7?  Yes! You can supply a vector of dates to `y_player_stats()`
+
+Using y_weeks we can find the start and end date for week 7.
+
+```{r}
+week_7 <- 
+  weeks %>%
+  dplyr::filter(week == 7) %>%
+  dplyr::select(start, end)
+```
+
+And create a date sequence
+```{r week 7 date sequence}
+week_7_dates <-
+  seq.Date(from = as.Date(week_7$start),
+           to = as.Date(week_7$end),
+           by = 1)
+```
+
+Week 7 player record count
+```{r week 7 player count, include=FALSE}
+with_mock_api({
+week_7_stats <-
+  y_player_stats(
+    players = players$player_key,
+    token_name = my_token,
+    game_date = week_7_dates
+  )
+})
+
+```
+
+```{r, eval=FALSE}
+week_7_stats <-
+  y_player_stats(
+    players = players$player_key,
+    token_name = my_token,
+    game_date = week_7_dates
+  )
+```
+
+```{r}
+week_7_stats %>% 
+  dplyr::count(name_full)
+```
+
+```{r}
+week_7_stats %>%
+  dplyr::select(name_full, g:sog) %>%
+  dplyr::group_by(name_full) %>%
+  dplyr::group_split() %>%
+  purrr::pluck(1)
 ```
 

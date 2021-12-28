@@ -60,7 +60,7 @@ y_transactions <- function(id = NULL, token_name = NULL, count = NULL, transacti
 
 
     r <-
-        .y_get_response(uri, yahoo_token)
+        .y_get_response(uri, api_token)
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
