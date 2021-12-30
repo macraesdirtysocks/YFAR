@@ -10,7 +10,7 @@
 #' @return Token2.0 object.
 #' @export
 
-y_create_token <-function(my_key = NULL, my_secret = NULL, app_name = NULL) {
+y_create_token <- function(my_key = NULL, my_secret = NULL, app_name = NULL) {
 
 
     if (.token_count(name = .GlobalEnv) >= 1){

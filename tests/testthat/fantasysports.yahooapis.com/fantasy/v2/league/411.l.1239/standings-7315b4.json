@@ -11,9 +11,9 @@
                 "logo_url": "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png",
                 "draft_status": "postdraft",
                 "num_teams": 12,
-                "edit_key": "2021-12-28",
+                "edit_key": "2021-12-29",
                 "weekly_deadline": "intraday",
-                "league_update_timestamp": "1640674725",
+                "league_update_timestamp": "1640764970",
                 "scoring_type": "head",
                 "league_type": "public",
                 "renew": "",
@@ -127,37 +127,37 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "1",
-                                                        "value": "87"
+                                                        "value": "88"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "2",
-                                                        "value": "143"
+                                                        "value": "146"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "20"
+                                                        "value": "19"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "8",
-                                                        "value": "69"
+                                                        "value": "70"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "708"
+                                                        "value": "715"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "364"
+                                                        "value": "366"
                                                     }
                                                 },
                                                 {
@@ -169,31 +169,31 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "22",
-                                                        "value": "112"
+                                                        "value": "117"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "23",
-                                                        "value": "2.11"
+                                                        "value": "2.19"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "25",
-                                                        "value": "1460"
+                                                        "value": "1470"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "24",
-                                                        "value": "1572"
+                                                        "value": "1587"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "26",
-                                                        "value": ".929"
+                                                        "value": ".926"
                                                     }
                                                 },
                                                 {
@@ -259,10 +259,10 @@
                                             "waiver_priority": 9
                                         },
                                         {
-                                            "faab_balance": "86"
+                                            "faab_balance": "84"
                                         },
                                         {
-                                            "number_of_moves": "12"
+                                            "number_of_moves": "14"
                                         },
                                         {
                                             "number_of_trades": 0
@@ -271,7 +271,7 @@
                                             "roster_adds": {
                                                 "coverage_type": "week",
                                                 "coverage_value": 11,
-                                                "value": "1"
+                                                "value": "3"
                                             }
                                         },
                                         [
@@ -317,19 +317,19 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "1",
-                                                        "value": "104"
+                                                        "value": "105"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "2",
-                                                        "value": "154"
+                                                        "value": "155"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "55"
+                                                        "value": "57"
                                                     }
                                                 },
                                                 {
@@ -341,13 +341,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "902"
+                                                        "value": "905"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "423"
+                                                        "value": "424"
                                                     }
                                                 },
                                                 {
@@ -642,7 +642,7 @@
                                             "faab_balance": "76"
                                         },
                                         {
-                                            "number_of_moves": "15"
+                                            "number_of_moves": "16"
                                         },
                                         {
                                             "number_of_trades": 0
@@ -651,7 +651,7 @@
                                             "roster_adds": {
                                                 "coverage_type": "week",
                                                 "coverage_value": 11,
-                                                "value": "0"
+                                                "value": "1"
                                             }
                                         },
                                         [
@@ -697,37 +697,37 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "1",
-                                                        "value": "103"
+                                                        "value": "104"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "2",
-                                                        "value": "166"
+                                                        "value": "167"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "42"
+                                                        "value": "43"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "8",
-                                                        "value": "76"
+                                                        "value": "77"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "911"
+                                                        "value": "916"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "359"
+                                                        "value": "360"
                                                     }
                                                 },
                                                 {
@@ -899,7 +899,7 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "36"
+                                                        "value": "40"
                                                     }
                                                 },
                                                 {
@@ -911,7 +911,7 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "899"
+                                                        "value": "902"
                                                     }
                                                 },
                                                 {
@@ -1089,7 +1089,7 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "38"
+                                                        "value": "36"
                                                     }
                                                 },
                                                 {
@@ -1101,13 +1101,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "872"
+                                                        "value": "875"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "475"
+                                                        "value": "477"
                                                     }
                                                 },
                                                 {
@@ -1267,37 +1267,37 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "1",
-                                                        "value": "89"
+                                                        "value": "91"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "2",
-                                                        "value": "147"
+                                                        "value": "148"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "32"
+                                                        "value": "34"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "8",
-                                                        "value": "71"
+                                                        "value": "72"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "874"
+                                                        "value": "877"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "361"
+                                                        "value": "362"
                                                     }
                                                 },
                                                 {
@@ -1463,13 +1463,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "2",
-                                                        "value": "178"
+                                                        "value": "180"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "38"
+                                                        "value": "40"
                                                     }
                                                 },
                                                 {
@@ -1481,13 +1481,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "877"
+                                                        "value": "881"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "320"
+                                                        "value": "321"
                                                     }
                                                 },
                                                 {
@@ -1647,7 +1647,7 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "1",
-                                                        "value": "81"
+                                                        "value": "82"
                                                     }
                                                 },
                                                 {
@@ -1659,7 +1659,7 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "-9"
+                                                        "value": "-10"
                                                     }
                                                 },
                                                 {
@@ -1671,13 +1671,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "857"
+                                                        "value": "861"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "335"
+                                                        "value": "336"
                                                     }
                                                 },
                                                 {
@@ -1849,7 +1849,7 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "4",
-                                                        "value": "62"
+                                                        "value": "61"
                                                     }
                                                 },
                                                 {
@@ -1861,13 +1861,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "964"
+                                                        "value": "966"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "349"
+                                                        "value": "351"
                                                     }
                                                 },
                                                 {
@@ -2027,13 +2027,13 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "1",
-                                                        "value": "74"
+                                                        "value": "77"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "2",
-                                                        "value": "143"
+                                                        "value": "144"
                                                     }
                                                 },
                                                 {
@@ -2045,19 +2045,19 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "8",
-                                                        "value": "48"
+                                                        "value": "49"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "14",
-                                                        "value": "715"
+                                                        "value": "727"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "31",
-                                                        "value": "243"
+                                                        "value": "246"
                                                     }
                                                 },
                                                 {
@@ -2253,37 +2253,37 @@
                                                 {
                                                     "stat": {
                                                         "stat_id": "19",
-                                                        "value": "24"
+                                                        "value": "25"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "22",
-                                                        "value": "104"
+                                                        "value": "107"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "23",
-                                                        "value": "2.56"
+                                                        "value": "2.57"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "25",
-                                                        "value": "1119"
+                                                        "value": "1143"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "24",
-                                                        "value": "1223"
+                                                        "value": "1250"
                                                     }
                                                 },
                                                 {
                                                     "stat": {
                                                         "stat_id": "26",
-                                                        "value": ".915"
+                                                        "value": ".914"
                                                     }
                                                 },
                                                 {
@@ -2320,7 +2320,7 @@
                 ]
             }
         ],
-        "time": "50.289154052734ms",
+        "time": "108.14785957336ms",
         "copyright": "Data provided by Yahoo! and STATS, LLC",
         "refresh_rate": "60"
     }

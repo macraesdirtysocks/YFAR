@@ -52,8 +52,8 @@ with_mock_api({
               "uniform_number", "display_position", "headshot_url", "headshot_size",
               "image_url", "is_undroppable", "position_type", "primary_position",
               "eligible_positions_position", "eligible_positions_position_2",
-              "status", "status_full", "injury_note", "on_disabled_list", "eligible_positions_position_3",
-              "has_player_notes", "player_notes_last_timestamp")
+              "status", "status_full", "has_player_notes", "player_notes_last_timestamp",
+              "injury_note", "on_disabled_list", "has_recent_player_notes")
 
 
         # test that colnames of the df match expected

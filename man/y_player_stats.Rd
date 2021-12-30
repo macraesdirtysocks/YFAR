@@ -18,7 +18,7 @@ y_player_stats(
 \item{token_name}{Assigned object name used when creating token with y_create_token().}
 
 \item{game_date}{Date of fantasy season in form YYYY-MM-DD to return.
-Default is null and will return current date.  Accepts a vector of dates.}
+Default is NULL which will return aggregate stats for current season.  Accepts a vector of dates.}
 
 \item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
 }

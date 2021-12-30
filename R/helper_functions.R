@@ -334,13 +334,11 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #'
 #' @keywords internal
 .date_check <- function(x) {
-    if (is.null(x)) {
-        x
-    } else if (!is.na(as.Date(x, format = "%Y-%m-%d"))) {
+    if(!is.na(as.Date(x, format = "%Y-%m-%d"))) {
         x
     } else {
-        NULL
         message("please supply a valid date in format %Y-%m-%d, returning rosters for today's date")
+        Sys.Date()
     }
 }
 

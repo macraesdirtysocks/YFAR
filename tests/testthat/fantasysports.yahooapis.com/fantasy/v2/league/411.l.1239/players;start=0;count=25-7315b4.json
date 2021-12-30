@@ -11,9 +11,9 @@
                 "logo_url": "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png",
                 "draft_status": "postdraft",
                 "num_teams": 12,
-                "edit_key": "2021-12-28",
+                "edit_key": "2021-12-29",
                 "weekly_deadline": "intraday",
-                "league_update_timestamp": "1640674725",
+                "league_update_timestamp": "1640764970",
                 "scoring_type": "head",
                 "league_type": "public",
                 "renew": "",
@@ -660,16 +660,6 @@
                                     }
                                 },
                                 {
-                                    "status": "IR-LT",
-                                    "status_full": "Injured Reserve"
-                                },
-                                {
-                                    "injury_note": "Leg"
-                                },
-                                {
-                                    "on_disabled_list": "1"
-                                },
-                                {
                                     "editorial_player_key": "nhl.p.3231"
                                 },
                                 {
@@ -707,9 +697,6 @@
                                     "eligible_positions": [
                                         {
                                             "position": "G"
-                                        },
-                                        {
-                                            "position": "IR"
                                         }
                                     ]
                                 },
@@ -720,7 +707,7 @@
                                     "has_recent_player_notes": 1
                                 },
                                 {
-                                    "player_notes_last_timestamp": 1640639507
+                                    "player_notes_last_timestamp": 1640801243
                                 }
                             ]
                         ]
@@ -742,16 +729,6 @@
                                         "ascii_first": "Duncan",
                                         "ascii_last": "Keith"
                                     }
-                                },
-                                {
-                                    "status": "IR",
-                                    "status_full": "Injured Reserve"
-                                },
-                                {
-                                    "injury_note": "Covid-19"
-                                },
-                                {
-                                    "on_disabled_list": "1"
                                 },
                                 {
                                     "editorial_player_key": "nhl.p.3266"
@@ -791,21 +768,18 @@
                                     "eligible_positions": [
                                         {
                                             "position": "D"
-                                        },
-                                        {
-                                            "position": "IR"
                                         }
                                     ]
                                 },
-                                [
-
-                                ],
-                                [
-
-                                ],
-                                [
-
-                                ]
+                                {
+                                    "has_player_notes": 1
+                                },
+                                {
+                                    "has_recent_player_notes": 1
+                                },
+                                {
+                                    "player_notes_last_timestamp": 1640801626
+                                }
                             ]
                         ]
                     },
@@ -1071,6 +1045,16 @@
                                     }
                                 },
                                 {
+                                    "status": "COVID-19",
+                                    "status_full": "Covid-19"
+                                },
+                                {
+                                    "injury_note": "Covid-19"
+                                },
+                                {
+                                    "on_disabled_list": "1"
+                                },
+                                {
                                     "editorial_player_key": "nhl.p.3345"
                                 },
                                 {
@@ -1108,6 +1092,9 @@
                                     "eligible_positions": [
                                         {
                                             "position": "D"
+                                        },
+                                        {
+                                            "position": "IR"
                                         }
                                     ]
                                 },
@@ -1573,9 +1560,9 @@
                                 {
                                     "has_player_notes": 1
                                 },
-                                {
-                                    "has_recent_player_notes": 1
-                                },
+                                [
+
+                                ],
                                 {
                                     "player_notes_last_timestamp": 1640638458
                                 }
@@ -1958,7 +1945,7 @@
                 }
             }
         ],
-        "time": "36.889791488647ms",
+        "time": "25.373935699463ms",
         "copyright": "Data provided by Yahoo! and STATS, LLC",
         "refresh_rate": "60"
     }
