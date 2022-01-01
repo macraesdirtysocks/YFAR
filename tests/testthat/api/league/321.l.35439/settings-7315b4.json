@@ -1,0 +1,490 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/league/321.l.35439/settings",
+        "league": [
+            {
+                "league_key": "321.l.35439",
+                "league_id": "35439",
+                "name": "HasBeenHockey",
+                "url": "https://hockey.fantasysports.yahoo.com/2013/hockey/35439",
+                "logo_url": false,
+                "password": "",
+                "draft_status": "postdraft",
+                "num_teams": 15,
+                "edit_key": "2014-04-13",
+                "weekly_deadline": "",
+                "league_update_timestamp": "1397456777",
+                "scoring_type": "point",
+                "league_type": "private",
+                "renew": "",
+                "renewed": "341_16858",
+                "iris_group_chat_id": "",
+                "short_invitation_url": "http://y.ahoo.it/eHHVNREV",
+                "allow_add_to_dl_extra_pos": 0,
+                "is_pro_league": "0",
+                "is_cash_league": "0",
+                "start_date": "2013-10-01",
+                "end_date": "2014-04-13",
+                "is_finished": 1,
+                "game_code": "nhl",
+                "season": "2013"
+            },
+            {
+                "settings": [
+                    {
+                        "draft_type": "live",
+                        "is_auction_draft": "0",
+                        "scoring_type": "point",
+                        "uses_playoff": "0",
+                        "waiver_type": "R",
+                        "waiver_rule": "all",
+                        "uses_faab": "0",
+                        "draft_time": "1380489300",
+                        "draft_pick_time": "60",
+                        "post_draft_players": "W",
+                        "max_teams": "16",
+                        "waiver_time": "1",
+                        "trade_end_date": "2014-03-06",
+                        "trade_ratify_type": "vote",
+                        "trade_reject_time": "1",
+                        "player_pool": "ALL",
+                        "cant_cut_list": "none",
+                        "draft_together": 0,
+                        "sendbird_channel_url": "",
+                        "roster_positions": [
+                            {
+                                "roster_position": {
+                                    "position": "C",
+                                    "position_type": "P",
+                                    "count": 2,
+                                    "is_starting_position": 1
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "LW",
+                                    "position_type": "P",
+                                    "count": 2,
+                                    "is_starting_position": 1
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "RW",
+                                    "position_type": "P",
+                                    "count": 2,
+                                    "is_starting_position": 1
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "D",
+                                    "position_type": "P",
+                                    "count": 4,
+                                    "is_starting_position": 1
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "Util",
+                                    "position_type": "P",
+                                    "count": 2,
+                                    "is_starting_position": 1
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "G",
+                                    "position_type": "G",
+                                    "count": 2,
+                                    "is_starting_position": 1
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "BN",
+                                    "count": 2,
+                                    "is_starting_position": 0
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "IR",
+                                    "count": "1",
+                                    "is_starting_position": 0
+                                }
+                            },
+                            {
+                                "roster_position": {
+                                    "position": "IR+",
+                                    "count": "1",
+                                    "is_starting_position": 0
+                                }
+                            }
+                        ],
+                        "stat_categories": {
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": 1,
+                                        "enabled": "1",
+                                        "name": "Goals",
+                                        "display_name": "G",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 2,
+                                        "enabled": "1",
+                                        "name": "Assists",
+                                        "display_name": "A",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 4,
+                                        "enabled": "1",
+                                        "name": "Plus/Minus",
+                                        "display_name": "+/-",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 5,
+                                        "enabled": "1",
+                                        "name": "Penalty Minutes",
+                                        "display_name": "PIM",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 8,
+                                        "enabled": "1",
+                                        "name": "Powerplay Points",
+                                        "display_name": "PPP",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 14,
+                                        "enabled": "1",
+                                        "name": "Shots on Goal",
+                                        "display_name": "SOG",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 16,
+                                        "enabled": "1",
+                                        "name": "Faceoffs Won",
+                                        "display_name": "FW",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 17,
+                                        "enabled": "1",
+                                        "name": "Faceoffs Lost",
+                                        "display_name": "FL",
+                                        "sort_order": "0",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 31,
+                                        "enabled": "1",
+                                        "name": "Hits",
+                                        "display_name": "HIT",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 32,
+                                        "enabled": "1",
+                                        "name": "Blocks",
+                                        "display_name": "BLK",
+                                        "sort_order": "1",
+                                        "position_type": "P",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 18,
+                                        "enabled": "1",
+                                        "name": "Games Started",
+                                        "display_name": "GS",
+                                        "sort_order": "1",
+                                        "position_type": "G",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "G"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 19,
+                                        "enabled": "1",
+                                        "name": "Wins",
+                                        "display_name": "W",
+                                        "sort_order": "1",
+                                        "position_type": "G",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "G"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 22,
+                                        "enabled": "1",
+                                        "name": "Goals Against",
+                                        "display_name": "GA",
+                                        "sort_order": "0",
+                                        "position_type": "G",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "G"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 25,
+                                        "enabled": "1",
+                                        "name": "Saves",
+                                        "display_name": "SV",
+                                        "sort_order": "1",
+                                        "position_type": "G",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "G"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 27,
+                                        "enabled": "1",
+                                        "name": "Shutouts",
+                                        "display_name": "SHO",
+                                        "sort_order": "1",
+                                        "position_type": "G",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "G"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "stat_modifiers": {
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": 1,
+                                        "value": "3"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 2,
+                                        "value": "2"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 4,
+                                        "value": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 5,
+                                        "value": "0.5"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 8,
+                                        "value": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 14,
+                                        "value": ".1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 16,
+                                        "value": ".1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 17,
+                                        "value": "-.1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 31,
+                                        "value": ".5"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 32,
+                                        "value": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 18,
+                                        "value": ".5"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 19,
+                                        "value": "4"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 22,
+                                        "value": "-1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 25,
+                                        "value": "0.2"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 27,
+                                        "value": "2"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    [
+
+                    ]
+                ]
+            }
+        ],
+        "time": "323.3699798584ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

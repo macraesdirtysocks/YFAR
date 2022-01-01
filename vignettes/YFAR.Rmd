@@ -82,6 +82,7 @@ Here's where you get to use your token for the first time.
 Get your games
 
 ```{r, echo=FALSE}
+# Create a dummy token class to pacify functions checking for a token.
 my_token <-
     structure(
         list(),
@@ -89,20 +90,20 @@ my_token <-
 
 ```
 
-```{r, include=FALSE}
-httptest::with_mock_api({
-  games <- y_games(my_token)
-})
-```
 
-```{r, eval = FALSE}
+<!-- ```{r, include=FALSE} -->
+<!-- httptest::with_mock_api({ -->
+<!--   games <- y_games(my_token) -->
+<!-- }) -->
+<!-- ``` -->
 
-games <- y_games(my_token)
-```
+<!-- ```{r, eval = FALSE} -->
+<!-- games <- y_games(my_token) -->
+<!-- ``` -->
 
-```{r}
-games
-```
+<!-- ```{r} -->
+<!-- games -->
+<!-- ``` -->
 
 **The league_key and league_id are what will be used to tell the functions from which leagues you want data**
 
@@ -178,7 +179,7 @@ league_settings <- y_league_settings(league_id = "411.l.1239", my_token)
 league_settings
 ```
 
-Pluck an element to view the tibble.  
+Pluck an element to view the tibble.
 ```{r League Settings Stat Categories}
 league_settings$data[4]
 ```
@@ -313,7 +314,7 @@ all_players_in_my_league <- y_player_slate(league_id = "411.l.1239", token_name 
 
 ### y_players
 
-To get a slice of the players in your league.  By default returns 100 players sorted by "AR"
+To get a slice of the players in your league.  By default returns 100 players sorted by "AR".
 
 ```{r basic y_players, include=FALSE}
 with_mock_api({
@@ -349,13 +350,12 @@ Pass filters as ... arguments to customize your return.
     - start (Any integer 0 or greater e.g. /players;start=25)
     - count (Any integer b/t 0 & 25 /players;count=5)
 
-Top 10 players by actual rank ("AR")
+Top 10 players by actual rank ("OR")
 ```{r y_players top 10, include=FALSE}
 with_mock_api({
-top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "AR", status = "ALL", debug = FALSE)
+top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "OR", status = "ALL", debug = FALSE)
 })
 ```
-
 
 ```{r, eval=FALSE}
 top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "AR", status = "ALL", debug = FALSE)
@@ -387,7 +387,7 @@ top_10_ar_players
 
 Takes a league or team id.
 ```{r y_draft_results, eval=FALSE}
-
+# Not run
 league_draft <- y_draft_results("411.l.1239", token_name = my_token, debug = FALSE)
 
 or
@@ -460,9 +460,18 @@ my_matchups
 ```
 
 Also takes a week argument. Return week 8 matchup.
-```{r y_matchup week 8, eval=FALSE}
-# Not run
+```{r y_matchup week 8, include=FALSE}
+with_mock_api({
 my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
+})
+```
+
+```{r, eval=FALSE}
+my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
+```
+
+```{r}
+my_week_8_matchup
 ```
 
 ### Examples
@@ -485,7 +494,9 @@ Multiple teams with multiple weeks
 
 Get standings data
 ```{r, include=FALSE}
+with_mock_api({
 standings <- y_standings("411.l.1239", my_token)
+})
 ```
 
 ```{r, eval=FALSE}
@@ -502,7 +513,7 @@ I want to see the current roster for each team in my league.
 
 To retrieve the players which makeup a roster or rosters.  Accepts a team_key or league_key.
 
-### league rosters
+### League Rosters
 
 Here a league key is supplied and a tibble with the current roster for each team is returned.
 ```{r Rosters, eval=FALSE}
@@ -530,9 +541,18 @@ team_roster
 ### Date
 
 A date argument can be supplied.
-```{r team roster with date, eval=FALSE}
-# Not run
-team_1_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token, date = "2021-10-12")
+```{r team roster with date, include=FALSE}
+with_mock_api({
+team_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token, game_date = "2021-10-12")
+})
+```
+
+```{r, eval=FALSE}
+team_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
+```
+
+```{r}
+team_roster_w_date
 ```
 
 ### Examples
@@ -542,7 +562,7 @@ team_1_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token, 
 Map over multiple dates
 ```{r map over multiple dates}
 # create a date sequence from fantasy week 1 using return from `y_weeks()`
-week_1 <- 
+week_1 <-
   seq.Date(from = lubridate::ymd(weeks$start[1]), to = lubridate::ymd(weeks$end[1]), by = 1)
 ```
 
@@ -557,9 +577,9 @@ purrr::map_df(.x = week_1, .f = y_rosters, id = "411.l.1239.t.1", token_name = m
 You can map over multiple teams.  Here team 1 and 2 are returned in a list.
 
     purrr::map(
-    c("411.l.1239.t.1", "411.l.1239.t.2"), 
-    y_rosters, 
-    token_name = my_token, 
+    c("411.l.1239.t.1", "411.l.1239.t.2"),
+    y_rosters,
+    token_name = my_token,
     debug = FALSE)
 
 #### Multiple Teams and Dates
@@ -576,7 +596,6 @@ You can map over multiple teams.  Here team 1 and 2 are returned in a list.
 Let's see some player stats! To get stats for players using player keys.
 
 Here's a basic example using Leon Draisaitl.
-
 ```{r y_player_stats, include=FALSE}
 with_mock_api({
 draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token)
@@ -588,7 +607,7 @@ draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token)
 ```
 
 ```{r}
-draisaitl_stats %>% 
+draisaitl_stats %>%
   dplyr::select(g:sog)
 ```
 
@@ -603,16 +622,16 @@ Here's an example from the public league.
 
 ```{r, include=FALSE}
 with_mock_api({
-players <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
+team_1_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 })
 ```
 
 ```{r, eval=FALSE}
-players <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
+team_1_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 ```
 
 ```{r}
-players %>%
+team_1_roster %>%
   dplyr::select(player_key, name_full)
 ```
 
@@ -620,101 +639,39 @@ OK so what? I have to write down those numbers and run this function for each pl
 
 Nope! `y_player_stats()` can take a vector of player keys.  Here's how using our roster from the last example.
 
-```{r, include=FALSE}
-with_mock_api({
-  my_player_stats <- y_player_stats(players = players$player_key, token_name = my_token)
-})
-```
-
 ```{r, eval=FALSE}
-my_player_stats <- y_player_stats(players = players$player_key, token_name = my_token)
+# Not run
+  my_player_stats <- y_player_stats(players = team_1_roster$player_key, token_name = my_token)
 ```
-
-```{r}
-my_player_stats %>% 
-  dplyr::select(name_full, g:sog)
-```
-
-Don't worry about the NA's in the goalie stats.  I'm only showing you skater stats.
 
 OK well that's pretty good but what if I only want stats for my players from yesterday?
 
-```{r, include=FALSE}
-with_mock_api({
-yesterday_stats <-
-  y_player_stats(
-    players = players$player_key,
-    token_name = my_token,
-    game_date = Sys.Date() - 1
-  )
-})
-```
-
-```{r, eval=FALSE}
-yesterday_stats <-
-  y_player_stats(
-    players = players$player_key,
-    token_name = my_token,
-    date = Sys.Date() - 1
-  )
-```
-
-```{r}
-yesterday_stats %>% 
-   dplyr::select(name_full, g:sog)
-```
+    yesterday_stats <- 
+      y_player_stats(
+      players = team_1_roster$player_key,
+      token_name = my_token,
+      game_date = Sys.Date() - 1)
 
 And can it get my players stats for week 7?  Yes! You can supply a vector of dates to `y_player_stats()`
 
 Using y_weeks we can find the start and end date for week 7.
 
-```{r}
-week_7 <- 
-  weeks %>%
-  dplyr::filter(week == 7) %>%
-  dplyr::select(start, end)
-```
+    week_7 <- 
+      weeks %>%
+      dplyr::filter(week == 7) %>%
+      dplyr::select(start, end)
 
 And create a date sequence
-```{r week 7 date sequence}
-week_7_dates <-
-  seq.Date(from = as.Date(week_7$start),
-           to = as.Date(week_7$end),
-           by = 1)
-```
+
+    week_7_dates <- 
+      seq.Date(from = as.Date(week_7$start),
+      to = as.Date(week_7$end),
+      by = 1)
 
 Week 7 player record count
-```{r week 7 player count, include=FALSE}
-with_mock_api({
-week_7_stats <-
-  y_player_stats(
-    players = players$player_key,
-    token_name = my_token,
-    game_date = week_7_dates
-  )
-})
 
-```
-
-```{r, eval=FALSE}
-week_7_stats <-
-  y_player_stats(
-    players = players$player_key,
-    token_name = my_token,
-    game_date = week_7_dates
-  )
-```
-
-```{r}
-week_7_stats %>% 
-  dplyr::count(name_full)
-```
-
-```{r}
-week_7_stats %>%
-  dplyr::select(name_full, g:sog) %>%
-  dplyr::group_by(name_full) %>%
-  dplyr::group_split() %>%
-  purrr::pluck(1)
-```
-
+    week_7_stats <-
+      y_player_stats(
+      players = team_1_roster$player_key,
+      token_name = my_token,
+      game_date = week_7_dates)

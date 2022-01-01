@@ -1,4 +1,3 @@
-context("Get game data")
 library(YFAR)
 
 with_mock_api({
@@ -59,10 +58,10 @@ with_mock_api({
         x <- c("week", "week_start", "week_end", "status", "is_playoffs",
                "is_consolation", "is_tied", "winner_team_key", "g", "a", "x",
                "ppp", "sog", "hit", "w", "gaa", "sv_percent", "sho", "team_key",
-               "team_id", "name", "point_total", "remaining_games", "live_games",
-               "completed_games", "count_g", "count_a", "count_x", "count_ppp",
-               "count_sog", "count_hit", "count_w", "count_ga", "count_gaa",
-               "count_sv", "count_sa", "count_sv_percent", "count_sho")
+               "team_id", "name", "coverage_type", "count_g", "count_a", "count_x",
+               "count_ppp", "count_sog", "count_hit", "count_w", "count_ga",
+               "count_gaa", "count_sv", "count_sa", "count_sv_percent", "count_sho",
+               "total", "remaining_games", "live_games", "completed_games")
 
         # test that colnames of the df match expected
         testthat::expect_named(df, x, ignore.order = TRUE, ignore.case = TRUE)

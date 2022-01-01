@@ -1,4 +1,3 @@
-context("Get top 10 players sorted by goals")
 library(YFAR)
 
 with_mock_api({

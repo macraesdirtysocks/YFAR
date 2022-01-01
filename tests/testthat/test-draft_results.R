@@ -1,4 +1,3 @@
-context("Get draft results")
 library(YFAR)
 
 with_mock_api({

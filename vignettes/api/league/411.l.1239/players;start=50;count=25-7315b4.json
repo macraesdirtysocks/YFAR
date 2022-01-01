@@ -1,0 +1,1910 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/league/411.l.1239/players;start=50;count=25",
+        "league": [
+            {
+                "league_key": "411.l.1239",
+                "league_id": "1239",
+                "name": "Yahoo Public 1239",
+                "url": "https://hockey.fantasysports.yahoo.com/hockey/1239",
+                "logo_url": "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png",
+                "draft_status": "postdraft",
+                "num_teams": 12,
+                "edit_key": "2022-01-01",
+                "weekly_deadline": "intraday",
+                "league_update_timestamp": "1641022665",
+                "scoring_type": "head",
+                "league_type": "public",
+                "renew": "",
+                "renewed": "",
+                "iris_group_chat_id": "",
+                "allow_add_to_dl_extra_pos": 0,
+                "is_pro_league": "0",
+                "is_cash_league": "0",
+                "current_week": 11,
+                "start_week": "1",
+                "start_date": "2021-10-12",
+                "end_week": "24",
+                "end_date": "2022-04-29",
+                "game_code": "nhl",
+                "season": "2021"
+            },
+            {
+                "players": {
+                    "0": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3801"
+                                },
+                                {
+                                    "player_id": "3801"
+                                },
+                                {
+                                    "name": {
+                                        "full": "T.J. Oshie",
+                                        "first": "T.J.",
+                                        "last": "Oshie",
+                                        "ascii_first": "T.J.",
+                                        "ascii_last": "Oshie"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3801"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.23"
+                                },
+                                {
+                                    "editorial_team_full_name": "Washington Capitals"
+                                },
+                                {
+                                    "editorial_team_abbr": "Was"
+                                },
+                                {
+                                    "uniform_number": "77"
+                                },
+                                {
+                                    "display_position": "C,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/jXYu8dcN_9yI.fxIVNUcxQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3801.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/jXYu8dcN_9yI.fxIVNUcxQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3801.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640821018
+                                }
+                            ]
+                        ]
+                    },
+                    "1": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3802"
+                                },
+                                {
+                                    "player_id": "3802"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Andrew Cogliano",
+                                        "first": "Andrew",
+                                        "last": "Cogliano",
+                                        "ascii_first": "Andrew",
+                                        "ascii_last": "Cogliano"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3802"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.18"
+                                },
+                                {
+                                    "editorial_team_full_name": "San Jose Sharks"
+                                },
+                                {
+                                    "editorial_team_abbr": "SJ"
+                                },
+                                {
+                                    "uniform_number": "11"
+                                },
+                                {
+                                    "display_position": "LW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/g7v4YRvXCji0ZYzFOk5o.g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11112021/3802.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/g7v4YRvXCji0ZYzFOk5o.g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11112021/3802.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "LW"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "LW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "2": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3818"
+                                },
+                                {
+                                    "player_id": "3818"
+                                },
+                                {
+                                    "name": {
+                                        "full": "James Neal",
+                                        "first": "James",
+                                        "last": "Neal",
+                                        "ascii_first": "James",
+                                        "ascii_last": "Neal"
+                                    }
+                                },
+                                {
+                                    "status": "IR-LT",
+                                    "status_full": "Injured Reserve"
+                                },
+                                {
+                                    "injury_note": "Undisclosed"
+                                },
+                                {
+                                    "on_disabled_list": "1"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3818"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.19"
+                                },
+                                {
+                                    "editorial_team_full_name": "St. Louis Blues"
+                                },
+                                {
+                                    "editorial_team_abbr": "StL"
+                                },
+                                {
+                                    "uniform_number": "81"
+                                },
+                                {
+                                    "display_position": "LW,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/vCQ9gIbo.AvdTsQWXwzApg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11302021/3818.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/vCQ9gIbo.AvdTsQWXwzApg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11302021/3818.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "LW"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "LW"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        },
+                                        {
+                                            "position": "IR"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640805070
+                                }
+                            ]
+                        ]
+                    },
+                    "3": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3829"
+                                },
+                                {
+                                    "player_id": "3829"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Marc-Edouard Vlasic",
+                                        "first": "Marc-Edouard",
+                                        "last": "Vlasic",
+                                        "ascii_first": "Marc-Edouard",
+                                        "ascii_last": "Vlasic"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3829"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.18"
+                                },
+                                {
+                                    "editorial_team_full_name": "San Jose Sharks"
+                                },
+                                {
+                                    "editorial_team_abbr": "SJ"
+                                },
+                                {
+                                    "uniform_number": "44"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/cXPpb3_DmCvGSiQvpIG3BQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10222019/3829.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/cXPpb3_DmCvGSiQvpIG3BQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10222019/3829.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "4": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3835"
+                                },
+                                {
+                                    "player_id": "3835"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Blake Comeau",
+                                        "first": "Blake",
+                                        "last": "Comeau",
+                                        "ascii_first": "Blake",
+                                        "ascii_last": "Comeau"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3835"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.9"
+                                },
+                                {
+                                    "editorial_team_full_name": "Dallas Stars"
+                                },
+                                {
+                                    "editorial_team_abbr": "Dal"
+                                },
+                                {
+                                    "uniform_number": "15"
+                                },
+                                {
+                                    "display_position": "LW,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/1.ocLa1Hseqbxb0ZPaaIjg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3835.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/1.ocLa1Hseqbxb0ZPaaIjg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3835.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "LW"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "LW"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "5": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3861"
+                                },
+                                {
+                                    "player_id": "3861"
+                                },
+                                {
+                                    "name": {
+                                        "full": "David Backes",
+                                        "first": "David",
+                                        "last": "Backes",
+                                        "ascii_first": "David",
+                                        "ascii_last": "Backes"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3861"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.25"
+                                },
+                                {
+                                    "editorial_team_full_name": "Anaheim Ducks"
+                                },
+                                {
+                                    "editorial_team_abbr": "Anh"
+                                },
+                                {
+                                    "uniform_number": "21"
+                                },
+                                {
+                                    "display_position": "C,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/yeEYjbPXkWlX8cUjHcbn0A--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/01292021/3861.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/yeEYjbPXkWlX8cUjHcbn0A--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/01292021/3861.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "6": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3871"
+                                },
+                                {
+                                    "player_id": "3871"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Andy Greene",
+                                        "first": "Andy",
+                                        "last": "Greene",
+                                        "ascii_first": "Andy",
+                                        "ascii_last": "Greene"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3871"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.12"
+                                },
+                                {
+                                    "editorial_team_full_name": "New York Islanders"
+                                },
+                                {
+                                    "editorial_team_abbr": "NYI"
+                                },
+                                {
+                                    "uniform_number": "4"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/uG8RSqYBMYlsFTPNHXxeFg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3871.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/uG8RSqYBMYlsFTPNHXxeFg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3871.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "7": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3885"
+                                },
+                                {
+                                    "player_id": "3885"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Keith Yandle",
+                                        "first": "Keith",
+                                        "last": "Yandle",
+                                        "ascii_first": "Keith",
+                                        "ascii_last": "Yandle"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3885"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.15"
+                                },
+                                {
+                                    "editorial_team_full_name": "Philadelphia Flyers"
+                                },
+                                {
+                                    "editorial_team_abbr": "Phi"
+                                },
+                                {
+                                    "uniform_number": "3"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/dGxh4c0tJTArhP6QUSYa9g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3885.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/dGxh4c0tJTArhP6QUSYa9g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3885.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "8": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3889"
+                                },
+                                {
+                                    "player_id": "3889"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Adam Cracknell",
+                                        "first": "Adam",
+                                        "last": "Cracknell",
+                                        "ascii_first": "Adam",
+                                        "ascii_last": "Cracknell"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3889"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.6"
+                                },
+                                {
+                                    "editorial_team_full_name": "Edmonton Oilers"
+                                },
+                                {
+                                    "editorial_team_abbr": "Edm"
+                                },
+                                {
+                                    "uniform_number": "27"
+                                },
+                                {
+                                    "display_position": "C,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/BPNAfdtWCB82VMCuVYlU6Q--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272018/3889.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/BPNAfdtWCB82VMCuVYlU6Q--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272018/3889.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "9": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3898"
+                                },
+                                {
+                                    "player_id": "3898"
+                                },
+                                {
+                                    "name": {
+                                        "full": "David Krejci",
+                                        "first": "David",
+                                        "last": "Krejci",
+                                        "ascii_first": "David",
+                                        "ascii_last": "Krejci"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3898"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.1"
+                                },
+                                {
+                                    "editorial_team_full_name": "Boston Bruins"
+                                },
+                                {
+                                    "editorial_team_abbr": "Bos"
+                                },
+                                {
+                                    "uniform_number": "46"
+                                },
+                                {
+                                    "display_position": "C"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/h2ufJObb_KVF8wB4n4_gCw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/02102021/3898.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/h2ufJObb_KVF8wB4n4_gCw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/02102021/3898.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "10": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3912"
+                                },
+                                {
+                                    "player_id": "3912"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Jonathan Ericsson",
+                                        "first": "Jonathan",
+                                        "last": "Ericsson",
+                                        "ascii_first": "Jonathan",
+                                        "ascii_last": "Ericsson"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3912"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.5"
+                                },
+                                {
+                                    "editorial_team_full_name": "Detroit Red Wings"
+                                },
+                                {
+                                    "editorial_team_abbr": "Det"
+                                },
+                                {
+                                    "uniform_number": "52"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/UWDMn98W4McmhaBhU47BBQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11252019/3912.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/UWDMn98W4McmhaBhU47BBQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11252019/3912.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "11": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3918"
+                                },
+                                {
+                                    "player_id": "3918"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Frans Nielsen",
+                                        "first": "Frans",
+                                        "last": "Nielsen",
+                                        "ascii_first": "Frans",
+                                        "ascii_last": "Nielsen"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3918"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.5"
+                                },
+                                {
+                                    "editorial_team_full_name": "Detroit Red Wings"
+                                },
+                                {
+                                    "editorial_team_abbr": "Det"
+                                },
+                                {
+                                    "uniform_number": "81"
+                                },
+                                {
+                                    "display_position": "C,LW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/O2m4tTeFztiE69qzFnNqfw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11252019/3918.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/O2m4tTeFztiE69qzFnNqfw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11252019/3918.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        },
+                                        {
+                                            "position": "LW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "12": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3936"
+                                },
+                                {
+                                    "player_id": "3936"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Thomas Greiss",
+                                        "first": "Thomas",
+                                        "last": "Greiss",
+                                        "ascii_first": "Thomas",
+                                        "ascii_last": "Greiss"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3936"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.5"
+                                },
+                                {
+                                    "editorial_team_full_name": "Detroit Red Wings"
+                                },
+                                {
+                                    "editorial_team_abbr": "Det"
+                                },
+                                {
+                                    "uniform_number": "29"
+                                },
+                                {
+                                    "display_position": "G"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/wANDBh9lqUDZiTjIP6PxAg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11012021/3936.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/wANDBh9lqUDZiTjIP6PxAg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11012021/3936.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "G"
+                                },
+                                {
+                                    "primary_position": "G"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "G"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                {
+                                    "has_recent_player_notes": 1
+                                },
+                                {
+                                    "player_notes_last_timestamp": 1641008682
+                                }
+                            ]
+                        ]
+                    },
+                    "13": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3947"
+                                },
+                                {
+                                    "player_id": "3947"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Troy Brouwer",
+                                        "first": "Troy",
+                                        "last": "Brouwer",
+                                        "ascii_first": "Troy",
+                                        "ascii_last": "Brouwer"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3947"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.19"
+                                },
+                                {
+                                    "editorial_team_full_name": "St. Louis Blues"
+                                },
+                                {
+                                    "editorial_team_abbr": "StL"
+                                },
+                                {
+                                    "uniform_number": "36"
+                                },
+                                {
+                                    "display_position": "LW,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/NkBx78Z20hURYv5I3FLQNA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/02112021/3947.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/NkBx78Z20hURYv5I3FLQNA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/02112021/3947.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "LW"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "LW"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "14": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3951"
+                                },
+                                {
+                                    "player_id": "3951"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Kris Russell",
+                                        "first": "Kris",
+                                        "last": "Russell",
+                                        "ascii_first": "Kris",
+                                        "ascii_last": "Russell"
+                                    }
+                                },
+                                {
+                                    "status": "IR-LT",
+                                    "status_full": "Injured Reserve"
+                                },
+                                {
+                                    "injury_note": "Upper Body"
+                                },
+                                {
+                                    "on_disabled_list": "1"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3951"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.6"
+                                },
+                                {
+                                    "editorial_team_full_name": "Edmonton Oilers"
+                                },
+                                {
+                                    "editorial_team_abbr": "Edm"
+                                },
+                                {
+                                    "uniform_number": "6"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/jw27Ig2f.iiGEMi9dmsZlg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/3951.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/jw27Ig2f.iiGEMi9dmsZlg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/3951.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        },
+                                        {
+                                            "position": "IR"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "15": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3952"
+                                },
+                                {
+                                    "player_id": "3952"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Cody Franson",
+                                        "first": "Cody",
+                                        "last": "Franson",
+                                        "ascii_first": "Cody",
+                                        "ascii_last": "Franson"
+                                    }
+                                },
+                                {
+                                    "status": "NA",
+                                    "status_full": "Not Active"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3952"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.23"
+                                },
+                                {
+                                    "editorial_team_full_name": "Washington Capitals"
+                                },
+                                {
+                                    "editorial_team_abbr": "Was"
+                                },
+                                {
+                                    "uniform_number": "4"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/Fm8g_RAGuYXwSjC9KhobGA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11022017/3952.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/Fm8g_RAGuYXwSjC9KhobGA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11022017/3952.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "16": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3979"
+                                },
+                                {
+                                    "player_id": "3979"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Erik Johnson",
+                                        "first": "Erik",
+                                        "last": "Johnson",
+                                        "ascii_first": "Erik",
+                                        "ascii_last": "Johnson"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3979"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.17"
+                                },
+                                {
+                                    "editorial_team_full_name": "Colorado Avalanche"
+                                },
+                                {
+                                    "editorial_team_abbr": "Col"
+                                },
+                                {
+                                    "uniform_number": "6"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/QcuJXTBbTLijA_uWYRL5iw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3979.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/QcuJXTBbTLijA_uWYRL5iw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3979.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "17": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3980"
+                                },
+                                {
+                                    "player_id": "3980"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Jordan Staal",
+                                        "first": "Jordan",
+                                        "last": "Staal",
+                                        "ascii_first": "Jordan",
+                                        "ascii_last": "Staal"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3980"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.7"
+                                },
+                                {
+                                    "editorial_team_full_name": "Carolina Hurricanes"
+                                },
+                                {
+                                    "editorial_team_abbr": "Car"
+                                },
+                                {
+                                    "uniform_number": "11"
+                                },
+                                {
+                                    "display_position": "C"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/VEFE0a7ueOsxDI4khB7QhQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272021/3980.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/VEFE0a7ueOsxDI4khB7QhQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/10272021/3980.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640610939
+                                }
+                            ]
+                        ]
+                    },
+                    "18": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3981"
+                                },
+                                {
+                                    "player_id": "3981"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Jonathan Toews",
+                                        "first": "Jonathan",
+                                        "last": "Toews",
+                                        "ascii_first": "Jonathan",
+                                        "ascii_last": "Toews"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3981"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.4"
+                                },
+                                {
+                                    "editorial_team_full_name": "Chicago Blackhawks"
+                                },
+                                {
+                                    "editorial_team_abbr": "Chi"
+                                },
+                                {
+                                    "uniform_number": "19"
+                                },
+                                {
+                                    "display_position": "C"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/tz.KOMoEiBDch6AJAGaUtg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3981.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/tz.KOMoEiBDch6AJAGaUtg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11032021/3981.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "19": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3982"
+                                },
+                                {
+                                    "player_id": "3982"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Nicklas Backstrom",
+                                        "first": "Nicklas",
+                                        "last": "Backstrom",
+                                        "ascii_first": "Nicklas",
+                                        "ascii_last": "Backstrom"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3982"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.23"
+                                },
+                                {
+                                    "editorial_team_full_name": "Washington Capitals"
+                                },
+                                {
+                                    "editorial_team_abbr": "Was"
+                                },
+                                {
+                                    "uniform_number": "19"
+                                },
+                                {
+                                    "display_position": "C"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/bNFdCLAQFKInLqUX0S7_2g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3982.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/bNFdCLAQFKInLqUX0S7_2g--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3982.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640629985
+                                }
+                            ]
+                        ]
+                    },
+                    "20": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3983"
+                                },
+                                {
+                                    "player_id": "3983"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Phil Kessel",
+                                        "first": "Phil",
+                                        "last": "Kessel",
+                                        "ascii_first": "Phil",
+                                        "ascii_last": "Kessel"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3983"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.24"
+                                },
+                                {
+                                    "editorial_team_full_name": "Arizona Coyotes"
+                                },
+                                {
+                                    "editorial_team_abbr": "Ari"
+                                },
+                                {
+                                    "uniform_number": "81"
+                                },
+                                {
+                                    "display_position": "RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/rg_Q.51K2VEwblHRc.Ydeg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11102021/3983.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/rg_Q.51K2VEwblHRc.Ydeg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11102021/3983.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "RW"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640779722
+                                }
+                            ]
+                        ]
+                    },
+                    "21": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3985"
+                                },
+                                {
+                                    "player_id": "3985"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Joe Pavelski",
+                                        "first": "Joe",
+                                        "last": "Pavelski",
+                                        "ascii_first": "Joe",
+                                        "ascii_last": "Pavelski"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3985"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.9"
+                                },
+                                {
+                                    "editorial_team_full_name": "Dallas Stars"
+                                },
+                                {
+                                    "editorial_team_abbr": "Dal"
+                                },
+                                {
+                                    "uniform_number": "16"
+                                },
+                                {
+                                    "display_position": "C,RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/GBysrozp0ae3yoF0zcA8aA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3985.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/GBysrozp0ae3yoF0zcA8aA--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3985.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        },
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "22": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3986"
+                                },
+                                {
+                                    "player_id": "3986"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Andrej Sekera",
+                                        "first": "Andrej",
+                                        "last": "Sekera",
+                                        "ascii_first": "Andrej",
+                                        "ascii_last": "Sekera"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3986"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.9"
+                                },
+                                {
+                                    "editorial_team_full_name": "Dallas Stars"
+                                },
+                                {
+                                    "editorial_team_abbr": "Dal"
+                                },
+                                {
+                                    "uniform_number": "5"
+                                },
+                                {
+                                    "display_position": "D"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/fSjl40Mc5q1KWfUW756Ljg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3986.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/fSjl40Mc5q1KWfUW756Ljg--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3986.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "D"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "D"
+                                        }
+                                    ]
+                                },
+                                [
+
+                                ],
+                                [
+
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    },
+                    "23": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3987"
+                                },
+                                {
+                                    "player_id": "3987"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Derick Brassard",
+                                        "first": "Derick",
+                                        "last": "Brassard",
+                                        "ascii_first": "Derick",
+                                        "ascii_last": "Brassard"
+                                    }
+                                },
+                                {
+                                    "status": "O",
+                                    "status_full": "Out"
+                                },
+                                {
+                                    "injury_note": "Hip"
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3987"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.15"
+                                },
+                                {
+                                    "editorial_team_full_name": "Philadelphia Flyers"
+                                },
+                                {
+                                    "editorial_team_abbr": "Phi"
+                                },
+                                {
+                                    "uniform_number": "19"
+                                },
+                                {
+                                    "display_position": "C,LW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/br9VdMOmDxnX_d2XD4slfw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3987.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/br9VdMOmDxnX_d2XD4slfw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11082021/3987.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "C"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "C"
+                                        },
+                                        {
+                                            "position": "LW"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640634235
+                                }
+                            ]
+                        ]
+                    },
+                    "24": {
+                        "player": [
+                            [
+                                {
+                                    "player_key": "411.p.3988"
+                                },
+                                {
+                                    "player_id": "3988"
+                                },
+                                {
+                                    "name": {
+                                        "full": "Kyle Okposo",
+                                        "first": "Kyle",
+                                        "last": "Okposo",
+                                        "ascii_first": "Kyle",
+                                        "ascii_last": "Okposo"
+                                    }
+                                },
+                                {
+                                    "editorial_player_key": "nhl.p.3988"
+                                },
+                                {
+                                    "editorial_team_key": "nhl.t.2"
+                                },
+                                {
+                                    "editorial_team_full_name": "Buffalo Sabres"
+                                },
+                                {
+                                    "editorial_team_abbr": "Buf"
+                                },
+                                {
+                                    "uniform_number": "21"
+                                },
+                                {
+                                    "display_position": "RW"
+                                },
+                                {
+                                    "headshot": {
+                                        "url": "https://s.yimg.com/iu/api/res/1.2/nkaioOgBZoZwBamjoRR2jQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3988.png",
+                                        "size": "small"
+                                    },
+                                    "image_url": "https://s.yimg.com/iu/api/res/1.2/nkaioOgBZoZwBamjoRR2jQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11092021/3988.png"
+                                },
+                                {
+                                    "is_undroppable": "0"
+                                },
+                                {
+                                    "position_type": "P"
+                                },
+                                {
+                                    "primary_position": "RW"
+                                },
+                                {
+                                    "eligible_positions": [
+                                        {
+                                            "position": "RW"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "has_player_notes": 1
+                                },
+                                [
+
+                                ],
+                                {
+                                    "player_notes_last_timestamp": 1640920823
+                                }
+                            ]
+                        ]
+                    },
+                    "count": 25
+                }
+            }
+        ],
+        "time": "32.370090484619ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

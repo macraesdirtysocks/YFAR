@@ -1,4 +1,3 @@
-context("Get player stats")
 library(YFAR)
 
 with_mock_api({
@@ -65,9 +64,10 @@ with_mock_api({
           "editorial_team_key", "editorial_team_full_name", "editorial_team_abbr",
           "uniform_number", "display_position", "headshot_url", "headshot_size",
           "image_url", "is_undroppable", "position_type", "eligible_positions_position",
-          "eligible_positions_position_2", "gp", "gp_2", "g", "a", "p",
-          "x", "pim", "ppg", "ppa", "ppp", "shg", "sha", "shp", "gwg",
-          "gtg", "sog", "sh_percent", "fw", "fl", "hit", "blk")
+          "eligible_positions_position_2", "has_player_notes", "player_notes_last_timestamp",
+          "gp", "gp_2", "g", "a", "p", "x", "pim", "ppg", "ppa", "ppp",
+          "shg", "sha", "shp", "gwg", "gtg", "sog", "sh_percent", "fw",
+          "fl", "hit", "blk")
 
 
     # test that colnames of the df match expected

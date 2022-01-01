@@ -1,4 +1,3 @@
-context("Get fanatasy weeks")
 library(YFAR)
 
 with_mock_api({

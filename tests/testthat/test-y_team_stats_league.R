@@ -1,4 +1,3 @@
-context("Get league team stats")
 library(YFAR)
 
 with_mock_api({

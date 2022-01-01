@@ -1,4 +1,3 @@
-context("Get point league settings")
 library(YFAR)
 
 with_mock_api({

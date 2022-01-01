@@ -1,4 +1,3 @@
-context("Get transactions")
 library(YFAR)
 
 with_mock_api({
@@ -72,12 +71,11 @@ with_mock_api({
         # expected colnames
         x <-
             c("transaction_key", "transaction_id", "type", "status", "timestamp",
-              "faab_bid", "player_key", "player_id", "name_full", "name_first",
-              "name_last", "name_ascii_first", "name_ascii_last", "editorial_team_abbr",
+              "player_key", "player_id", "name_full", "name_first", "name_last",
+              "name_ascii_first", "name_ascii_last", "editorial_team_abbr",
               "display_position", "position_type", "transaction_data_type",
-              "transaction_data_source_type", "transaction_data_destination_type",
-              "transaction_data_destination_team_key", "transaction_data_destination_team_name",
-              "transaction_data_source_team_key", "transaction_data_source_team_name"
+              "transaction_data_source_type", "transaction_data_source_team_key",
+              "transaction_data_source_team_name", "transaction_data_destination_type"
             )
 
 
