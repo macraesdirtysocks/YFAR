@@ -648,36 +648,12 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         magrittr::extract(1:3) %>%
         purrr::flatten_df()
 
-    # stats_count <-
-    #     x %>%
-    #     purrr::pluck("team", 2, "team_stats", "stats") %>%
-    #     purrr::keep(purrr::is_list) %>%
-    #     purrr::map(purrr::pluck, "stat") %>%
-    #     purrr::map_depth(3, as.character) %>%
-    #     purrr::map_df(purrr::flatten_df) %>%
-    #     # # convert stat id numbers to display name i.e. stat 1 = G
-    #     dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
-    #     dplyr::select(display_name, value) %>%
-    #     tidyr::pivot_wider(names_from = display_name,
-    #                        values_from = value,
-    #                        names_prefix = "count_"
-    #                        )
-    #
-    # team_points <-
-    #     x %>%
-    #     purrr::pluck("team", 2, "team_points") %>%
-    #     magrittr::extract("total") %>%
-    #     purrr::set_names("point_total") %>%
-    #     purrr::map_df(as.character)
-    #
-    # team_remaining_games <-
-    #     x %>%
-    #     purrr::pluck("team", 2, "team_remaining_games", "total") %>%
-    #     purrr::flatten_df()
-
     stats <-
         x %>%
         purrr::pluck("team", 2) %>%
+        purrr::map_at("team_stats", purrr::map_at, "stats", purrr::map_depth, 2, purrr::map_at, "value", as.double) %>%
+        purrr::map_at("team_remaining_games", purrr::map_at, "total", purrr::map_depth, 2, as.double) %>%
+        purrr::map_at("team_points", purrr::map_at, c("week","total"), as.double) %>%
         purrr::flatten() %>%
         purrr::map_if(purrr::is_list, purrr::flatten_df) %>%
         purrr::map_at(
@@ -688,9 +664,9 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
                     names_from = display_name,
                     values_from = value,
                     names_prefix = "count_")
-            ) %>%
+        ) %>%
         dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
-        dplyr::select(!matches("_[[:digit:]]$"))
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
 
 
     df <- dplyr::bind_cols(team_name, stats)
@@ -976,8 +952,8 @@ return(stats)
         dplyr::bind_rows()
 
     df <-
-        dplyr::bind_cols(matchup_meta, stat_winners, matchup_team_data, .name_repair = janitor::make_clean_names) %>%
-        dplyr::select(!matches("_[[:digit:]]$"))
+        dplyr::bind_cols(matchup_meta, matchup_team_data, stat_winners, .name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
 
     return(df)
 

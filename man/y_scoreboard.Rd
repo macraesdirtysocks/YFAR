@@ -4,22 +4,25 @@
 \alias{y_scoreboard}
 \title{Get scoreboard stats and results data from Yahoo! Fantasy API}
 \usage{
-y_scoreboard(league_id = NULL, token_name = NULL, week = NULL)
+y_scoreboard(league_id = NULL, token_name = NULL, weeks = NULL, debug = FALSE)
 }
 \arguments{
-\item{league_id}{team id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{league_id}{league as a string in the form "000.l.0000".  League id can be found with y_games().}
 
-\item{token_name}{assigned object name used when creating token with y_create_token().}
+\item{token_name}{Assigned object name used when creating token with y_create_token().}
 
-\item{week}{the week of fantasy season to return. Default NULL will return current week of season.}
+\item{weeks}{The week of fantasy season to return. Default NULL will return current week of season.}
+
+\item{debug}{Returns a list of data uri call and content.  Useful for debugging.}
 }
 \value{
-a list
+a list or tibble
 }
 \description{
 `y_scoreboard()` gets scoreboard stats and results for a given league and week.
-It returns a list with the meta data as well as tibble containing the scoreboard data
-in the element `scoreboard_data`.
+It is similar to `y_matchups()` but takes a league_id as opposed to a team_id and
+returns league wide matchup data.  This eliminates mapping over team_id's with `y_matchups()`
+to get league matchup data.
 }
 \details{
 `y_scoreboard()` takes a league id and returns matchup data for all teams in requested week.

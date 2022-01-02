@@ -1,0 +1,2754 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/league/411.l.1239/scoreboard",
+        "league": [
+            {
+                "league_key": "411.l.1239",
+                "league_id": "1239",
+                "name": "Yahoo Public 1239",
+                "url": "https://hockey.fantasysports.yahoo.com/hockey/1239",
+                "logo_url": "https://s.yimg.com/cv/api/default/20180206/default-league-logo@2x.png",
+                "draft_status": "postdraft",
+                "num_teams": 12,
+                "edit_key": "2022-01-01",
+                "weekly_deadline": "intraday",
+                "league_update_timestamp": "1641022665",
+                "scoring_type": "head",
+                "league_type": "public",
+                "renew": "",
+                "renewed": "",
+                "iris_group_chat_id": "",
+                "allow_add_to_dl_extra_pos": 0,
+                "is_pro_league": "0",
+                "is_cash_league": "0",
+                "current_week": 11,
+                "start_week": "1",
+                "start_date": "2021-10-12",
+                "end_week": "24",
+                "end_date": "2022-04-29",
+                "game_code": "nhl",
+                "season": "2021"
+            },
+            {
+                "scoreboard": {
+                    "week": 11,
+                    "0": {
+                        "matchups": {
+                            "0": {
+                                "matchup": {
+                                    "week": "11",
+                                    "week_start": "2021-12-20",
+                                    "week_end": "2022-01-02",
+                                    "status": "midevent",
+                                    "is_playoffs": "0",
+                                    "is_consolation": "0",
+                                    "stat_winners": [
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "1",
+                                                "winner_team_key": "411.l.1239.t.12"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "2",
+                                                "winner_team_key": "411.l.1239.t.1"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "4",
+                                                "winner_team_key": "411.l.1239.t.1"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "8",
+                                                "winner_team_key": "411.l.1239.t.12"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "14",
+                                                "winner_team_key": "411.l.1239.t.12"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "31",
+                                                "winner_team_key": "411.l.1239.t.12"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "19",
+                                                "is_tied": 1
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "23",
+                                                "winner_team_key": "411.l.1239.t.12"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "26",
+                                                "winner_team_key": "411.l.1239.t.12"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "27",
+                                                "is_tied": 1
+                                            }
+                                        }
+                                    ],
+                                    "0": {
+                                        "teams": {
+                                            "0": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.1"
+                                                        },
+                                                        {
+                                                            "team_id": "1"
+                                                        },
+                                                        {
+                                                            "name": "Shoe's Extraordinary Team"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/1"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 11
+                                                        },
+                                                        {
+                                                            "faab_balance": "82"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "13"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 2
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "1",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "KOSXQIEKZPXPGVTDOYXJM7NTM4",
+                                                                        "felo_score": "919",
+                                                                        "felo_tier": "diamond"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 0
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 35
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 33
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "3.83"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 47
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 52
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".904"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 2
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 6,
+                                                                "live_games": 0,
+                                                                "completed_games": 29
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.12"
+                                                        },
+                                                        {
+                                                            "team_id": "12"
+                                                        },
+                                                        {
+                                                            "name": "Kenora Thistles II"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/12"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://s.yimg.com/cv/apiv2/default/nhl/nhl_4.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 7
+                                                        },
+                                                        {
+                                                            "faab_balance": "37"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "27"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "1"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 11
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "12",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "LVFKRYYIDPAE7O4CLBSAVCNYWA",
+                                                                        "felo_score": "716",
+                                                                        "felo_tier": "gold"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 11
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": -5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 73
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 35
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 4
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.41"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 39
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 43
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".907"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 6
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 9,
+                                                                "live_games": 1,
+                                                                "completed_games": 31
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "1": {
+                                "matchup": {
+                                    "week": "11",
+                                    "week_start": "2021-12-20",
+                                    "week_end": "2022-01-02",
+                                    "status": "midevent",
+                                    "is_playoffs": "0",
+                                    "is_consolation": "0",
+                                    "stat_winners": [
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "1",
+                                                "winner_team_key": "411.l.1239.t.11"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "2",
+                                                "winner_team_key": "411.l.1239.t.11"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "4",
+                                                "winner_team_key": "411.l.1239.t.11"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "8",
+                                                "winner_team_key": "411.l.1239.t.11"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "14",
+                                                "winner_team_key": "411.l.1239.t.2"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "31",
+                                                "winner_team_key": "411.l.1239.t.2"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "19",
+                                                "winner_team_key": "411.l.1239.t.11"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "23",
+                                                "winner_team_key": "411.l.1239.t.2"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "26",
+                                                "winner_team_key": "411.l.1239.t.11"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "27",
+                                                "is_tied": 1
+                                            }
+                                        }
+                                    ],
+                                    "0": {
+                                        "teams": {
+                                            "0": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.2"
+                                                        },
+                                                        {
+                                                            "team_id": "2"
+                                                        },
+                                                        {
+                                                            "name": "Doughty Sanchez"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/2"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://s.yimg.com/cv/apiv2/default/nhl/nhl_6_d.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 2
+                                                        },
+                                                        {
+                                                            "faab_balance": "85"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "7"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 8
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "2",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "KIFYUJWDLJG34ZM42WLVBMO2TI",
+                                                                        "felo_score": "799",
+                                                                        "felo_tier": "gold"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 46
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 22
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.68"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 41
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 47
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".872"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 3
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 11,
+                                                                "live_games": 2,
+                                                                "completed_games": 20
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.11"
+                                                        },
+                                                        {
+                                                            "team_id": "11"
+                                                        },
+                                                        {
+                                                            "name": "rmdz"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/11"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://s.yimg.com/cv/apiv2/default/nhl/nhl_4_r.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 9
+                                                        },
+                                                        {
+                                                            "faab_balance": "84"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "14"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "3"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 10
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "11",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "KAGOI2BDEF5BGLKAXJW2QE5MAU",
+                                                                        "felo_score": "949",
+                                                                        "felo_tier": "diamond"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 17
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 11
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 4
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 42
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 11
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 12
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.98"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 106
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 118
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".898"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 6
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 10,
+                                                                "live_games": 2,
+                                                                "completed_games": 19
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "2": {
+                                "matchup": {
+                                    "week": "11",
+                                    "week_start": "2021-12-20",
+                                    "week_end": "2022-01-02",
+                                    "status": "midevent",
+                                    "is_playoffs": "0",
+                                    "is_consolation": "0",
+                                    "stat_winners": [
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "1",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "2",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "4",
+                                                "winner_team_key": "411.l.1239.t.3"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "8",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "14",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "31",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "19",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "23",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "26",
+                                                "winner_team_key": "411.l.1239.t.10"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "27",
+                                                "is_tied": 1
+                                            }
+                                        }
+                                    ],
+                                    "0": {
+                                        "teams": {
+                                            "0": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.3"
+                                                        },
+                                                        {
+                                                            "team_id": "3"
+                                                        },
+                                                        {
+                                                            "name": "Ballinchef31"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/3"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://s.yimg.com/cv/apiv2/default/nhl/nhl_4.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 3
+                                                        },
+                                                        {
+                                                            "faab_balance": "100"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "1"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 7
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "3",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "D7UMT2KFVY7RYWJL35JLCG4DI4",
+                                                                        "felo_score": "574",
+                                                                        "felo_tier": "bronze"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 7
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 25
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.69"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 54
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 62
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".871"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 1
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 5,
+                                                                "live_games": 2,
+                                                                "completed_games": 19
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.10"
+                                                        },
+                                                        {
+                                                            "team_id": "10"
+                                                        },
+                                                        {
+                                                            "name": "Windlords"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/10"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/24702661304_811271846a.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 5
+                                                        },
+                                                        {
+                                                            "faab_balance": "87"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "11"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 4
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "10",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "5OWLTEY36Y5BMJ2OW7OO4B5WJ4",
+                                                                        "felo_score": "933",
+                                                                        "felo_tier": "diamond"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 7
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 15
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 53
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 26
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 4
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.18"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 65
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 73
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".890"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 8
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 2,
+                                                                "live_games": 3,
+                                                                "completed_games": 27
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "3": {
+                                "matchup": {
+                                    "week": "11",
+                                    "week_start": "2021-12-20",
+                                    "week_end": "2022-01-02",
+                                    "status": "midevent",
+                                    "is_playoffs": "0",
+                                    "is_consolation": "0",
+                                    "stat_winners": [
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "1",
+                                                "winner_team_key": "411.l.1239.t.9"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "2",
+                                                "winner_team_key": "411.l.1239.t.9"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "4",
+                                                "winner_team_key": "411.l.1239.t.9"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "8",
+                                                "winner_team_key": "411.l.1239.t.9"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "14",
+                                                "winner_team_key": "411.l.1239.t.9"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "31",
+                                                "winner_team_key": "411.l.1239.t.9"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "19",
+                                                "winner_team_key": "411.l.1239.t.4"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "23",
+                                                "winner_team_key": "411.l.1239.t.4"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "26",
+                                                "winner_team_key": "411.l.1239.t.4"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "27",
+                                                "is_tied": 1
+                                            }
+                                        }
+                                    ],
+                                    "0": {
+                                        "teams": {
+                                            "0": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.4"
+                                                        },
+                                                        {
+                                                            "team_id": "4"
+                                                        },
+                                                        {
+                                                            "name": "MxPx"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/4"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/56477871475_fd560a.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 10
+                                                        },
+                                                        {
+                                                            "faab_balance": "72"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "37"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "4"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 9
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "4",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "FXQSH3RVOMMFHGWFLQUCQMNNMU",
+                                                                        "felo_score": "820",
+                                                                        "felo_tier": "platinum"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 3
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": -1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 37
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 18
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.50"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 59
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 64
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".922"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 3
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 6,
+                                                                "live_games": 1,
+                                                                "completed_games": 26
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.9"
+                                                        },
+                                                        {
+                                                            "team_id": "9"
+                                                        },
+                                                        {
+                                                            "name": "Renegades"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/9"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/36842499730_74925a.jpg"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 4
+                                                        },
+                                                        {
+                                                            "faab_balance": "23"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "13"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 5
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "9",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "BWWYDYQZIE2BFSZ2IIUGDM2IOE",
+                                                                        "felo_score": "674",
+                                                                        "felo_tier": "silver"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 7
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 21
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 10
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 56
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 22
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.91"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 64
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 70
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".914"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 6
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 8,
+                                                                "live_games": 1,
+                                                                "completed_games": 32
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "4": {
+                                "matchup": {
+                                    "week": "11",
+                                    "week_start": "2021-12-20",
+                                    "week_end": "2022-01-02",
+                                    "status": "midevent",
+                                    "is_playoffs": "0",
+                                    "is_consolation": "0",
+                                    "stat_winners": [
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "1",
+                                                "is_tied": 1
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "2",
+                                                "winner_team_key": "411.l.1239.t.8"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "4",
+                                                "winner_team_key": "411.l.1239.t.5"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "8",
+                                                "winner_team_key": "411.l.1239.t.8"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "14",
+                                                "winner_team_key": "411.l.1239.t.8"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "31",
+                                                "winner_team_key": "411.l.1239.t.8"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "19",
+                                                "winner_team_key": "411.l.1239.t.5"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "23",
+                                                "winner_team_key": "411.l.1239.t.5"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "26",
+                                                "winner_team_key": "411.l.1239.t.8"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "27",
+                                                "is_tied": 1
+                                            }
+                                        }
+                                    ],
+                                    "0": {
+                                        "teams": {
+                                            "0": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.5"
+                                                        },
+                                                        {
+                                                            "team_id": "5"
+                                                        },
+                                                        {
+                                                            "name": "Old Fashioned"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/5"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/619f24703b38cebecb2c56f5255e3123b8c13ebed82143e13d9fc2e8d5dc5a7d.jpg"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 12
+                                                        },
+                                                        {
+                                                            "faab_balance": "100"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "11"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 3
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "5",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "PO7RXKRX5HOPEV6DPHCADE3AVQ",
+                                                                        "felo_score": "886",
+                                                                        "felo_tier": "platinum"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 3
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 27
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 11
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 2
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "1.88"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 17
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 19
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".895"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 3
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 5,
+                                                                "live_games": 2,
+                                                                "completed_games": 15
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.8"
+                                                        },
+                                                        {
+                                                            "team_id": "8"
+                                                        },
+                                                        {
+                                                            "name": "Tim's Top-Notch Team"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/8"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://s.yimg.com/cv/apiv2/default/nhl/nhl_5_t.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 6
+                                                        },
+                                                        {
+                                                            "faab_balance": "93"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "2"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "0"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 1
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "8",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "LPVMG4RHRVYSZ3MIEP5GIRHCUM",
+                                                                        "felo_score": "589",
+                                                                        "felo_tier": "bronze"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 3
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 11
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": -6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 3
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 55
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 14
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 0
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 5
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "2.49"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 77
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 82
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".939"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 5
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 10,
+                                                                "live_games": 1,
+                                                                "completed_games": 24
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "5": {
+                                "matchup": {
+                                    "week": "11",
+                                    "week_start": "2021-12-20",
+                                    "week_end": "2022-01-02",
+                                    "status": "midevent",
+                                    "is_playoffs": "0",
+                                    "is_consolation": "0",
+                                    "stat_winners": [
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "1",
+                                                "is_tied": 1
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "2",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "4",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "8",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "14",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "31",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "19",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "23",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "26",
+                                                "winner_team_key": "411.l.1239.t.7"
+                                            }
+                                        },
+                                        {
+                                            "stat_winner": {
+                                                "stat_id": "27",
+                                                "is_tied": 1
+                                            }
+                                        }
+                                    ],
+                                    "0": {
+                                        "teams": {
+                                            "0": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.6"
+                                                        },
+                                                        {
+                                                            "team_id": "6"
+                                                        },
+                                                        {
+                                                            "name": "MapleBuds Cmbk Kids !"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/6"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/25017684030_de54f4f91f.gif"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 1
+                                                        },
+                                                        {
+                                                            "faab_balance": "55"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "29"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "2"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 12
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "6",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "2VMZDD53VVV7H4ET6X4W6PC6BY",
+                                                                        "felo_score": "909",
+                                                                        "felo_tier": "diamond"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 7
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 4
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 50
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 17
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 1
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 4
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "4.02"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 19
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 23
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".826"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": "0"
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 8,
+                                                                "live_games": 4,
+                                                                "completed_games": 18
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "team": [
+                                                    [
+                                                        {
+                                                            "team_key": "411.l.1239.t.7"
+                                                        },
+                                                        {
+                                                            "team_id": "7"
+                                                        },
+                                                        {
+                                                            "name": "Dominik's Dandy Team"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/7"
+                                                        },
+                                                        {
+                                                            "team_logos": [
+                                                                {
+                                                                    "team_logo": {
+                                                                        "size": "large",
+                                                                        "url": "https://s.yimg.com/cv/apiv2/default/nhl/nhl_12_d.png"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "waiver_priority": 8
+                                                        },
+                                                        {
+                                                            "faab_balance": "76"
+                                                        },
+                                                        {
+                                                            "number_of_moves": "16"
+                                                        },
+                                                        {
+                                                            "number_of_trades": 0
+                                                        },
+                                                        {
+                                                            "roster_adds": {
+                                                                "coverage_type": "week",
+                                                                "coverage_value": 11,
+                                                                "value": "1"
+                                                            }
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "league_scoring_type": "head"
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "draft_position": 6
+                                                        },
+                                                        {
+                                                            "has_draft_grade": 0
+                                                        },
+                                                        [
+
+                                                        ],
+                                                        [
+
+                                                        ],
+                                                        {
+                                                            "managers": [
+                                                                {
+                                                                    "manager": {
+                                                                        "manager_id": "7",
+                                                                        "nickname": "--hidden--",
+                                                                        "guid": "FKXENDFAUIZYI5HTEZWOW7UZTU",
+                                                                        "felo_score": "750",
+                                                                        "felo_tier": "gold"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    {
+                                                        "team_stats": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "stats": [
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "1",
+                                                                        "value": 6
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "2",
+                                                                        "value": 15
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "4",
+                                                                        "value": 3
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "8",
+                                                                        "value": 8
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "14",
+                                                                        "value": 51
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "31",
+                                                                        "value": 24
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "19",
+                                                                        "value": 3
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "22",
+                                                                        "value": 15
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "23",
+                                                                        "value": "3.67"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "25",
+                                                                        "value": 104
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "24",
+                                                                        "value": 119
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "26",
+                                                                        "value": ".874"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "stat": {
+                                                                        "stat_id": "27",
+                                                                        "value": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "team_points": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": 8
+                                                        },
+                                                        "team_remaining_games": {
+                                                            "coverage_type": "week",
+                                                            "week": "11",
+                                                            "total": {
+                                                                "remaining_games": 6,
+                                                                "live_games": 3,
+                                                                "completed_games": 24
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "count": 6
+                        }
+                    }
+                }
+            }
+        ],
+        "time": "261.57402992249ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

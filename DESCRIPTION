@@ -33,7 +33,8 @@ Imports:
     glue (>= 1.4.2),
     lubridate,
     progress,
-    usethis
+    usethis,
+    tidyselect
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
 Remotes: 

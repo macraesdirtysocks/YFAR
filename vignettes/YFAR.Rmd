@@ -28,15 +28,13 @@ library(YFAR)
 library(dplyr)
 library(usethis)
 library(httptest)
-
-
 ```
 
 *WooHoo!, finally an R package to get fantasy data from Yahoo!*
 
 # Getting started
 
-I registered an app at YDN and have my key and secret.  Whats now? How do I start using this package?
+I registered an app at YDN and have my key and secret.  What now?  How do I start using this package?
 
 - There are two core functions you will need to run to get started:
   1. `y_create_token()`
@@ -67,7 +65,7 @@ The token has some features which can help if you are getting http errors, speci
   - `my_token$can_refresh()` - check if token is refreshable
   - `my_token$refresh()` - refresh token
 
-After creating your token you should not need to run `y_create_toke()` again.  You can just keep refreshing your existing token.
+After creating your token you should not need to run `y_create_token()` again.  You can just keep refreshing your existing token.
 
 Now whenever you call a function you supply this value to the argument `token_name`.
 
@@ -79,8 +77,17 @@ Now you can retrieve the general data from all the games you have participated i
 
 Here's where you get to use your token for the first time.
 
-Get your games
+Get your game data
 
+  > A note on terminology for those who are wondering. 
+  >
+  > A game in this context is the fantasy sport you are playing or getting data for.  I.E. 2021 fantasy hockey is a game.
+  >
+  >  The overall structure is Game>League>Team>Roster>Players
+  >
+  > This can be read as a game is made up of leagues, leagues are made up of teams, teams are made up of a roster, a roster is made up of players.
+
+Having said all that lets get some game data.
 ```{r, echo=FALSE}
 # Create a dummy token class to pacify functions checking for a token.
 my_token <-
@@ -90,20 +97,19 @@ my_token <-
 
 ```
 
+```{r, include=FALSE}
+httptest::with_mock_api({
+  games <- y_games(my_token)
+})
+```
 
-<!-- ```{r, include=FALSE} -->
-<!-- httptest::with_mock_api({ -->
-<!--   games <- y_games(my_token) -->
-<!-- }) -->
-<!-- ``` -->
+```{r, eval = FALSE}
+games <- y_games(my_token)
+```
 
-<!-- ```{r, eval = FALSE} -->
-<!-- games <- y_games(my_token) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- games -->
-<!-- ``` -->
+```{r}
+games
+```
 
 **The league_key and league_id are what will be used to tell the functions from which leagues you want data**
 
@@ -442,7 +448,15 @@ remaining_players <-
 remaining_players
 ```
 
-## y_matchups
+## y_matchups vs y_scoreboard
+
+Well what's the difference between y_matchups and y_scoreboard?  They are similar and "under the hood" they use the same parsing functions but y_matchups takes a team_id where y_scoreboard takes a league_id.
+
+In theory one could achieve the same return using y_matchups and mapping over the team_id's of a league but calling y_scoreboard is obviously easier.
+
+So.....
+
+### y_matchups
 
 How do I see my matchups? Default arguments return past and current matchups
 ```{r y_matchup, include=FALSE}
@@ -489,6 +503,28 @@ Multiple teams
 Multiple teams with multiple weeks
 
     purrr::map_df(teams, y_matchups, my_token, week = c(1, 8))
+
+### y_scoreboard
+
+```{r, include=FALSE}
+with_mock_api({
+league_matchups <- y_scoreboard("411.l.1239", my_token)
+})
+```
+
+```{r, eval=FALSE}
+league_matchups <- y_scoreboard("411.l.1239", my_token)
+```
+
+```{r}
+league_matchups
+```
+
+### Examples
+
+Multiple weeks
+
+    y_scoreboard("411.l.1239", my_token, week = c(4, 5))
 
 ## y_standings
 
