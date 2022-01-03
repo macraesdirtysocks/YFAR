@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.team_parse_fn}
 \alias{.team_parse_fn}
-\title{parse return from team resource}
+\title{Parse return from team resource}
 \usage{
 .team_parse_fn(x)
 }

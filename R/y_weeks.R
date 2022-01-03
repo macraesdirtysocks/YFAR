@@ -1,11 +1,11 @@
-#' Title
+#' Get dates of fantasy weeks.
 #'
 #' @param game_id a 3 or 4 digit integer.  It is the first 3 digits of league_id.
 #' Can be found with y_games().
 #' @param token_name Assigned object name used when creating token with y_create_token().
 #' @param debug returns a list of data such as uri call and content.  Useful for debugging.
 #'
-#' @return a list
+#' @return a list or tibble
 #' @export
 y_weeks <- memoise::memoise(function(game_id = NULL, token_name = NULL, debug = FALSE) {
 

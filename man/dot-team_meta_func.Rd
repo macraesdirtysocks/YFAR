@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.team_meta_func}
 \alias{.team_meta_func}
-\title{team_meta_data}
+\title{Parse team meta data}
 \usage{
 .team_meta_func(x)
 }

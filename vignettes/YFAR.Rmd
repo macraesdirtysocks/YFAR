@@ -32,7 +32,7 @@ library(httptest)
 
 *WooHoo!, finally an R package to get fantasy data from Yahoo!*
 
-# Getting started
+## Getting started
 
 I registered an app at YDN and have my key and secret.  What now?  How do I start using this package?
 
@@ -40,9 +40,7 @@ I registered an app at YDN and have my key and secret.  What now?  How do I star
   1. `y_create_token()`
   2. `y_games()`
   
-## Create Token
-
-### y_create_token
+### Create Token with y_create_token
 
 First a token is created using the KEY and SECRET given to you by the YDN.  
   
@@ -69,11 +67,11 @@ After creating your token you should not need to run `y_create_token()` again.  
 
 Now whenever you call a function you supply this value to the argument `token_name`.
 
-## Get Game Info
+### Get Game Info
 
 Now you can retrieve the general data from all the games you have participated in or are currently participating in.
 
-### y_games
+#### y_games
 
 Here's where you get to use your token for the first time.
 
@@ -119,11 +117,11 @@ For the examples here-on-in I'll use the league_key for a Yahoo! Public Fantasy 
 > 411.l.1239
 >
 
-# Functions
+## Functions
 
 OK enough with all this setup stuff.  Where the data at?
 
-## y_weeks
+### y_weeks
 
 Use `y_weeks()` to get the match-up schedule for a game.  Here only the game key is necessary because the schedule for a game is set across all leagues.  All that changes is what week the league commences and the week playoffs start.
 
@@ -147,7 +145,7 @@ Well that return from `y_weeks()` wasn't exactly what I was hoping for.
 
 I know right? First we need to call some smaller functions to get the inputs for the functions that do the heavy lifting.
 
-## y_teams
+### y_teams
 
 Retrieve data about teams in the league.  It may be handy to run this function upfront as it will return a column named `team_key` which can be used to get data for specific teams.
 
@@ -167,7 +165,7 @@ league_teams
 
 > team keys can be supplied to a lot functions to get team specific data.
 
-## y_league_settings
+### y_league_settings
 
 Retrieving the settings for a league will return a nested tibble of values
 
@@ -185,12 +183,12 @@ league_settings <- y_league_settings(league_id = "411.l.1239", my_token)
 league_settings
 ```
 
-Pluck an element to view the tibble.
+Extract an element to view the tibble.
 ```{r League Settings Stat Categories}
 league_settings$data[4]
 ```
 
-## y_team_stats
+### y_team_stats
 
 A league id will return team stats for the current week.
 
@@ -238,7 +236,7 @@ week_5_team_stats <- y_team_stats(id = "411.l.1239", my_token, week = 5)
 week_5_team_stats
 ```
 
-## y_transactions
+### y_transactions
 
 I want to see all the moves made in my league this year. Can I do that?
 
@@ -292,7 +290,7 @@ The last trade in the league.
 
 Unfortunately as of right now you can filter by date or sort with this function.
 
-## y_players vs y_player_slate
+### y_players vs y_player_slate
 
 > Note
 >
@@ -304,7 +302,7 @@ y_players is intended to get a slice of players and takes arguments for specifyi
 y_player_slate is a while loop that will return all players that exist in your league.
 
 
-### y_player_slate
+#### y_player_slate
 
 Used to get all the players that exist in your league.  This function includes a progress bar.
 
@@ -318,7 +316,7 @@ Used to get all the players that exist in your league.  This function includes a
 all_players_in_my_league <- y_player_slate(league_id = "411.l.1239", token_name = my_token)
 ```
 
-### y_players
+#### y_players
 
 To get a slice of the players in your league.  By default returns 100 players sorted by "AR".
 
@@ -389,7 +387,7 @@ top_10_ar_players <-
 top_10_ar_players
 ```
 
-## y_draft_results
+### y_draft_results
 
 Takes a league or team id.
 ```{r y_draft_results, eval=FALSE}
@@ -418,7 +416,7 @@ team_draft
 
 The Yahoo! API doesn't return player names with this call but can be used with `y_players()` or `y_rosters()`
 
-### Examples
+#### Examples
 
 See which players drafted by a team are still currently on the team's roster.
 
@@ -448,7 +446,7 @@ remaining_players <-
 remaining_players
 ```
 
-## y_matchups vs y_scoreboard
+### y_matchups vs y_scoreboard
 
 Well what's the difference between y_matchups and y_scoreboard?  They are similar and "under the hood" they use the same parsing functions but y_matchups takes a team_id where y_scoreboard takes a league_id.
 
@@ -456,7 +454,7 @@ In theory one could achieve the same return using y_matchups and mapping over th
 
 So.....
 
-### y_matchups
+#### y_matchups
 
 How do I see my matchups? Default arguments return past and current matchups
 ```{r y_matchup, include=FALSE}
@@ -488,7 +486,7 @@ my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
 my_week_8_matchup
 ```
 
-### Examples
+#### Examples
 
 Multiple weeks
 
@@ -504,7 +502,7 @@ Multiple teams with multiple weeks
 
     purrr::map_df(teams, y_matchups, my_token, week = c(1, 8))
 
-### y_scoreboard
+#### y_scoreboard
 
 ```{r, include=FALSE}
 with_mock_api({
@@ -520,13 +518,13 @@ league_matchups <- y_scoreboard("411.l.1239", my_token)
 league_matchups
 ```
 
-### Examples
+#### Examples
 
 Multiple weeks
 
     y_scoreboard("411.l.1239", my_token, week = c(4, 5))
 
-## y_standings
+### y_standings
 
 Get standings data
 ```{r, include=FALSE}
@@ -543,7 +541,7 @@ standings <- y_standings("411.l.1239", my_token)
 standings
 ```
 
-## y_rosters
+### y_rosters
 
 I want to see the current roster for each team in my league.
 
@@ -557,7 +555,7 @@ Here a league key is supplied and a tibble with the current roster for each team
 rosters <- y_rosters(id = "411.l.1239", token_name = my_token)
 ```
 
-### Team Roster
+#### Team Roster
 
 Alternatively supplying a team key will return the current roster for that team.
 ```{r y_roster team, include=FALSE}
@@ -574,7 +572,7 @@ team_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 team_roster
 ```
 
-### Date
+#### Date
 
 A date argument can be supplied.
 ```{r team roster with date, include=FALSE}
@@ -591,9 +589,9 @@ team_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 team_roster_w_date
 ```
 
-### Examples
+#### Examples
 
-#### Multiple dates
+##### Multiple dates
 
 Map over multiple dates
 ```{r map over multiple dates}
@@ -608,7 +606,7 @@ week_1 <-
 purrr::map_df(.x = week_1, .f = y_rosters, id = "411.l.1239.t.1", token_name = my_token)
 ```
 
-#### Multiple teams
+##### Multiple teams
 
 You can map over multiple teams.  Here team 1 and 2 are returned in a list.
 
@@ -618,7 +616,7 @@ You can map over multiple teams.  Here team 1 and 2 are returned in a list.
     token_name = my_token,
     debug = FALSE)
 
-#### Multiple Teams and Dates
+##### Multiple Teams and Dates
 
     purrr::map_df(
     .x = c("411.l.1239.t.1", "411.l.1239.t.1"),
@@ -627,7 +625,7 @@ You can map over multiple teams.  Here team 1 and 2 are returned in a list.
     game_date = c("2021-12-01", "2021-12-02"),
     debug = FALSE)
 
-## y_player_stats
+### y_player_stats
 
 Let's see some player stats! To get stats for players using player keys.
 

@@ -41,6 +41,7 @@
 
 
 #' Token Count
+#'
 #' Function called by .token_check and y_create_token()
 #' Function called by .token_check
 #' Check environment for a Token2.0 class.
@@ -130,7 +131,7 @@
 #..........................TEAM ID CHECK.........................
 
 
-#' TEAM_id check
+#' team_id check
 #'
 #' Checks for presence of supplied team_id and validity
 #'
@@ -217,7 +218,9 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' Generate uris.  Arugments are passed on to `httr::modify_url()`.
+#' Generate uris.
+#'
+#' Arguments are passed on to `httr::modify_url()`.
 #'
 #' The Yahoo! Fantasy API will return a max of 25 players per call to the API.
 #' This function divided by 25 and finds the remainder to construct the uri's
@@ -232,7 +235,7 @@
 #' @param ... api filter parameters
 #'
 #' @return a vector of strings
-#' @export
+#' @keywords internal
 .uri_gen_func <- function(resp_len = 25, league_id, resource, subresource, start, number_of_players, ...){
 
     # Params as list
@@ -329,6 +332,8 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 
 #' check date format
+#'
+#' check's date argument for format "%Y-%m-%d"
 #'
 #' @param date
 #'
@@ -452,7 +457,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #................CATEGORY LEAGUE SETTINGS FUNCTION...............
 
 
-#' category_league_settings
+#' Parse category league settings
 #'
 #' helper function called by y_league_settings()
 #'
@@ -527,7 +532,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #.................POINT LEAGUE SETTINGS FUNCTION.................
 
 
-#' points_league_settings
+#' Parse points league settings
 #'
 #' helper function called by y_league_settings()
 #'
@@ -599,7 +604,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-#' team_meta_data
+#' Parse team meta data
 #'
 #' helper function called by y_ functions to parse team meta data
 #'
@@ -633,7 +638,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #......................STATS DATA FUNCTION.......................
 
 
-#' stats_data_func
+#' Parse stats data
 #'
 #' helper function called by y_matchups to parse team standings response
 #'
@@ -698,7 +703,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##                            league resource parse                         ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' parse return from league resource
+#' Parse return from league resource
 #'
 #' helper function called by y_rosters.  this function calls .team_parse_fn helper.
 #'
@@ -732,7 +737,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##                             team resource parse                          ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' parse return from team resource
+#' Parse return from team resource
 #'
 #' helper function called by y_rosters.  this function calls .roster_parse_fn helper.
 #'
@@ -763,7 +768,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##                            roster resource parse                         ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' parse return from roster resource
+#' Parse return from roster resource
 #'
 #' helper function called by y_rosters.  this function calls .player_parse_fn helper.
 #'
@@ -809,9 +814,9 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##                            player resource parse                         ----
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' parse return from player resource
+#' Parse return from player resource
 #'
-#' helper function called by y_rosters.  this function calls .player_parse_fn helper.
+#' helper function called by y_rosters.  This function calls .player_parse_fn helper.
 #'
 #' @param x list passed on from .roster_resource_fn
 #'
@@ -1239,7 +1244,7 @@ return(stats)
 #' @param y Prefix string
 #'
 #' @return a sting
-#' @keywords internals
+#' @keywords internal
 .col_name_change_fn <- function(x, y){
 
     ifelse(grepl(y, names(x)), names(x), paste(y, names(x), sep = "_"))

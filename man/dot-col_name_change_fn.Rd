@@ -17,4 +17,4 @@ a sting
 \description{
 Used internally for prefixing resource and subresource names to column names.
 }
-\keyword{internals}
+\keyword{internal}

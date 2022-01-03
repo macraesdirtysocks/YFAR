@@ -1,0 +1,31 @@
+url: ~
+template:
+  bootstrap: 5
+
+reference:
+
+- title: Authentication Functions
+  contents:
+  - y_create_token
+
+- title: Auxilary Functions
+  contents:
+  - y_games
+  - y_weeks
+  - y_teams
+  - y_stats_categories
+  - y_league_settings
+
+- title: Mains
+  contents:
+  - y_draft_results
+  - y_standings
+  - y_rosters
+  - y_players
+  - y_player_slate
+  - y_player_stats
+  - y_team_stats
+  - y_matchups
+  - y_scoreboard
+  - y_transactions
+

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.uri_gen_func}
 \alias{.uri_gen_func}
-\title{Generate uris.  Arugments are passed on to `httr::modify_url()`.}
+\title{Generate uris.}
 \usage{
 .uri_gen_func(
   resp_len = 25,
@@ -33,7 +33,11 @@
 a vector of strings
 }
 \description{
+Arguments are passed on to `httr::modify_url()`.
+}
+\details{
 The Yahoo! Fantasy API will return a max of 25 players per call to the API.
 This function divided by 25 and finds the remainder to construct the uri's
 which are then passed to `y_get_response()`.
 }
+\keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.league_resource_fn}
 \alias{.league_resource_fn}
-\title{parse return from league resource}
+\title{Parse return from league resource}
 \usage{
 .league_resource_fn(x)
 }

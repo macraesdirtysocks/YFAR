@@ -10,6 +10,6 @@
 \item{date}{}
 }
 \description{
-check date format
+check's date argument for format "%Y-%m-%d"
 }
 \keyword{internal}

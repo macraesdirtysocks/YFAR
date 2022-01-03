@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.team_id_check}
 \alias{.team_id_check}
-\title{TEAM_id check}
+\title{team_id check}
 \usage{
 .team_id_check(team_id)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.stats_data_func}
 \alias{.stats_data_func}
-\title{stats_data_func}
+\title{Parse stats data}
 \usage{
 .stats_data_func(x)
 }

@@ -2,10 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.token_count}
 \alias{.token_count}
-\title{Token Count
-Function called by .token_check and y_create_token()
-Function called by .token_check
-Check environment for a Token2.0 class.}
+\title{Token Count}
 \usage{
 .token_count(...)
 }
@@ -13,7 +10,6 @@ Check environment for a Token2.0 class.}
 \item{...}{environment name argument passed to ls()}
 }
 \description{
-Token Count
 Function called by .token_check and y_create_token()
 Function called by .token_check
 Check environment for a Token2.0 class.

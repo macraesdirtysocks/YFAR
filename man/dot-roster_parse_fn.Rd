@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.roster_parse_fn}
 \alias{.roster_parse_fn}
-\title{parse return from roster resource}
+\title{Parse return from roster resource}
 \usage{
 .roster_parse_fn(x, ...)
 }

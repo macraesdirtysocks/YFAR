@@ -2,7 +2,7 @@
 % Please edit documentation in R/y_weeks.R
 \name{y_weeks}
 \alias{y_weeks}
-\title{Title}
+\title{Get dates of fantasy weeks.}
 \usage{
 y_weeks(game_id = NULL, token_name = NULL, debug = FALSE)
 }
@@ -15,8 +15,8 @@ Can be found with y_games().}
 \item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
 }
 \value{
-a list
+a list or tibble
 }
 \description{
-Title
+Get dates of fantasy weeks.
 }

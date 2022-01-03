@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.player_parse_fn}
 \alias{.player_parse_fn}
-\title{parse return from player resource}
+\title{Parse return from player resource}
 \usage{
 .player_parse_fn(x)
 }
@@ -10,6 +10,6 @@
 \item{x}{list passed on from .roster_resource_fn}
 }
 \description{
-helper function called by y_rosters.  this function calls .player_parse_fn helper.
+helper function called by y_rosters.  This function calls .player_parse_fn helper.
 }
 \keyword{internal}

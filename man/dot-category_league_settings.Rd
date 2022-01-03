@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.category_league_settings}
 \alias{.category_league_settings}
-\title{category_league_settings}
+\title{Parse category league settings}
 \usage{
 .category_league_settings(r_parsed)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{.point_league_settings}
 \alias{.point_league_settings}
-\title{points_league_settings}
+\title{Parse points league settings}
 \usage{
 .point_league_settings(r_parsed)
 }
