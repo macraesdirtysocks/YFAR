@@ -64,16 +64,11 @@ y_matchups <-
         ##                                PARSE CONTENT                             ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-        #...........................preprocess...........................
-
-
         # preprocess list to feed into parsing function
 
         preprocess <-
             r_parsed %>%
             purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-            purrr::map_depth(2, purrr::pluck, "matchup") %>%
             purrr::map(purrr::keep, purrr::is_list) %>%
             purrr::compact() %>%
             purrr::flatten()
@@ -84,8 +79,13 @@ y_matchups <-
 
         # future matchups that have yet to take place break function.  This subsets them out.
 
-        preprocess <-
-            preprocess[purrr::map_lgl(preprocess, purrr::negate(~purrr::has_element(.x, "preevent")))]
+        future_weeks <-
+            preprocess %>%
+            purrr::map_depth(2, purrr::pluck, "status") %>%
+            purrr::flatten() %>%
+            purrr::map_lgl(identical, "preevent")
+
+        preprocess <- purrr::discard(preprocess, future_weeks)
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,8 +94,14 @@ y_matchups <-
 
         if(!debug){
 
+        team_meta <-
+            r_parsed %>%
+            purrr::map_df(.team_meta_func)
+
+
         df <-
-            purrr::map_df(preprocess, .matchup_parse_fn)
+            preprocess %>%
+            purrr::map_df(.matchup_parse_fn)
 
         return(df)
 

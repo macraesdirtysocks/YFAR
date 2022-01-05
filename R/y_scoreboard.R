@@ -46,7 +46,7 @@ y_scoreboard <- function(league_id = NULL, token_name = NULL, weeks = NULL, debu
     uri <-
         httr::modify_url(
             url = "https://fantasysports.yahooapis.com",
-            path = paste("fantasy/v2", "league", "411.l.1239", "scoreboard", sep = "/"),
+            path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
             param = glue::glue("week={weeks}"),
             query = "format=json"
         )
@@ -80,7 +80,6 @@ y_scoreboard <- function(league_id = NULL, token_name = NULL, weeks = NULL, debu
         preprocess <-
             r_parsed %>%
             purrr::map(purrr::pluck, "0", "matchups") %>%
-            purrr::map_depth(2, purrr::pluck, "matchup") %>%
             purrr::map(purrr::keep, purrr::is_list) %>%
             purrr::compact() %>%
             purrr::flatten()

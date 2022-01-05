@@ -277,7 +277,7 @@ team_trans <- y_transactions(id = "411.l.1239.t.1", token_name = my_token, count
 
 ```{r}
 team_trans %>%
-  select(type, timestamp, name_full)
+  select(type, timestamp, player_full)
 ```
 
 The last 10 transactions in the league.
@@ -428,7 +428,7 @@ remaining_players <-
     y_draft_results(id = "411.l.1239.t.1", my_token, debug = FALSE),
     by = "player_key"
   ) %>%
-  dplyr::select("name_full")
+  dplyr::select("player_full")
 })
 ```
 
@@ -666,7 +666,7 @@ team_1_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 
 ```{r}
 team_1_roster %>%
-  dplyr::select(player_key, name_full)
+  dplyr::select(player_key, player_full)
 ```
 
 OK so what? I have to write down those numbers and run this function for each player?

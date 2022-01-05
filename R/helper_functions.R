@@ -604,9 +604,9 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-#' Parse team meta data
+#' Parse team meta data element
 #'
-#' helper function called by y_ functions to parse team meta data
+#' helper function called by y_functions to parse team meta data
 #'
 #' @param x parsed content from response object
 #'
@@ -618,10 +618,47 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::pluck("team", 1) %>%
         purrr::keep(purrr::is_list) %>%
         purrr::compact() %>%
-        purrr::map_depth(1, unlist, recursive = TRUE) %>%
-        purrr::map_depth(2, as.character) %>%
-        purrr::map(~ purrr::set_names(.x, janitor::make_clean_names(names(.x)))) %>%
-        purrr::flatten_df()
+        purrr::flatten() %>%
+        purrr::map_if(purrr::is_list, unlist, recursive = TRUE) %>%
+        purrr::map_if(purrr::is_list, purrr::map_depth, 2, as.character) %>%
+        purrr::map_depth(2, as.character, .ragged = TRUE) %>%
+        purrr::flatten_df() %>%
+        dplyr::rename_with(~ paste("team", .x, sep = "_"), .cols = !tidyselect::matches("^team_")) %>%
+        janitor::clean_names()
+
+    return(df)
+}
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                            PLAYER META PARSE FN                          ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Parse player meta data element
+#'
+#' helper function called by y_functions to parse team meta data
+#'
+#' @param x Parsed content from response object
+#' @param ... Arguments passed on to purrr::pluck
+#'
+#' @keywords internal
+.player_meta_func <- function(x, ...) {
+
+    df <-
+        purrr::pluck(x, ...) %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::compact() %>%
+        purrr::flatten() %>%
+        purrr::map_if(purrr::is_list, dplyr::bind_cols, .name_repair = janitor::make_clean_names) %>%
+        unlist() %>%
+        tibble::enframe() %>%
+        tidyr::pivot_wider(
+            id_cols = name, names_from = name, values_from = value, names_repair = janitor::make_clean_names)
 
     return(df)
 }
@@ -647,12 +684,6 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .stats_data_func <- function(x) {
 
-    team_name <-
-        x %>%
-        purrr::pluck("team", 1) %>%
-        magrittr::extract(1:3) %>%
-        purrr::flatten_df()
-
     stats <-
         x %>%
         purrr::pluck("team", 2) %>%
@@ -673,8 +704,8 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
         dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
 
+    return(stats)
 
-    df <- dplyr::bind_cols(team_name, stats)
 
 }
 
@@ -712,24 +743,23 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .league_resource_fn <- function(x) {
 
-    league_list <- list(
-        league_info = NULL,
-        teams = NULL
-        )
-
-    league_list$league_info <-
+    league_info <-
         x %>%
         purrr::pluck("league", 1) %>%
-        dplyr::bind_rows()
+        dplyr::bind_rows() %>%
+        dplyr::rename_with(~ paste("league", .x, sep = "_"), .cols = !tidyselect::matches("^league_"))
 
-    league_list$teams <-
+    teams <-
         x %>%
         purrr::pluck("league", 2, "teams") %>%
         purrr::keep(purrr::is_list) %>%
         purrr::map_df(.team_parse_fn)
 
+    df <- dplyr::bind_cols(league_info, teams, .name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
 
-    return(league_list)
+
+    return(df)
 }
 
 
@@ -748,14 +778,13 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
     team_meta <-
         x %>%
-        purrr::pluck("team", 1) %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::map_depth(1, unlist, recursive = TRUE) %>%
-        purrr::map_depth(2, as.character) %>%
-        purrr::map(~purrr::set_names(.x, janitor::make_clean_names(names(.x))))
+        .team_meta_func()
 
-    roster <- .roster_parse_fn(x, "team", 2, "roster")
+    roster <-
+        x %>%
+        purrr::pluck("team", 2) %>%
+        purrr::map_df(.roster_parse_fn)
+
 
     df <- dplyr::bind_cols(team_meta, roster)
 
@@ -773,37 +802,35 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' helper function called by y_rosters.  this function calls .player_parse_fn helper.
 #'
 #' @param x list passed on from .roster_resource_fn
-#' @param ... arguments passed on to purrr::pluck
 #'
 #' @keywords internal
-.roster_parse_fn <- function(x, ...) {
+.roster_parse_fn <- function(x) {
 
-        preprocess <-
-            x %>%
-            purrr::pluck(...)
 
         roster_meta <-
-            preprocess %>%
+            x %>%
             purrr::keep(purrr::is_bare_atomic) %>%
             dplyr::bind_cols()
 
         player_data <-
-            preprocess %>%
+            x %>%
             purrr::pluck("0", "players") %>%
             purrr::keep(purrr::is_list) %>%
-            purrr::flatten() %>%
             purrr::map_df(.player_parse_fn)
 
         goalie_min_games <-
-            preprocess %>%
+            x %>%
             purrr::pluck("minimum_games") %>%
+            purrr::map(as.character) %>%
             dplyr::bind_cols()
 
         df <- dplyr::bind_cols(
             roster_meta,
             player_data,
             goalie_min_games,
-            .name_repair = janitor::make_clean_names)
+            .name_repair = janitor::make_clean_names) %>%
+            dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+
 
         return(df)
 
@@ -823,13 +850,32 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 #' @keywords internal
 .player_parse_fn <- function(x) {
 
-    df <-
+    player_meta <-
         x %>%
+        purrr::pluck("player", 1) %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::compact() %>%
+        purrr::flatten() %>%
+        purrr::map_if(purrr::is_list, unlist, recursive = TRUE) %>%
+        purrr::map_if(purrr::is_list, purrr::map_depth, 2, as.character) %>%
+        purrr::flatten() %>%
+        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
+        dplyr::rename_with(~ paste("player", .x, sep = "_"), .cols = !tidyselect::matches("^player")) %>%
+        janitor::clean_names()
+
+    position <-
+        x %>%
+        purrr::pluck("player", 2) %>%
         purrr::keep(purrr::is_list) %>%
         purrr::compact() %>%
         purrr::map(unlist, recursive = TRUE) %>%
-        purrr::map(~ purrr::set_names(.x, janitor::make_clean_names(names(.x)))) %>%
-        purrr::flatten_df()
+        purrr::flatten() %>%
+        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
+        dplyr::rename_with(~ paste("position", .x, sep = "_"), .cols = !tidyselect::matches("^position")) %>%
+        janitor::clean_names()
+
+        df <-
+            dplyr::bind_cols(player_meta, position)
 
         return(df)
 
@@ -846,6 +892,8 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 #' Parse player stats
 #'
+#' Parse the stats resource of a player collection
+#'
 #' @param x element to parse
 #'
 #' @return a tibble
@@ -854,12 +902,12 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 basic_stats <-
     x %>%
-    purrr::pluck(2, "player_stats", "stats") %>%
+    purrr::pluck("player", 2, "player_stats", "stats") %>%
     purrr::map_df(purrr::flatten_df)
 
 advanced_stats <-
     x %>%
-    purrr::pluck(2, "player_advanced_stats", "stats") %>%
+    purrr::pluck("player", 2, "player_advanced_stats", "stats") %>%
     purrr::map_df(purrr::flatten_df)
 
 
@@ -896,13 +944,12 @@ return(stats)
 
     transaction_meta <-
         x %>%
-        purrr::pluck(1) %>%
+        purrr::pluck("transaction", 1) %>%
         dplyr::bind_cols()
 
     players <-
         x %>%
-        purrr::pluck(2, "players") %>%
-        purrr::map(purrr::pluck, "player") %>%
+        purrr::pluck("transaction", 2, "players") %>%
         purrr::keep(purrr::is_list) %>%
         purrr::compact() %>%
         purrr::map_df(.player_parse_fn)
@@ -934,13 +981,14 @@ return(stats)
 
     matchup_meta <-
         x %>%
+        purrr::pluck("matchup") %>%
         purrr::keep(purrr::is_atomic) %>%
         purrr::map(as.character) %>%
         dplyr::bind_cols()
 
     stat_winners <-
         x %>%
-        purrr::pluck("stat_winners") %>%
+        purrr::pluck("matchup", "stat_winners") %>%
         purrr::map_depth(3, as.character) %>%
         purrr::flatten_df() %>%
         ##convert stat id numbers to display name i.e. stat 1 = G
@@ -949,16 +997,27 @@ return(stats)
         tidyr::pivot_wider(names_from = display_name,
                            values_from = 2)
 
-    matchup_team_data <-
+    matchup_team_meta <-
         x %>%
-        purrr::pluck("0", "teams") %>%
+        purrr::pluck("matchup", "0", "teams") %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::map(.stats_data_func) %>%
-        dplyr::bind_rows()
+        purrr::map_df(.team_meta_func)
+
+    matchup_team_stats <-
+        x %>%
+        purrr::pluck("matchup", "0", "teams") %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::map_df(.stats_data_func)
 
     df <-
-        dplyr::bind_cols(matchup_meta, matchup_team_data, stat_winners, .name_repair = janitor::make_clean_names) %>%
-        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+        dplyr::bind_cols(
+            matchup_meta,
+            matchup_team_meta,
+            matchup_team_stats,
+            stat_winners,
+            .name_repair = janitor::make_clean_names
+        ) %>% dplyr::mutate(
+            dplyr::across(.cols = dplyr::everything(), as.character))
 
     return(df)
 

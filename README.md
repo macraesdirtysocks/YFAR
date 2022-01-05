@@ -21,6 +21,11 @@ the functions to return data from your league and teams.
 
 ## Installation
 
+``` r
+# install.packages("devtools")
+devtools::install_github("https://github.com/macraesdirtysocks/YFAR")
+```
+
 ## The Basics
 
   - At its core YFAR has 3 types of functions:

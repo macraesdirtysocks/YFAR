@@ -90,7 +90,7 @@ y_players <-
             df <-
                 r_parsed %>%
                 purrr::flatten() %>%
-                purrr::map(.player_parse_fn) %>%
+                purrr::map(.player_meta_func, "player", 1) %>%
                 # add in rank column which is not included in the response
                 purrr::set_names(nm = seq_along(.)) %>%
                 purrr::imap(~purrr::prepend(.x, list("rank" = .y))) %>%

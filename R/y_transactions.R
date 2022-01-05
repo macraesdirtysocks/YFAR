@@ -84,12 +84,8 @@ y_transactions <- function(id = NULL, token_name = NULL, count = NULL, transacti
 
     if(!debug){
 
-        preprocess <-
-            r_parsed %>%
-            purrr::map(purrr::pluck, "transaction")
-
         df <-
-            purrr::map_df(preprocess, .transaction_parse_fn) %>%
+            purrr::map_df(r_parsed, .transaction_parse_fn) %>%
             dplyr::mutate(timestamp = as.numeric(timestamp) %>%
                               as.POSIXct(origin = "1970-01-01"))
 

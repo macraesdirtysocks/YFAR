@@ -67,52 +67,51 @@ y_player_stats <-
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        ##                                PARSE CONTENT                             ----
-        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-        #........................preprocess list.........................
-
-
-        preprocess <-
-            r_parsed %>%
-            purrr::map(purrr::keep, purrr::is_list) %>%
-            purrr::map(purrr::compact) %>%
-            purrr::map_depth(2, purrr::pluck, "player")
-
-
-        #..........................player_info...........................
-
-
-        player_info <-
-            preprocess %>%
-            purrr::map_depth(2, purrr::pluck, 1) %>%
-            purrr::map_df(purrr::map_df, .player_parse_fn, .id = "week_day")
-
-
-        #..........................player_stats..........................
-
-
-        stats <-
-            preprocess %>%
-            purrr::map_df(purrr::map_df, .player_stats_parse)
-
-
-        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                      DF                                  ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
         if (!debug) {
+
+            #........................preprocess list.........................
+
+
+            preprocess <-
+                r_parsed %>%
+                purrr::map(purrr::keep, purrr::is_list) %>%
+                purrr::map(purrr::compact) %>%
+                purrr::flatten()
+
+
+            #..........................player_info...........................
+
+
+            player_info <-
+                preprocess %>%
+                purrr::map_df(.player_meta_func, "player", 1, .id = "week_day")
+
+
+            #..........................player_stats..........................
+
+
+            stats <-
+                preprocess %>%
+                purrr::map_df(.player_stats_parse)
+
+
+            #...............................DF...............................
+
+
             df <-
                 dplyr::bind_cols(player_info, stats)
 
             return(df)
+
         }
 
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        ##                                    RETURN                                ----
+        ##                                DEBUG RETURN                              ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 

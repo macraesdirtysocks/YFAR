@@ -20,29 +20,29 @@ with_mock_api({
         testthat::expect_identical(uri, "https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/players;sort=1;status=ALL;start=0;count=10?format=json")
 
         r <-
-            .y_get_response(uri)
+            purrr::map(uri, .y_get_response)
 
         # test response uri matches desired uri
-        testthat::expect_identical(r$url, uri)
+        testthat::expect_identical(r[[1]][["url"]], uri)
 
         # test that r is a response class
-        testthat::expect_s3_class(r, class = "response")
+        testthat::expect_s3_class(r[[1]], class = "response")
 
         # test that response is json format
-        testthat::expect_identical(httr::http_type(r), "application/json")
+        testthat::expect_identical(httr::http_type(r[[1]]), "application/json")
 
         # test that response is not an error
-        testthat::expect_identical(httr::status_code(r), 200L)
+        testthat::expect_identical(httr::status_code(r[[1]]), 200L)
 
         # get content
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", "league", 2, "players")
+            purrr::map(r, .y_parse_response, "fantasy_content", "league", 2, "players")
 
         # parse function
         df <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::map(.player_parse_fn) %>%
+            purrr::map(.player_meta_func, "player", 1) %>%
             # add in rank column which is not included in the response
             purrr::set_names(nm = seq_along(.)) %>%
             purrr::imap(~purrr::prepend(.x, list("rank" = .y))) %>%
@@ -68,8 +68,8 @@ with_mock_api({
               "uniform_number", "display_position", "headshot_url", "headshot_size",
               "image_url", "is_undroppable", "position_type", "primary_position",
               "eligible_positions_position", "eligible_positions_position_2",
-              "has_player_notes", "player_notes_last_timestamp", "has_recent_player_notes"
-            )
+              "has_player_notes", "player_notes_last_timestamp", "has_recent_player_notes",
+              "status", "status_full", "injury_note", "on_disabled_list")
 
 
         # test that colnames of the df match expected
@@ -77,8 +77,6 @@ with_mock_api({
                                x,
                                ignore.order = TRUE,
                                ignore.case = TRUE)
-
-
 
 
     })

@@ -33,11 +33,10 @@ with_mock_api({
 
         # get content
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", "league", 2, "players") %>%
-            purrr::flatten()
+            .y_parse_response(r, "fantasy_content", "league", 2, "players")
 
         # parse function
-        df <- purrr::map_df(r_parsed, .player_parse_fn)
+        df <- purrr::map_df(r_parsed, .player_meta_func, "player", 1)
 
 
         # test that df is a tibble

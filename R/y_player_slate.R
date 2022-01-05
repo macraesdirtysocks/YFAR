@@ -244,7 +244,7 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
         player_parse <- function(x){
             pb$tick()
-            df <- .player_parse_fn(x)
+            df <- .player_meta_func(x, "player", 1)
             return(df)
         }
 

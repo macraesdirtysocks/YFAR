@@ -13,6 +13,6 @@
 a tibble
 }
 \description{
-Parse player stats
+Parse the stats resource of a player collection
 }
 \keyword{internal}

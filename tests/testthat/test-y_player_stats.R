@@ -30,7 +30,7 @@ with_mock_api({
         r_parsed %>%
         purrr::map(purrr::keep, purrr::is_list) %>%
         purrr::map(purrr::compact) %>%
-        purrr::map_depth(2, purrr::pluck, "player")
+        purrr::flatten()
 
 
     #..........................player_info...........................
@@ -38,8 +38,7 @@ with_mock_api({
 
     player_info <-
         preprocess %>%
-        purrr::map_depth(2, purrr::pluck, 1) %>%
-        purrr::map_df(purrr::map_df, .player_parse_fn, .id = "week_day")
+        purrr::map_df(.player_meta_func, "player", 1, .id = "week_day")
 
 
     #..........................player_stats..........................
@@ -47,7 +46,7 @@ with_mock_api({
 
     stats <-
         preprocess %>%
-        purrr::map_df(purrr::map_df, .player_stats_parse)
+        purrr::map_df(.player_stats_parse)
 
 
     df <-

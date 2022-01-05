@@ -35,12 +35,9 @@ with_mock_api({
 
         preprocess <-
             r_parsed %>%
-            purrr::pluck("fantasy_content", "league", 2, "scoreboard") %>%
-            purrr::map(purrr::pluck, "matchups") %>%
-            purrr::map_depth(2, purrr::pluck, "matchup") %>%
-            purrr::map(purrr::keep, purrr::is_list) %>%
-            purrr::compact() %>%
-            purrr::flatten()
+            purrr::pluck("fantasy_content", "league", 2, "scoreboard", "0", "matchups") %>%
+            purrr::keep(purrr::is_list) %>%
+            purrr::compact()
 
         # test that the preprocess is length 1 after plucking out the matchup resource
         testthat::expect_gte(length(preprocess), 6)
@@ -54,12 +51,18 @@ with_mock_api({
         # expected colnames
         x <-
             c("matchup", "week", "week_start", "week_end", "status", "is_playoffs",
-              "is_consolation", "g", "a", "x", "ppp", "sog", "hit", "w", "gaa",
-              "sv_percent", "sho", "team_key", "team_id", "name", "coverage_type",
-              "count_g", "count_a", "count_x", "count_ppp", "count_sog", "count_hit",
-              "count_w", "count_ga", "count_gaa", "count_sv", "count_sa", "count_sv_percent",
-              "count_sho", "total", "remaining_games", "live_games", "completed_games"
-            )
+              "is_consolation", "team_key", "team_id", "team_name", "team_url",
+              "team_logo_size", "team_logo_url", "team_waiver_priority", "team_faab_balance",
+              "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
+              "team_coverage_value", "team_value", "team_league_scoring_type",
+              "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
+              "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
+              "team_manager_felo_tier", "coverage_type", "week_2", "count_g",
+              "count_a", "count_x", "count_ppp", "count_sog", "count_hit",
+              "count_w", "count_ga", "count_sv", "count_sa", "count_sho", "total",
+              "remaining_games", "live_games", "completed_games", "g", "a",
+              "x", "ppp", "sog", "hit", "w", "gaa", "sv_percent", "sho", "count_gaa",
+              "count_sv_percent")
 
         # test that colnames of the df match expected
         testthat::expect_named(df, x, ignore.order = TRUE, ignore.case = TRUE)
@@ -77,7 +80,8 @@ with_mock_api({
         uri <- c("https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/scoreboard;week=4?format=json",
                  "https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/scoreboard;week=5?format=json")
 
-        r <- purrr::map(uri, .y_get_response)
+        r <-
+            purrr::map(uri, .y_get_response)
 
         # test response uri matches desired uri
         r %>%
@@ -108,7 +112,6 @@ with_mock_api({
         preprocess <-
             r_parsed %>%
             purrr::map(purrr::pluck, "fantasy_content", "league", 2, "scoreboard", "0", "matchups") %>%
-            purrr::map_depth(2, purrr::pluck, "matchup") %>%
             purrr::map(purrr::keep, purrr::is_list) %>%
             purrr::compact() %>%
             purrr::flatten()
@@ -117,20 +120,26 @@ with_mock_api({
         testthat::expect_length(preprocess, 12)
 
         df <-
-            purrr::map_df(preprocess, .matchup_parse_fn, .id = "matchup")
+            purrr::map_df(preprocess, .matchup_parse_fn)
 
         # test that df is a tibble
         testthat::expect_equal(tibble::is_tibble(df), TRUE)
 
         # expected colnames
         x <-
-            c("matchup", "week", "week_start", "week_end", "status", "is_playoffs",
+            c("week", "week_start", "week_end", "status", "is_playoffs",
               "is_consolation", "is_tied", "winner_team_key", "team_key", "team_id",
-              "name", "coverage_type", "count_g", "count_a", "count_x", "count_ppp",
-              "count_sog", "count_hit", "count_w", "count_ga", "count_gaa",
-              "count_sv", "count_sa", "count_sv_percent", "count_sho", "total",
-              "remaining_games", "live_games", "completed_games", "g", "a",
-              "x", "ppp", "sog", "hit", "w", "gaa", "sv_percent", "sho")
+              "team_name", "team_url", "team_logo_size", "team_logo_url", "team_waiver_priority",
+              "team_faab_balance", "team_number_of_moves", "team_number_of_trades",
+              "team_coverage_type", "team_coverage_value", "team_value", "team_league_scoring_type",
+              "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
+              "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
+              "team_manager_felo_tier", "coverage_type", "week_2", "count_g",
+              "count_a", "count_x", "count_ppp", "count_sog", "count_hit",
+              "count_w", "count_ga", "count_gaa", "count_sv", "count_sa", "count_sv_percent",
+              "count_sho", "total", "remaining_games", "live_games", "completed_games",
+              "g", "a", "x", "ppp", "sog", "hit", "w", "gaa", "sv_percent",
+              "sho")
 
         # test that colnames of the df match expected
         testthat::expect_named(df, x, ignore.order = TRUE, ignore.case = TRUE)

@@ -55,12 +55,8 @@ with_mock_api({
             .y_parse_response(r, "fantasy_content", resource, 2, subresource)
 
         # parse function
-        preprocess <-
-            r_parsed %>%
-            purrr::map(purrr::pluck, "transaction")
-
         df <-
-            purrr::map_df(preprocess, .transaction_parse_fn) %>%
+            purrr::map_df(r_parsed, .transaction_parse_fn) %>%
             dplyr::mutate(timestamp = as.numeric(timestamp) %>%
                               as.POSIXct(origin = "1970-01-01"))
 
@@ -71,12 +67,11 @@ with_mock_api({
         # expected colnames
         x <-
             c("transaction_key", "transaction_id", "type", "status", "timestamp",
-              "player_key", "player_id", "name_full", "name_first", "name_last",
-              "name_ascii_first", "name_ascii_last", "editorial_team_abbr",
-              "display_position", "position_type", "transaction_data_type",
-              "transaction_data_source_type", "transaction_data_source_team_key",
-              "transaction_data_source_team_name", "transaction_data_destination_type"
-            )
+              "player_key", "player_id", "player_full", "player_first", "player_last",
+              "player_ascii_first", "player_ascii_last", "player_editorial_team_abbr",
+              "player_display_position", "player_position_type", "position_type",
+              "position_source_type", "position_source_team_key", "position_source_team_name",
+              "position_destination_type")
 
 
         # test that colnames of the df match expected

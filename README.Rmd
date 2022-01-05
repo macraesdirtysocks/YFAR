@@ -28,7 +28,7 @@ After creating a token and retrieving some simple input data you can use the fun
 
 ## Installation
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("https://github.com/macraesdirtysocks/YFAR")
 ```
