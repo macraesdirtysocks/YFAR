@@ -2,41 +2,44 @@
 % Please edit documentation in R/y_players.R
 \name{y_players}
 \alias{y_players}
-\title{Get player data from Yahoo! Fantasy API}
+\title{Get player data from Yahoo! Fantasy API.}
 \usage{
 y_players(
-  league_id = NULL,
+  key = NULL,
   token_name = NULL,
   start = 0,
   number_of_players = 100,
+  quiet = TRUE,
   debug = FALSE,
   ...
 )
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{key}{Game or league key as a string in the form "000" or 000.l.0000".  Can be found with `y_games()`.}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{start}{Where to start the uris i.e. 50}
+\item{start}{Where to start the count in uris i.e. 50.  Default is 0.}
 
-\item{number_of_players}{Number of players}
+\item{number_of_players}{Number of players to return.  Default is 100}
+
+\item{quiet}{Print function activity.}
 
 \item{debug}{Returns a list of data uri call and content.  Useful for debugging.}
 
-\item{...}{URI filter arguments (as characters) passed onto internal .uri_gen_func.}
+\item{...}{Other URI filter arguments.  See vignette for full list.}
 }
 \value{
-a list or tibble
+A tibble
 }
 \description{
 This function is not intended to get all players in a league.  To get all players in your league use the
 function `y_player_slate()`.
 }
 \details{
-Function returns a tibble containing info on all players in your leagues universe.
-By default the players are sorted by "Actual Rank"
+This function is intended to get a subset of players i.e. top 100 players sorted by AR (actual rank).
 
-This function is intented to get a subset of players i.e. top 100 players sorted by AR (actual rank).
-If you want all players in that exist in your leagues universe use `y_player_slate()`
+Takes many filter and sort arguments via ...
+E.G. sort = 1 will return however many players you requested sorted by stat 1.
+See vignette for all possibilities.
 }

@@ -1,7 +1,7 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
-##                            TOKEN CHECK FUNCTION                          ----
+##                            TOKEN CHECK FUNCTIONS                         ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,15 +28,6 @@
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                            TOKEN COUNT FUNCTION                          ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 #......................Token Count Function......................
 
 
@@ -61,229 +52,7 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
-##                                  ID CHECK                                ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#' id check
-#'
-#' detect if league or team id provided to id argument
-#'
-#' @param id league_id supplied to y_function
-#'
-#' @keywords internal
-.id_check <- function(id){
-
-    if (stringr::str_detect(id, pattern = "[:digit:]*(\\.l\\.[:digit:]*)$") == TRUE) {
-        "league"
-    } else if (stringr::str_detect(id, pattern = "[:digit:]*\\.l\\.[:digit:]*(\\.t\\.[:digit:])$") == TRUE) {
-        "team"
-    } else {
-        stop(message("please supply a league_id or team_id"))
-    }
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                              LEAGUE ID CHECK                             ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#........................LEAGUE ID CHECK.........................
-
-
-#' league_id check
-#'
-#' Checks for presence of supplied league_id and validity
-#'
-#' @param league_id league_id supplied to y_function
-#'
-#' @keywords internal
-.league_id_check <- function(league_id){
-
-    if (is.null(league_id) == TRUE){
-        stop(message("league_id argument required but not supplied"))
-    } else if (is.character(league_id) == FALSE){
-        stop(message("league_id should be a character string"))
-    } else if (stringr::str_detect(league_id, pattern = "[:digit:]*\\.l\\.[:digit:]*") == FALSE){
-        stop(message("league_id syntax should be 000.l.0000"))
-    } else {
-        invisible(league_id)
-    }
-
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                                TEAM ID CHECK                             ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#..........................TEAM ID CHECK.........................
-
-
-#' team_id check
-#'
-#' Checks for presence of supplied team_id and validity
-#'
-#' @param team_id team id supplied to y_function
-#'
-#' @keywords internal
-.team_id_check <- function(team_id){
-
-    if (is.null(team_id) == TRUE){
-        stop(message("team_id argument required but not supplied"))
-    } else if (!is.character(team_id) == TRUE){
-        stop(message("team_id should be a character string"))
-    } else if (stringr::str_detect(team_id, pattern = "[:digit:]*\\.l\\.[:digit:]{3,5}^") == TRUE){
-        stop(message("league_id supplied, function takes team_id syntax 000.l.0000.t.0"))
-    } else if (!stringr::str_detect(team_id, pattern = "[:digit:]*\\.l\\.[:digit:]*\\.t\\.[:digit:]") == TRUE){
-        stop(message("function takes team_id syntax 000.l.0000.t.0"))
-    } else {
-        invisible(team_id)
-    }
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                              PLAYER ID CHECK                             ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#' player id check
-#'
-#' Checks for presence of supplied player id and validity
-#'
-#' @param player_id league_id supplied to y_function
-#'
-#' @keywords internal
-.player_id_check <- function(player_id) {
-    if (is.null(player_id) == TRUE) {
-        stop(message("player_id argument required but not supplied"))
-    } else if (is.character(player_id) == FALSE) {
-        stop(message("player_id should be a character string"))
-    } else if (stringr::str_detect(player_id, pattern = "[:digit:]*\\.p\\.[:digit:]*") == FALSE) {
-        stop(message("player_id syntax should be 000.p.0000"))
-    } else {
-        invisible(player_id)
-    }
-
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                                 WEEK CHECK                               ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#...........................WEEK CHECK...........................
-
-
-#' week check
-#'
-#' Checks for presence of supplied week and validity
-#'
-#' @param week team id supplied to y_function
-#'
-#' @keywords internal
-.week_check <- function(week){
-
-    stopifnot(!is.null(week))
-    stopifnot(week != "current" | !is.numeric(week))
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                                URI_GEN_FUNC                              ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#' Generate uris.
-#'
-#' Arguments are passed on to `httr::modify_url()`.
-#'
-#' The Yahoo! Fantasy API will return a max of 25 players per call to the API.
-#' This function divided by 25 and finds the remainder to construct the uri's
-#' which are then passed to `y_get_response()`.
-#'
-#' @param league_id league_id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
-#' @param resource resource from the api to be called
-#' @param subresource subresource from the api to be called, takes a vector if more than one subresource
-#' @param resp_len length of each response with a max of 25
-#' @param start Return start number
-#' @param number_of_players Count of players to return
-#' @param ... api filter parameters
-#'
-#' @return a vector of strings
-#' @keywords internal
-.uri_gen_func <- function(resp_len = 25, league_id, resource, subresource, start, number_of_players, ...){
-
-    # Params as list
-    uri_params <- list(...)
-
-    # Takes params list and makes element name the param and the element value the param value.
-    # i.e. list(count = 5) gets converted to "count=5".
-    uri_params <-
-        if(!purrr::is_empty(uri_params)) {
-            paste(names(uri_params), purrr::map_chr(uri_params, `[[`, 1), sep = "=", collapse = ";")
-        } else{
-            NULL
-        }
-
-    subresource <- ifelse(length(subresource) > 1, glue::glue_collapse(subresource, sep = "/"), subresource)
-
-    resp_len <- ifelse(resp_len > 25, 25, resp_len)
-
-    remainder <- number_of_players%%resp_len
-
-    full_pages <- (number_of_players - remainder)
-
-    full_pages_multiple <- full_pages/resp_len
-
-    end <- full_pages + start
-
-    page_start <- seq(from = start, to = end, by = resp_len)
-
-    page_count <- c(rep(resp_len, times = full_pages_multiple), remainder)
-
-    uri <- httr::modify_url(
-        url = "https://fantasysports.yahooapis.com",
-        path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
-        params = glue::glue(uri_params, "start={page_start}", "count={page_count}", .sep = ";", .null = NULL),
-        query = "format=json"
-    )
-
-    uri <- uri[!grepl("count=0", uri)]
-
-    return(uri)
-
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                          Y_GET_RESPONSE FUNCTION                         ----
+##                             RESPONSE FUNCTIONS                           ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -296,8 +65,8 @@
 #'
 #' Send GET request to YAHOO! api
 #'
-#' @param uri URI being queried
-#' @param token_name Oauth token value assign by y_create_token()
+#' @param uri URI being queried.
+#' @param token_name Oauth token value assign by `y_create_token()`.
 #'
 #' @keywords internal
 .y_get_response <- function(uri = NULL, token_name = NULL) {
@@ -315,46 +84,6 @@
     return(r)
 
 }
-
-ARTofR::xxx_title1("DATE CHECK FUNCTION")
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                            DATE CHECK FUNCTION                           ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# check format of the date supplied to the date argument in y_rosters
-# necessary form is "%Y-%m-%d"
-
-
-#' check date format
-#'
-#' check's date argument for format "%Y-%m-%d"
-#'
-#' @param date
-#'
-#' @keywords internal
-.date_check <- function(x) {
-    if(!is.na(as.Date(x, format = "%Y-%m-%d"))) {
-        x
-    } else {
-        message("please supply a valid date in format %Y-%m-%d, returning rosters for today's date")
-        Sys.Date()
-    }
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                          Y_PARSE_RESPONSE FUNCTION                       ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 #....................Y_PARSE_RESPONSE FUNCTION...................
@@ -379,239 +108,59 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
-##                                CURRENT WEEK                              ----
+##                            META PARSE FUNCTIONS                          ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-#' Get current fantasy week
+#........................GAME META PARSE.........................
+
+
+#' Parse meta from game resource
 #'
-#' @param game_id 3 digit number which prefixes league_id.
-#' Identifies Yahoo Fanatasy Sport i.e. 411 is 2021  fantasy hockey.
-#' Can be found with `y_games()`.
-#'
-#' @param token_name api token value assigned by `y_create_token()`
+#
+#' @param x Game resource
 #'
 #' @keywords internal
-.current_week <- function(game_id = NULL, token_name = NULL){
+.game_meta_parse_fn <- function(x) {
 
-    api_token <- token_name
-
-    season_weeks <- YFAR::y_weeks(game_id, token_name = api_token)
-
-    i <- purrr::map2(.x = season_weeks$start, .y = season_weeks$end, lubridate::interval)
-
-    this_week <- season_weeks[purrr::map_lgl(.x = i, .f = ~lubridate::`%within%`(lubridate::now(), .x)),]
-
-    return(this_week)
-
+game_meta <-
+    x %>%
+    purrr::pluck("game", 1) %>%
+    purrr::map(as.character) %>%
+    dplyr::bind_cols() %>%
+    dplyr::rename_with(~ paste("game", .x, sep = "_"), .cols = !tidyselect::matches("^game_"))
 }
 
+#........................LEAGUE MEAT PARSE.......................
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                                Y GAMES PARSE                             ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#' Parse games resource
+#' Parse meta from league resource
 #'
-#' @param x input list
+#' @param x League resource
 #'
-#' @return a tibble
 #' @keywords internal
-.y_games_parse <- function(x){
+.league_meta_parse_fn <- function(x) {
 
-    game_meta <-
+    league_info <-
         x %>%
-        purrr::pluck(1) %>%
-        purrr::set_names(., nm = .col_name_change_fn(., "game")) %>%
-        dplyr::bind_cols()
-
-    game_leagues <-
-        x %>%
-        purrr::pluck(2, "leagues") %>%
-        purrr::map(purrr::pluck, "league") %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::map_depth(2, ~ purrr::set_names(.x, nm = .col_name_change_fn(.x, "league"))) %>%
-        purrr::map_df(unlist, recursive = TRUE)
-
-    df <-
-        dplyr::bind_cols(game_meta, game_leagues, .name_repair = janitor::make_clean_names)
-
-    return(df)
-}
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                      CATEGORY LEAGUE SETTINGS FUNCTION                   ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#................CATEGORY LEAGUE SETTINGS FUNCTION...............
-
-
-#' Parse category league settings
-#'
-#' helper function called by y_league_settings()
-#'
-#' @param r_parsed variable created within y_league_settings by y_parse_response
-#'
-#' @keywords internal
-.category_league_settings <- function(r_parsed){
-
-    league_meta <-
-        r_parsed %>%
-        purrr::pluck(1) %>%
+        purrr::pluck("league", 1) %>%
+        purrr::map(as.character) %>%
         dplyr::bind_rows() %>%
-        tibble::add_column("info" = "league_meta", .before = 1) %>%
-        tidyr::nest(data = !("info"))
+        dplyr::rename_with(~ paste("league", .x, sep = "_"), .cols = !tidyselect::matches("^league_"))
 
-    league_settings <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1) %>%
-        purrr::keep(purrr::negate(purrr::is_list)) %>%
-        dplyr::bind_rows() %>%
-        tibble::add_column("info" = "league_settings", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    roster_positions <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1, "roster_positions") %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map_df(~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
-        tibble::add_column("info" = "roster_positions", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    stat_categories <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1, "stat_categories", "stats") %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::transpose() %>%
-        purrr::map_at("stat_position_types", purrr::map, purrr::pluck, 1, "stat_position_type", "position_type") %>%
-        purrr::transpose() %>%
-        purrr::map_df(dplyr::bind_rows) %>%
-        tibble::add_column("info" = "stat_categories", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    divisions <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1, "divisions") %>%
-        purrr::map(purrr::pluck, "division") %>%
-        purrr::map_df(dplyr::bind_rows) %>%
-        tibble::add_column("info" = "divisons", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    df <-
-        dplyr::bind_rows(
-            league_meta,
-            league_settings,
-            roster_positions,
-            stat_categories,
-            divisions)
-
-    return(df)
+    return(league_info)
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                       POINT LEAGUE SETTINGS FUNCTION                     ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#.................POINT LEAGUE SETTINGS FUNCTION.................
-
-
-#' Parse points league settings
-#'
-#' helper function called by y_league_settings()
-#'
-#' @param r_parsed variable created within y_league_settings by y_parse_response
-#'
-#' @keywords internal
-.point_league_settings <- function(r_parsed) {
-
-    league_meta <-
-        r_parsed %>%
-        purrr::pluck(1) %>%
-        dplyr::bind_rows() %>%
-        tibble::add_column("info" = "league_meta", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    league_settings <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1) %>%
-        purrr::keep(purrr::negate(purrr::is_list)) %>%
-        dplyr::bind_rows() %>%
-        tibble::add_column("info" = "league_settings", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    roster_positions <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1, "roster_positions") %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map_df(~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = everything(), as.character))) %>%
-        tibble::add_column("info" = "roster_positions", .before = 1) %>%
-        tidyr::nest(data = !("info"))
-
-    stat_categories <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1, "stat_categories", "stats") %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::transpose() %>%
-        purrr::map_at("stat_position_types", purrr::map, purrr::pluck, 1, "stat_position_type", "position_type") %>%
-        purrr::transpose() %>%
-        purrr::map_df(dplyr::bind_rows)
-
-    stat_modifiers <-
-        r_parsed %>%
-        purrr::pluck(2, "settings", 1, "stat_modifiers", "stats") %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map_df(dplyr::bind_rows)
-
-    stats <-
-        dplyr::left_join(stat_categories, stat_modifiers, by = "stat_id") %>%
-        tibble::add_column("info" = "stat_modifiers", .before = 1) %>%
-        dplyr::rename("modifier_value" = "value") %>%
-        tidyr::nest(data = !("info"))
-
-    df <-
-        dplyr::bind_rows(
-            league_meta,
-            league_settings,
-            roster_positions,
-            stats)
-
-    return(df)
-}
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                          TEAM META DATA FUNCTION                         ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+#........................TEAM MEAT PARSE.........................
 
 #' Parse team meta data element
 #'
-#' helper function called by y_functions to parse team meta data
-#'
-#' @param x parsed content from response object
+#' @param x Team resource
 #'
 #' @keywords internal
-.team_meta_func <- function(x) {
+.team_meta_parse_fn <- function(x) {
 
     df <-
         x %>%
@@ -619,10 +168,9 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
         purrr::keep(purrr::is_list) %>%
         purrr::compact() %>%
         purrr::flatten() %>%
-        purrr::map_if(purrr::is_list, unlist, recursive = TRUE) %>%
-        purrr::map_if(purrr::is_list, purrr::map_depth, 2, as.character) %>%
-        purrr::map_depth(2, as.character, .ragged = TRUE) %>%
-        purrr::flatten_df() %>%
+        purrr::map_if(purrr::is_list, ~unlist(.x, recursive = TRUE) %>% tibble::as_tibble_row(.name_repair = janitor::make_clean_names)) %>%
+        dplyr::bind_cols() %>%
+        dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), .fns = as.character)) %>%
         dplyr::rename_with(~ paste("team", .x, sep = "_"), .cols = !tidyselect::matches("^team_")) %>%
         janitor::clean_names()
 
@@ -630,35 +178,25 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                            PLAYER META PARSE FN                          ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#........................PLAYER META PARSE.......................
 
 
-#' Parse player meta data element
+#' Parse meta data element from player resource.
 #'
-#' helper function called by y_functions to parse team meta data
-#'
-#' @param x Parsed content from response object
-#' @param ... Arguments passed on to purrr::pluck
+#' @param x Player resource
 #'
 #' @keywords internal
-.player_meta_func <- function(x, ...) {
+.player_meta_parse_fn <- function(x) {
 
     df <-
-        purrr::pluck(x, ...) %>%
+        x %>%
+        purrr::pluck("player", 1) %>%
         purrr::keep(purrr::is_list) %>%
         purrr::compact() %>%
         purrr::flatten() %>%
-        purrr::map_if(purrr::is_list, dplyr::bind_cols, .name_repair = janitor::make_clean_names) %>%
-        unlist() %>%
-        tibble::enframe() %>%
-        tidyr::pivot_wider(
-            id_cols = name, names_from = name, values_from = value, names_repair = janitor::make_clean_names)
+        purrr::map_if(purrr::is_list, ~unlist(.x) %>% tibble::as_tibble_row(.name_repair = janitor::make_clean_names)) %>%
+        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
+        dplyr::rename_with(~ paste("player", .x, sep = "_"), .cols = !tidyselect::matches("^player_"))
 
     return(df)
 }
@@ -666,53 +204,7 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##                                                                            ~~
-##                            STATS DATA FUNCTION                           ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-#......................STATS DATA FUNCTION.......................
-
-
-#' Parse stats data
-#'
-#' helper function called by y_matchups to parse team standings response
-#'
-#' @param x parsed content from response object
-#'
-#' @keywords internal
-.stats_data_func <- function(x) {
-
-    stats <-
-        x %>%
-        purrr::pluck("team", 2) %>%
-        purrr::map_at("team_stats", purrr::map_at, "stats", purrr::map_depth, 2, purrr::map_at, "value", as.double) %>%
-        purrr::map_at("team_remaining_games", purrr::map_at, "total", purrr::map_depth, 2, as.double) %>%
-        purrr::map_at("team_points", purrr::map_at, c("week","total"), as.double) %>%
-        purrr::flatten() %>%
-        purrr::map_if(purrr::is_list, purrr::flatten_df) %>%
-        purrr::map_at(
-            "stats",
-            ~ dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
-                dplyr::select(display_name, value) %>%
-                tidyr::pivot_wider(
-                    names_from = display_name,
-                    values_from = value,
-                    names_prefix = "count_")
-        ) %>%
-        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
-        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
-
-    return(stats)
-
-
-}
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                          Y ROSTER HELPER FUNCTIONS                       ----
+##                          RESOURCE PARSE FUNCTIONS                        ----
 ##                                                                            ~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -726,67 +218,197 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 # are made up of players.
 
 # Essentially what I attempted to do is standardize where each functions starts
-# so when the function index into the and hit a particular element that element
+# so when the functions index into the and hit a particular element that element
 # is then fed to the next parsing function.
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                            league resource parse                         ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#......................GAMES RESOURCE PARSE......................
+
+#' Parse game resource
+#'
+#' This function parses the games resource.
+#'
+#' The ... argument allows passing an addition parse function to parse addition
+#' sub-resources.
+#'
+#' @param x Games resource.
+#' @param ... Additional parse function passed to purrr::map_df.
+#'
+#' @keywords internal
+.game_resource_parse_fn <- function(x, ...) {
+
+    game_meta <-
+        x %>%
+        .game_meta_parse_fn()
+
+    subresource <-
+        x %>%
+        purrr::pluck("game", 2, 1) %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::map_df(...)
+
+    df <- dplyr::bind_cols(game_meta, subresource, .name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+
+    return(df)
+}
+
+
+#......................LEAGUE RESOURCE PARSE.....................
+
 
 #' Parse return from league resource
 #'
-#' helper function called by y_rosters.  this function calls .team_parse_fn helper.
+#' This function parses the league resource.
 #'
-#' @param x parsed content from response object
+#' The ... argument allows passing an addition parse function to parse addition
+#' sub-resources.
+#'
+#' Sub-resource attached to team could be draft_results, roster, team_stats,
+#' standings or match-ups.
+#'
+#' @param x Leagues resource.
+#' @param ... Additional parse function passed to purrr::map_df.
 #'
 #' @keywords internal
-.league_resource_fn <- function(x) {
+.league_resource_parse_fn <- function(x, ...) {
 
     league_info <-
         x %>%
-        purrr::pluck("league", 1) %>%
-        dplyr::bind_rows() %>%
-        dplyr::rename_with(~ paste("league", .x, sep = "_"), .cols = !tidyselect::matches("^league_"))
+        .league_meta_parse_fn()
 
-    teams <-
+    subresource <-
         x %>%
-        purrr::pluck("league", 2, "teams") %>%
+        purrr::pluck("league", 2, 1) %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::map_df(.team_parse_fn)
+        purrr::map_df(...)
 
-    df <- dplyr::bind_cols(league_info, teams, .name_repair = janitor::make_clean_names) %>%
+    df <- dplyr::bind_cols(league_info, subresource, .name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+
+    return(df)
+}
+
+
+#......................TEAM RESOURCE PARSE.......................
+
+
+#' Parse return from team resource
+#'
+#' This function parses the teams resource as well as the attached teams sub-resource.
+#'
+#' The ... argument allows passing an addition parse function to parse addition
+#' sub-resources.
+#'
+#' @param x Team resource.
+#' @param ... Additional parse function passed to purrr::map_df.
+#'
+#' @keywords internal
+.team_resource_parse_fn <- function(x, ...) {
+
+    team_meta <-
+        x %>%
+        .team_meta_parse_fn()
+
+    subresource <-
+        x %>%
+        purrr::pluck("team", 2, 1)
+
+    # Here reacts to a special case where the team sub-resource is roster.
+    # Because one teams can only have one roster mapping fails so we need to use do.call.
+    # If every element of the sub-resource is a list function will map else it will use do.call.
+    # Whne roster is plucked out via purrr::pluck("team", 2, 1) we have the roster sub-resource data on hand
+    # so we don't need to map into an element to get it.
+    if("count" %in% names(subresource)){
+        subresource <-
+            subresource %>%
+            purrr::keep(purrr::is_list) %>%
+            purrr::map_df(...)
+    } else {
+        subresource <- do.call(..., list(subresource))
+    }
+
+    df <- dplyr::bind_cols(team_meta,
+                           subresource,
+                           .name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+
+    return(df)
+
+}
+
+
+#......................ROSTER RESOURCE PARSE.....................
+
+
+#' Parse roster resource.
+#'
+#' This function parses the rosters resource.
+#'
+#' Calls .player_resource_parse_fn because rosters have players.
+#'
+#' @param x Roster resource.
+#'
+#' @keywords internal
+.roster_resource_parse_fn <- function(x) {
+
+    roster_meta <-
+        x %>%
+        purrr::keep(purrr::is_bare_atomic) %>%
+        dplyr::bind_cols() %>%
+        dplyr::rename_with(~ paste("roster", .x, sep = "_"), .cols = !tidyselect::matches("^roster_"))
+
+    player_data <-
+        x %>%
+        purrr::pluck("0", "players") %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::compact() %>%
+        purrr::map_df(.player_resource_parse_fn, .two_deep_subresource_parse)
+
+    other_elements <-
+        x %>%
+        purrr::keep(purrr::is_list) %>%
+        purrr::discard(names(.) == "0") %>%
+        purrr::map_df(.two_deep_subresource_parse)
+
+
+    df <- dplyr::bind_cols(
+        roster_meta,
+        player_data,
+        other_elements,
+        .name_repair = janitor::make_clean_names) %>%
         dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
 
 
     return(df)
+
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                             team resource parse                          ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#......................PLAYER RESOURCE PARSE.....................
 
-#' Parse return from team resource
+
+#' Parse player resource.
 #'
-#' helper function called by y_rosters.  this function calls .roster_parse_fn helper.
-#'
-#' @param x list passed on from .league_resource_fn
+#' @param x Player resource.
+#' @param ... Additional parse function passed to purrr::map_df.
 #'
 #' @keywords internal
-.team_parse_fn <- function(x) {
+.player_resource_parse_fn <- function(x, ...) {
 
-    team_meta <-
+    player_meta <-
         x %>%
-        .team_meta_func()
+        .player_meta_parse_fn()
 
-    roster <-
+    # x[1] is the player_meta which is parsed above.  This takes everything else.
+    subresource <-
         x %>%
-        purrr::pluck("team", 2) %>%
-        purrr::map_df(.roster_parse_fn)
+        purrr::pluck("player") %>%
+        magrittr::extract(-1) %>%
+        purrr::map_dfc(...)
 
-
-    df <- dplyr::bind_cols(team_meta, roster)
+    df <-
+        dplyr::bind_cols(player_meta, subresource)
 
     return(df)
 
@@ -794,188 +416,184 @@ ARTofR::xxx_title1("DATE CHECK FUNCTION")
 
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                            roster resource parse                         ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                        SUB-RESOURCE PARSE FUNCTIONS                      ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' Parse return from roster resource
+
+#......................LEAGUE SETTINGS PARSE.....................
+
+#' Parse league settings.
 #'
-#' helper function called by y_rosters.  this function calls .player_parse_fn helper.
-#'
-#' @param x list passed on from .roster_resource_fn
+#' @param x Settings sub-resource.
 #'
 #' @keywords internal
-.roster_parse_fn <- function(x) {
+.league_settings_parse_fn <- function(x){
 
+    # Initialize empty list.
+    settings_list <- list()
+    # Get names of elements in settings list.
+    settings_names <- names(purrr::pluck(x, 1))
+    # League scoring type.
+    league_scoring <- purrr::pluck(x, 1, "scoring_type")
+    # %>% magrittr::extract("scoring_type")
 
-        roster_meta <-
+    # General league settings.  These are already atomic and can be plucked with keep.
+    settings_list$league_settings =
+        x %>%
+        purrr::pluck(1) %>%
+        purrr::keep(purrr::negate(purrr::is_list)) %>%
+        dplyr::bind_rows() %>%
+        tidyr::nest(league_settings = tidyselect::everything())
+
+    # Roster positions list element.
+    settings_list$roster_positions =
+        x %>%
+        purrr::pluck(1, "roster_positions") %>%
+        purrr::map(purrr::flatten) %>%
+        purrr::map_df(~dplyr::bind_rows(.) %>%  dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), as.character))) %>%
+        tidyr::nest(roster_positions = tidyselect::everything())
+
+    # Stat categories list element.
+    settings_list$stat_categories =
+        x %>%
+        purrr::pluck(1, "stat_categories", "stats") %>%
+        purrr::map(purrr::pluck, 1) %>%
+        purrr::transpose() %>%
+        purrr::map_at("stat_position_types", purrr::map, purrr::pluck, 1, "stat_position_type", "position_type") %>%
+        purrr::transpose() %>%
+        purrr::map_df(dplyr::bind_rows) %>%
+        tidyr::nest(stat_categories = tidyselect::everything())
+
+    # If league has divisions.
+    if("divisions" %in% settings_names) {
+        settings_list$divisions =
             x %>%
-            purrr::keep(purrr::is_bare_atomic) %>%
-            dplyr::bind_cols()
+            purrr::pluck(1, "divisions") %>%
+            purrr::flatten_dfr() %>%
+            tidyr::nest(divisions = tidyselect::everything())
+    }
 
-        player_data <-
+    # If league has fixed waiver days.
+    if("waiver_days" %in% settings_names) {
+        settings_list$waiver_days =
             x %>%
-            purrr::pluck("0", "players") %>%
-            purrr::keep(purrr::is_list) %>%
-            purrr::map_df(.player_parse_fn)
+            purrr::pluck(1, "waiver_days") %>%
+            dplyr::bind_rows() %>%
+            tidyr::nest(waiver_days = tidyselect::everything())
+    }
 
-        goalie_min_games <-
+    # If league uses points.
+    if(league_scoring == "point") {
+        settings_list$stat_modifiers =
             x %>%
-            purrr::pluck("minimum_games") %>%
-            purrr::map(as.character) %>%
-            dplyr::bind_cols()
+            purrr::pluck(1, "stat_modifiers", "stats") %>%
+            purrr::map_df(purrr::pluck, 1) %>%
+            tidyr::nest(stat_modifiers = tidyselect::everything())
+    }
 
-        df <- dplyr::bind_cols(
-            roster_meta,
-            player_data,
-            goalie_min_games,
-            .name_repair = janitor::make_clean_names) %>%
-            dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+    df <-
+        purrr::reduce(settings_list, dplyr::bind_cols)
 
-
-        return(df)
-
+    return(df)
 }
 
+#........................STANDINGS PARSE.........................
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                            player resource parse                         ----
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#' Parse return from player resource
+#' Parse standings sub-resource
 #'
-#' helper function called by y_rosters.  This function calls .player_parse_fn helper.
-#'
-#' @param x list passed on from .roster_resource_fn
+#' @param x List element containing standings resource.
 #'
 #' @keywords internal
-.player_parse_fn <- function(x) {
+.standings_parse_fn <- function(x) {
 
-    player_meta <-
+    team_meta <-
         x %>%
-        purrr::pluck("player", 1) %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::flatten() %>%
-        purrr::map_if(purrr::is_list, unlist, recursive = TRUE) %>%
-        purrr::map_if(purrr::is_list, purrr::map_depth, 2, as.character) %>%
-        purrr::flatten() %>%
-        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
-        dplyr::rename_with(~ paste("player", .x, sep = "_"), .cols = !tidyselect::matches("^player")) %>%
+        .team_meta_parse_fn()
+
+    team_stats <-
+        x %>%
+        purrr::pluck("team", 2, "team_stats", "stats") %>%
+        purrr::flatten_df() %>%
+        dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+        dplyr::select("display_name", "value") %>%
+        tidyr::pivot_wider(
+            id_cols = display_name,
+            names_from = display_name,
+            values_from = value)
+
+    team_points <-
+        x %>%
+        purrr::pluck("team", 2, "team_points") %>%
+        purrr::flatten_df()
+
+    standings <-
+        x %>%
+        purrr::pluck("team", 3, "team_standings") %>%
+        unlist(recursive = TRUE) %>%
+        dplyr::bind_rows() %>%
         janitor::clean_names()
 
-    position <-
-        x %>%
-        purrr::pluck("player", 2) %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::map(unlist, recursive = TRUE) %>%
-        purrr::flatten() %>%
-        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
-        dplyr::rename_with(~ paste("position", .x, sep = "_"), .cols = !tidyselect::matches("^position")) %>%
-        janitor::clean_names()
+    df <- dplyr::bind_cols(team_meta, team_points, standings, team_stats)
 
-        df <-
-            dplyr::bind_cols(player_meta, position)
-
-        return(df)
+    return(df)
 
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                             PLAYER STATS PARSE                           ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#' Parse player stats
-#'
-#' Parse the stats resource of a player collection
-#'
-#' @param x element to parse
-#'
-#' @return a tibble
-#' @keywords internal
-.player_stats_parse <- function(x){
-
-basic_stats <-
-    x %>%
-    purrr::pluck("player", 2, "player_stats", "stats") %>%
-    purrr::map_df(purrr::flatten_df)
-
-advanced_stats <-
-    x %>%
-    purrr::pluck("player", 2, "player_advanced_stats", "stats") %>%
-    purrr::map_df(purrr::flatten_df)
+#........................TRANSACTION PARSE.......................
 
 
-stats <-
-    dplyr::bind_rows(basic_stats, advanced_stats) %>%
-    dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
-    dplyr::select(display_name, value) %>%
-    tidyr::pivot_wider(id_cols = display_name,
-                       names_from = display_name,
-                       values_from = value)
-
-return(stats)
-
-}
-
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                         TRANSACTION PARSE FUNCTION                       ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#' Parse transactions resource
+#' Parse transactions resource.
 #'
 #' This function call .player_parse_fn
 #'
 #' @param x element to parse
+#' @param ... element to parse
 #'
 #' @return a tibble
 #' @keywords internal
-.transaction_parse_fn <- function(x) {
+.transaction_parse_fn <- function(x, ...) {
 
     transaction_meta <-
         x %>%
         purrr::pluck("transaction", 1) %>%
-        dplyr::bind_cols()
+        dplyr::bind_cols() %>%
+        dplyr::rename_with(
+            ~ paste("transaction", .x, sep = "_"), .cols = !tidyselect::matches("^transaction_"))
 
-    players <-
+    subresource <-
         x %>%
-        purrr::pluck("transaction", 2, "players") %>%
+        purrr::pluck("transaction", 2, 1) %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::map_df(.player_parse_fn)
+        purrr::map_df(...)
 
     df <-
-        dplyr::bind_cols(transaction_meta, players)
+        dplyr::bind_cols(transaction_meta, subresource)
 
     return(df)
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                                MATCHUP PARSE                             ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#..........................MATCHUP PARSE.........................
 
-#' Parse matchup subresource
+
+#' Parse match-up sub-resource
 #'
-#' Called by y_matchups
+#' This function parses the match-up sub-resource.
 #'
-#' @param x input
+#' Used to parsed a list with a "match-up" element.
 #'
-#' @return a tibble or list
+#' Right now as a default it calls .yahoo_hockey_stat_categories() which converts stat_id numbers into
+#' more readable word abbreviation categories i.e. converts 1 into g.
+#'
+#' @param x List containing a matchup element.
+#'
+#' @return A tibble
 #' @keywords internal
 .matchup_parse_fn <- function(x) {
 
@@ -995,19 +613,20 @@ return(stats)
         dplyr::left_join(.yahoo_hockey_stat_categories(), by = "stat_id") %>%
         dplyr::select(display_name, 2) %>%
         tidyr::pivot_wider(names_from = display_name,
-                           values_from = 2)
+                           values_from = 2) %>%
+        dplyr::rename_with(.fn = ~paste(.x, "winner", sep = "_"), .cols = tidyselect::everything())
 
     matchup_team_meta <-
         x %>%
         purrr::pluck("matchup", "0", "teams") %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::map_df(.team_meta_func)
+        purrr::map_df(.team_meta_parse_fn)
 
     matchup_team_stats <-
         x %>%
         purrr::pluck("matchup", "0", "teams") %>%
         purrr::keep(purrr::is_list) %>%
-        purrr::map_df(.stats_data_func)
+        purrr::map_df(.team_stats_parse_fn)
 
     df <-
         dplyr::bind_cols(
@@ -1017,295 +636,254 @@ return(stats)
             stat_winners,
             .name_repair = janitor::make_clean_names
         ) %>% dplyr::mutate(
-            dplyr::across(.cols = dplyr::everything(), as.character))
+            dplyr::across(.cols = tidyselect::everything(), as.character))
 
     return(df)
 
 }
 
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                        YAHOO HOCKEY STAT CATEGORIES                      ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#...................SETTINGS SUBRESOURCE PARSE...................
+
+#' Parse settings sub-resource
+#'
+#' This function parses the settings sub-resource.
+#'
+#' Called by `y_league_settings()`.
+#'
+#' @param x List containing a matchup element.
+#' @param ... Takes a function and is passed on to do.call.
+#'
+#' @return A tibble
+#' @keywords internal
+.settings_subresource_parse_fn <- function(x, ...) {
+
+    sport_type <- purrr::pluck(x, "league", 1, "game_code")
+
+    league_info <-
+        x %>%
+        .league_meta_parse_fn() %>%
+        tidyr::nest(league_meta = !c(league_key))
+
+    subresource <-
+        do.call(..., list(purrr::pluck(x, "league", 2, 1)))
+
+    df <-
+        dplyr::bind_cols("sport" = sport_type,
+                         league_info,
+                         subresource,
+                         .name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+
+    return(df)
+
+}
 
 
-#' Create a tibble of the stat categories for yahoo fantasy hockey
+#......................DRAFT ANALYSIS PARSE......................
+
+
+#' Parse draft analysis sub-resource
+#'
+#' @param x List containing a draft analysis element.
+#' @keywords internal
+.draft_analysis_func <- function(x) {
+
+    # Parse player meta data with internal function.
+    player_meta <-
+        .player_meta_parse_fn(x)
+
+    # Parse draft analysis.
+    draft_analysis <-
+        x %>%
+        purrr::pluck("player", 2, "draft_analysis") %>%
+        dplyr::bind_cols()
+
+    # Bind cols
+    df <-
+        dplyr::bind_cols(player_meta, draft_analysis)
+
+    # Return df
+    return(df)
+
+}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##  ~ STATS PARSE FUNCTIONS  ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#..................GAME STAT CATEGORIES PARSE FN.................
+
+
+#' Parse game stats data.
+#'
+#' @param x Stats sub-resource of games resource
+#'
+#' @keywords internal
+.game_stats_category_parse_fn <- function(x){
+
+
+    game_meta <-
+        x %>%
+        purrr::pluck(1) %>%
+        .game_meta_parse_fn()
+
+    stats <-
+        x %>%
+        purrr::pluck(1, "game", 2, "stat_categories", "stats") %>%
+        purrr::map(rlang::squash) %>%
+        purrr::map(purrr::set_names, nm = janitor::make_clean_names) %>%
+        purrr::map_depth(2, as.character) %>%
+        dplyr::bind_rows() %>%
+        # Some stats such as those expressed as percentages include the stats that are used in their calculation in a list called "stat_base".
+        dplyr::rename_with(
+            .fn = ~stringr::str_replace(.x, pattern = "(stat_id)(_[:digit:])", replacement = "base_\\1") %>% janitor::make_clean_names(),
+            .cols = tidyselect::matches("stat_id_[[:digit:]]")
+        ) %>%
+        dplyr::bind_cols(game_meta, .) %>%
+        tidyr::nest(stats = !game_key)
+
+
+    advanced_stats <-
+        x %>%
+        purrr::pluck(2, "game", 2, "advanced_stat_categories", "stats") %>%
+        purrr::map(rlang::squash) %>%
+        purrr::map(purrr::set_names, nm = janitor::make_clean_names) %>%
+        purrr::map_depth(2, as.character) %>%
+        dplyr::bind_rows() %>%
+        dplyr::bind_cols(game_meta, .) %>%
+        tidyr::nest(advanced_stats = !game_key)
+
+
+    df <- dplyr::full_join(stats, advanced_stats, by = "game_key")
+
+    return(df)
+
+}
+
+#......................TEAM STATS PARSE FN.......................
+
+
+#' Parse team stats data.
+#'
+#' @param x Stats sub-resource of teams resource
+#'
+#' @keywords internal
+.team_stats_parse_fn <- function(x) {
+
+    stats <-
+        x %>%
+        purrr::pluck("team", 2, "team_stats", "stats") %>%
+        purrr::map(1) %>%
+        purrr::map_depth(2, as.character) %>% #added this as a hunch, remove if trouble.
+        purrr::map_df(dplyr::bind_cols) %>%
+        dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+        dplyr::select(display_name, value) %>%
+        tidyr::pivot_wider(names_from = display_name,
+                           values_from = value,
+                           names_prefix = "count_")
+
+    other_elements <-
+        x %>%
+        purrr::pluck("team", 2) %>%
+        purrr::discard(names(.) == "team_stats") %>%
+        purrr::map_if(purrr::is_list, ~unlist(.x) %>% dplyr::bind_rows()) %>%
+        dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
+        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+
+    df <- dplyr::bind_cols(stats, other_elements)
+
+    return(df)
+
+}
+
+
+#......................PLAYER STATS PARSE FN.....................
+
+
+#' Parse player stats
+#'
+#' Parse the stats resource of a player collection
+#'
+#' @param x element to parse
 #'
 #' @return a tibble
 #' @keywords internal
-.yahoo_hockey_stat_categories <- function(){
-    structure(
-        list(
-            stat_id = c(
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28",
-                "29",
-                "30",
-                "31",
-                "32",
-                "33",
-                "34",
-                "1001",
-                "1002",
-                "1003",
-                "1004",
-                "1005",
-                "1006",
-                "1007",
-                "1008",
-                "1009",
-                "1010",
-                "1011"
-            ),
-            name = c(
-                "Games Played",
-                "Goals",
-                "Assists",
-                "Points",
-                "Plus/Minus",
-                "Penalty Minutes",
-                "Powerplay Goals",
-                "Powerplay Assists",
-                "Powerplay Points",
-                "Shorthanded Goals",
-                "Shorthanded Assists",
-                "Shorthanded Points",
-                "Game-Winning Goals",
-                "Game-Tying Goals",
-                "Shots on Goal",
-                "Shooting Percentage",
-                "Faceoffs Won",
-                "Faceoffs Lost",
-                "Games Started",
-                "Wins",
-                "Losses",
-                "Ties",
-                "Goals Against",
-                "Goals Against Average",
-                "Shots Against",
-                "Saves",
-                "Save Percentage",
-                "Shutouts",
-                "Time on Ice",
-                "F/D Games",
-                "Goalie Games",
-                "Hits",
-                "Blocks",
-                "Time on Ice",
-                "Average Time on Ice",
-                "Power Play Time",
-                "Average Power Play Time",
-                "Short-Handed Time",
-                "Average Short-Handed Time",
-                "Corsi",
-                "Fenwick",
-                "Offensive Zone Starts",
-                "Defensive Zone Starts",
-                "Zone Start Percentage",
-                "Game Star",
-                "Shifts"
-            ),
-            display_name = c(
-                "gp",
-                "g",
-                "a",
-                "p",
-                "x",
-                "pim",
-                "ppg",
-                "ppa",
-                "ppp",
-                "shg",
-                "sha",
-                "shp",
-                "gwg",
-                "gtg",
-                "sog",
-                "sh_percent",
-                "fw",
-                "fl",
-                "gs",
-                "w",
-                "l",
-                "t",
-                "ga",
-                "gaa",
-                "sa",
-                "sv",
-                "sv_percent",
-                "sho",
-                "toi",
-                "gp_2",
-                "gp_3",
-                "hit",
-                "blk",
-                "toi_2",
-                "toi_g",
-                "ppt",
-                "avg_ppt",
-                "sht",
-                "avg_sht",
-                "cor",
-                "fen",
-                "off_zs",
-                "def_zs",
-                "zs_pct",
-                "g_str",
-                "shifts"
-            ),
-            sort_order = c(
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "0",
-                "1",
-                "1",
-                "0",
-                "1",
-                "0",
-                "0",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1",
-                "1"
-            ),
-            is_composite_stat = c(
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                1L,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                1L,
-                NA,
-                NA,
-                1L,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                1L,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA,
-                NA
-            )
-        ),
-        class = c("tbl_df", "tbl", "data.frame"),
-        row.names = c(NA, -46L)
-    )}
+.player_stats_parse <- function(x){
 
+    coverage <-
+        x %>%
+        purrr::pluck("player_stats", "0") %>%
+        dplyr::bind_cols()
 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##                                                                            ~~
-##                            .COL_NAME_CHANGE_FN                           ----
-##                                                                            ~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # basic_stats <-
+    #     x %>%
+    #     purrr::pluck("player_stats", "stats") %>%
+    #     purrr::map_df(purrr::flatten_df)
+    #     dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+    #     dplyr::select(display_name, value) %>%
+    #     tidyr::pivot_wider(id_cols = display_name,
+    #                        names_from = display_name,
+    #                        values_from = value)
+    #
+    # advanced_stats <-
+    #     x %>%
+    #     purrr::pluck("player_advanced_stats", "stats") %>%
+    #     purrr::map_df(purrr::flatten_df) %>%
+    #     dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+    #     dplyr::select(display_name, value) %>%
+    #     tidyr::pivot_wider(id_cols = display_name,
+    #                        names_from = display_name,
+    #                        values_from = value)
 
+    player_stats <-
+        x %>%
+        purrr::pluck("player_stats", "stats") %>%
+        purrr::flatten() %>%
+        purrr::keep(grepl("stat", names(.))) %>%
+        purrr::map_df(purrr::flatten_df) %>%
+        dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
+        dplyr::select(display_name, value) %>%
+        tidyr::pivot_wider(id_cols = display_name,
+                           names_from = display_name,
+                           values_from = value)
 
-#' Prefix column names
-#'
-#' Used internally for prefixing resource and subresource names to column names.
-#'
-#' @param x String to detect in column names. Passed to `names()`.
-#' @param y Prefix string
-#'
-#' @return a sting
-#' @keywords internal
-.col_name_change_fn <- function(x, y){
+    stats <-
+        dplyr::bind_cols(coverage, player_stats)
 
-    ifelse(grepl(y, names(x)), names(x), paste(y, names(x), sep = "_"))
+    return(stats)
+
 }
+
+
+
+
+
+#...................TWO DEEP SUBRESOURCE PARSE...................
+
+
+#' Parse a subresource that list a simple list of 1 deep lists.
+#'
+#' Function takes the name of the list and prefixes it any columns that
+#' don't start with that prefix.
+#'
+#' @param x Subresource containing lists of depth 1.
+#'
+#' @return A tibble
+#'
+#' @keywords internal
+.two_deep_subresource_parse <- function(x){
+
+    y <- names(x)
+
+    x %>%
+        unlist(recursive = TRUE) %>%
+        dplyr::bind_rows() %>%
+        janitor::clean_names() %>%
+        dplyr::rename_with(~ paste(y, .x, sep = "_"), .cols = !tidyselect::matches(glue::glue("^{y}_")))
+
+}
+
+
 

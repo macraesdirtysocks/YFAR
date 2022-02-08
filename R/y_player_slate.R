@@ -1,38 +1,70 @@
-#' Retrieve the full slate of players for provided league id
+#' Get full slate of players from Yahoo! Fantasy API.
+#'
+#' Every game or league has a slate of players eligible to be on a team.  This function gets them for you.
 #'
 #' This function is not intended to get a subset of players, i.e. top 100 players.
 #' Use `y_players()` for that case.
 #'
 #' Note: this function uses janitor::make_clean_names and as a result is a bit slow.
 #'
-#' @param league_id League id as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
-#' @param token_name Assigned object name used when creating token with `y_create_token()`.
+#' @param key Game key or league key as a string in the form "000.l.0000".  These ids can be found with `y_games()` and `y_teams()`.
+#' @param token_name Name used for assignment when creating token object with `y_create_token()`.
 #' @param debug Print uri and page counts to console as functions runs.  Useful for debugging.
-#' @param ... URI filter arguments passed onto internal .uri_gen_func.
-#'
+#' @param quiet Print function activity.
 #'
 #' @return A tibble
 #' @export
-y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE, ...) {
+y_player_slate <- memoise::memoise(function(key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE) {
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    TOKEN                                 ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    api_token <- token_name
+    .token_check(token_name, api_token, name = .GlobalEnv)
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    CHECKS                                ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    stopifnot(!is.null(key))
+    stopifnot(!is.null(api_token))
+
+
+    # Eligible key types.
+    e_key_types <- c("games", "leagues")
+
+    # Assign a resource to each key and count.
+    # Function then selects most frequently occurring resource and assigns value to resource.
+    c(resource, key, .) %<-% .multiple_resource_key_check(key, e_key_types = e_key_types)
+
+    # Determine what game the player_key belongs to.
+    game_key <- .game_key_assign_fn(key)
+
+    if(!quiet){cat(crayon::cyan("game is", game_key), sep = " ")}
+
+    # Subset out player_keys belonging to game_key.
+    # Function can't call multiple game resources.
+    key <-
+        stringr::str_subset(string = key, pattern = game_key)
 
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-    resource <- "league"
     subresource <- "players"
-    api_token <- token_name
+    uri_out <- switch(resource, "games" = "game_keys", "leagues" = "league_keys")
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                FUNCTION DEFS                             ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    #...........................empty list...........................
-
-
-    resp_list <- list(uri = NULL,
-                      resp_200 = NULL,
-                      resp_error = NULL)
-
+    # Vectorize seq.
+    # This function will be used to sequence pages that return errors
+    seq2 <- Vectorize(seq.default, vectorize.args = c("from"))
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                              function - part 1                           ----
@@ -46,6 +78,14 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
     ##  ~ while loop  ----
     ##~~~~~~~~~~~~~~~~~~~~
 
+
+    #...........................empty list...........................
+
+
+    resp_list <- list(uri = NULL,
+                      resp_200 = NULL,
+                      resp_error = NULL)
+
     #......................while loop conditions.....................
 
     page_start <- 0
@@ -55,34 +95,22 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
         #..............................uri...............................
 
-        uri <-
-            .uri_gen_func(
-                start = page_start,
-                number_of_players = 25,
-                resp_len = 25,
-                league_id = league_id,
-                resource = resource,
-                subresource = subresource,
-                ...
-            )
-
+        uri <- glue::glue(
+            "https://fantasysports.yahooapis.com/fantasy/v2/{resource};{uri_out}={key}/{subresource};start={page_start}?format=json"
+        )
 
         resp_list$uri <-
             append(resp_list$uri, uri, after = length(resp_list$uri))
 
         #...............print uri and page for GET request...............
 
-
         # If something isn't working set debug = TRUE to print uri and page
-
         if (debug) {
             print(uri)
             print(page_start)
         }
 
-
         #..............................GET...............................
-
 
         r <-
             .y_get_response(uri, api_token)
@@ -92,29 +120,31 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
         ##  ~ if  ----
         ##~~~~~~~~~~~~
 
-
         # Divert the response based on http code.
         # if response code == 200 the response is parsed and appended to
         # resp_list$resp_200.
         # else (usually http error 400) the page number is appended to
         # resp_list$resp_error
 
-
         if (identical(httr::status_code(r), 200L)) {
 
             #..........................get content...........................
 
             r_parsed <-
-                .y_parse_response(r, "fantasy_content", resource, 2, subresource)
+                .y_parse_response(r, "fantasy_content") %>%
+                purrr::map(1) %>%
+                purrr::keep(purrr::is_list) %>%
+                purrr::flatten()
 
             # assign response to list element with corresponding page start
 
-            resp_list[["resp_200"]][[as.character(page_start)]] <-
-                r_parsed
+            resp_list[["resp_200"]][[as.character(page_start)]] <- r_parsed
+
 
             #..........................update count..........................
 
-            count <- length(r_parsed)
+            count <- purrr::pluck(r_parsed, 1, 2, 1, "count")
+
 
             if (debug) {
                 print(count)
@@ -172,31 +202,13 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
     error_pages <-
         resp_list$resp_error
 
+    cat(crayon::cyan("pages", error_pages, "returned an http error, retrying\n"))
 
-    if (debug) {
-        cat("pages",
-            error_pages,
-            "returned an http error, retrying",
-            "\n")
-    }
+    error_pages_seq <- c(seq2(from = error_pages, length.out = 25))
 
-
-    #..............................uri...............................
-
-
-    uri <-
-        purrr::map(
-            error_pages,
-            .uri_gen_func,
-            start = error_pages,
-            number_of_players = 25,
-            resp_len = 1,
-            league_id = league_id,
-            resource = resource,
-            subresource = subresource,
-            ...
-        ) %>%
-        purrr::flatten_chr()
+    uri <- glue::glue(
+        "https://fantasysports.yahooapis.com/fantasy/v2/{resource};{uri_out}={key}/{subresource};start={error_pages_seq};count=1?format=json"
+    )
 
     if (debug) {
         print(uri)
@@ -219,37 +231,43 @@ y_player_slate <- memoise::memoise(function(league_id, token_name, debug = FALSE
 
     #..............................parse.............................
 
-
+    # Parse the "re-gotten" responses and append to resp_200
     resp_list[["resp_200"]] <-
         purrr::map(reget_response,
-                   .y_parse_response,
-                   "fantasy_content",
-                   resource,
-                   2,
-                   subresource) %>%
-        append(resp_list[["resp_200"]], ., after = length(resp_list[["resp_200"]]) +
-                   1)
+                   function(x) {
+                       .y_parse_response(x, "fantasy_content") %>%
+                           purrr::map(1) %>%
+                           purrr::flatten()
+                       }) %>%
+        append(resp_list[["resp_200"]], .,
+               after = length(resp_list[["resp_200"]]) + 1)
 
 
     #...............................df...............................
 
-
     if(!debug){
 
-        cat("parsing", length(resp_list$resp_200), "responses...", "\n")
 
-        player_list <- resp_list$resp_200 %>% purrr::flatten()
+        cat(crayon::cyan("parsing", length(resp_list$resp_200), "responses...\n"))
+
+        player_list <-
+            resp_list$resp_200 %>%
+            # Pluck 1 here because list returns a resource of "game" or "league" and I didn't want to
+            # write a big long switchery-do when this function will only ever be operation on one
+            # game or league resource at a time.
+            purrr::map( ~purrr::pluck(.x, 1, 2, "players") %>% purrr::keep(purrr::is_list)) %>%
+            purrr::flatten()
 
         pb <- progress::progress_bar$new(total = length(player_list))
 
-        player_parse <- function(x){
+        subresource_parse <- function(x){
             pb$tick()
-            df <- .player_meta_func(x, "player", 1)
+            df <- .player_meta_parse_fn(x)
             return(df)
         }
 
         df <-
-            purrr::map_df(player_list, player_parse)
+            purrr::map_df(player_list, subresource_parse)
 
         return(df)
     }

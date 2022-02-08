@@ -2,19 +2,21 @@
 % Please edit documentation in R/y_teams.R
 \name{y_teams}
 \alias{y_teams}
-\title{Get team data of a given Yahoo! Fantasy league.}
+\title{Get team level meta data from Yahoo! Fantasy API.}
 \usage{
-y_teams(league_id = NULL, token_name = NULL, debug = FALSE)
+y_teams(league_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{league_key}{League key as a string in the form "000.l.0000".  League id can be found with `y_games()`.}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list
+A tibble.
 }
 \description{
 Teams in a league make moves, have co-managers, have a waiver prioity etc.  This function

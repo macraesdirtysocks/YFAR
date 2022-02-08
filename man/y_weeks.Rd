@@ -2,21 +2,23 @@
 % Please edit documentation in R/y_weeks.R
 \name{y_weeks}
 \alias{y_weeks}
-\title{Get dates of fantasy weeks.}
+\title{Get dates of fantasy weeks from Yahoo! Fantasy API.}
 \usage{
-y_weeks(game_id = NULL, token_name = NULL, debug = FALSE)
+y_weeks(game_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{game_id}{a 3 or 4 digit integer.  It is the first 3 digits of league_id.
-Can be found with y_games().}
+\item{game_key}{A game key or a vector of game keys.  Can be found with y_games().}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with y_create_token().}
 
-\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list or tibble
+A tibble
 }
 \description{
-Get dates of fantasy weeks.
+Want to see start and end dates for fantasy weeks of a particular league?  Curious how long
+  long a fantasy week is?  If yes, this is your function.
 }

@@ -1,93 +1,129 @@
 library(YFAR)
 
+test_that("uri is generated properly",{
+
+y_standings__uri_gen_test_fn <- function(team_key = NULL) {
+
+    # Check if keys are type league, remove FALSE and duplicates.
+    key <- .single_resource_key_check(team_key, .team_key_check)
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                  ARGUMENTS                               ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    resource <- "teams"
+    subresource <- "standings"
+    uri_out <- "team_keys="
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                     URI                                  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # Initial uri components
+    uri_parsed <- structure(
+        list(
+            scheme = "https",
+            hostname = "fantasysports.yahooapis.com/fantasy/v2",
+            port = NULL,
+            path = resource,
+            query = list(format = "json"),
+            params = NULL
+        ),
+        class = "url"
+    )
+
+    key_paths <-
+        .uri_path_packer(key, 25)
+
+    uri_parsed$params <-
+        stringr::str_c(uri_out, key_paths, "/", subresource, sep = "")
+
+    uri <- httr::build_url(uri_parsed)
+}
+
+expect_identical(
+    y_standings__uri_gen_test_fn("411.l.1239.t.1"),
+    "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.1/standings?format=json")
+
+expect_identical(
+    y_standings__uri_gen_test_fn(c("411.l.1239.t.1", "411.l.1239.t.8", "411.l.1239.t.5")),
+    "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.1,411.l.1239.t.8,411.l.1239.t.5/standings?format=json")
+
+
+})
+
+
+testthat::test_that("Response returns valid response and is parsed to a tibble",{
 with_mock_api({
-    testthat::test_that("request returns valid response and is parsed to a tibble",{
 
-        uri <-
-            "https://fantasysports.yahooapis.com/fantasy/v2/league/411.l.1239/standings?format=json"
-        r <- .y_get_response(uri = uri)
+        # Declare desired mock uri.
+        mock_uri <-
+            "https://fantasysports.yahooapis.com/fantasy/v2/teams;411.l.1239.t.1,411.l.1239.t.8,411.l.1239.t.5/standings?format=json"
 
-        # test response uri matches desired uri
-        testthat::expect_identical(r$url, uri)
+        # Expected resource
+        resource <-
+            "teams"
 
-        # test that r is a response class
-        testthat::expect_s3_class(r, class = "response")
+        # Get response.
+        r <-
+            with_mock_api({
+                purrr::map(mock_uri, .y_get_response)
+            })
 
-        # test that response is json format
-        testthat::expect_identical(httr::http_type(r), "application/json")
-
-        # test that response is not an error
-        testthat::expect_identical(httr::status_code(r), 200L)
-
-        # get content
+        # Parsed response.
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", "league", 2, "standings", 1, "teams") %>%
-            purrr::map(purrr::pluck, "team") %>%
-            purrr::compact()
+            purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
-        # parse function
-        standings_parse <- function(x){
+        # Test that response uri and declared uri are equal.
+        expect_equal(mock_uri,
+                     purrr::map_chr(r, purrr::pluck, "url"))
 
-            team_meta <-
-                x %>%
-                purrr::pluck(1) %>%
-                magrittr::extract(1:3) %>%
-                purrr::flatten_df()
+        # Test not null.
+        expect_true(!is.null(r_parsed))
 
-            team_stats <-
-                x %>%
-                purrr::pluck(2, "team_stats", "stats") %>%
+        # Test not empty.
+        expect_true(!purrr::is_empty(r_parsed))
+
+        # Define parse function relative to resource value.
+
+
+        # Preprocess list.  This step is verbatim from y_matchups.
+        preprocess <-
+            r_parsed %>%
+            purrr::flatten() %>%
+            purrr::keep(purrr::is_list)
+
+        subresource_parse_fn <- function(x) {
+            x %>%
                 purrr::flatten_df() %>%
-                dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
-                dplyr::select("display_name", "value") %>%
-                tidyr::pivot_wider(
-                    id_cols = display_name,
-                    names_from = display_name,
-                    values_from = value)
-
-            team_points <-
-                x %>%
-                purrr::pluck(2, "team_points") %>%
-                purrr::flatten_df()
-
-            standings <-
-                x %>%
-                purrr::pluck(3, "team_standings") %>%
-                purrr::keep(purrr::negate(purrr::is_list)) %>%
-                dplyr::bind_cols()
-
-            outcomes <-
-                x %>%
-                purrr::pluck(3, "team_standings", "outcome_totals") %>%
-                dplyr::bind_cols()
-
-            df <- dplyr::bind_cols(team_meta, team_points, standings, outcomes, team_stats)
-
+                janitor::clean_names()
         }
 
         df <-
-            purrr::map_df(r_parsed, standings_parse)
+            purrr::map_df(preprocess,
+                          .team_resource_parse_fn,
+                          subresource_parse_fn)
+
+        # Test that a tibble was returned from parsing.
+        expect_true(tibble::is_tibble(df), TRUE)
 
 
-        # test that df is a tibble
-        testthat::expect_equal(tibble::is_tibble(df), TRUE)
+        # Expected colnames.
+        expected_colnames <-
+            c("team_key", "team_id", "team_name", "team_url", "team_logo_size",
+              "team_logo_url", "team_waiver_priority", "team_faab_balance",
+              "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
+              "team_coverage_value", "team_value", "team_league_scoring_type",
+              "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
+              "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
+              "team_manager_felo_tier", "rank", "playoff_seed", "wins", "losses",
+              "ties", "percentage")
 
-        # expected colnames
-        x <-
-            c("team_key", "team_id", "name", "coverage_type", "season", "total",
-               "rank", "playoff_seed", "wins", "losses", "ties", "percentage",
-               "g", "a", "x", "ppp", "sog", "hit", "w", "ga", "gaa", "sv", "sa",
-               "sv_percent", "sho")
+        # Test df colnames
+        expect_named(df,
+                     expected_colnames,
+                     ignore.order = TRUE,
+                     ignore.case = TRUE)
 
-
-        # test that colnames of the df match expected
-        testthat::expect_named(df,
-                               x,
-                               ignore.order = TRUE,
-                               ignore.case = TRUE)
-
-
-
-
-    })
+})
 })

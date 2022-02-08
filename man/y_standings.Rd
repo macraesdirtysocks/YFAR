@@ -2,21 +2,28 @@
 % Please edit documentation in R/y_standings.R
 \name{y_standings}
 \alias{y_standings}
-\title{Get standings data from Yahoo! Fantasy API}
+\title{Get standings data from Yahoo! Fantasy API.}
 \usage{
-y_standings(league_id = NULL, token_name = NULL, debug = FALSE)
+y_standings(team_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{team_key}{A vector of team keys as a string in the form 000.l.0000.t.0".}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list
+A tibble.
 }
 \description{
-Get standings data, divison data playoff seed and team matchup results.
+Supply a team key or vector of team keys to return standings data.
+This function is best use with y_teams to supply a vector to team keys from a league.
+It seems you should be able to supply a league key to this function but for some reason the request returns
+a bunch of team stats data and I wanted to keep that in the `y_team_stats()` function.
+}
+\details{
 This function does not return individual category win data form H2H leagues.
 }

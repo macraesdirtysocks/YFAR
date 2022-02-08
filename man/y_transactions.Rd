@@ -2,30 +2,40 @@
 % Please edit documentation in R/y_transactions.R
 \name{y_transactions}
 \alias{y_transactions}
-\title{Get transaction data from Yahoo! Fantasy API}
+\title{Get transaction data from Yahoo! Fantasy API.}
 \usage{
 y_transactions(
-  id = NULL,
+  key = NULL,
   token_name = NULL,
   count = NULL,
   transaction_type = NULL,
-  debug = FALSE
+  debug = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
-\item{id}{league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
+\item{key}{league key or team key as a string in the form "000.l.0000" or "000.l.0000.t.0".}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
 \item{count}{Number of transactions to return.}
 
 \item{transaction_type}{Filter argument for request.  Accepts 1 of "commish", "add", "drop", "trade".}
 
-\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list
+A tibble.
 }
 \description{
-Get transaction data from Yahoo! Fantasy API
+This function returns data from the transactions resource.
+  - Transactions include:
+    - add
+    - drop
+    - trade
+    - commissioner
+  A single transaction can have multiple parts such as an add drop.
+  Waivers transactions are not included in this function.
 }

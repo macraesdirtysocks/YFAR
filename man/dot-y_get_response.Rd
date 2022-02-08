@@ -7,9 +7,9 @@
 .y_get_response(uri = NULL, token_name = NULL)
 }
 \arguments{
-\item{uri}{URI being queried}
+\item{uri}{URI being queried.}
 
-\item{token_name}{Oauth token value assign by y_create_token()}
+\item{token_name}{Oauth token value assign by `y_create_token()`.}
 }
 \description{
 Send GET request to YAHOO! api

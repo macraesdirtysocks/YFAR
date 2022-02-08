@@ -2,23 +2,35 @@
 % Please edit documentation in R/y_team_stats.R
 \name{y_team_stats}
 \alias{y_team_stats}
-\title{Get team level stats for scoring categories}
+\title{Get team scoring stats from Yahoo! Fantasy API.}
 \usage{
-y_team_stats(id = NULL, token_name = NULL, week = "current", debug = FALSE)
+y_team_stats(
+  key = NULL,
+  token_name = NULL,
+  week = NULL,
+  debug = FALSE,
+  quiet = TRUE
+)
 }
 \arguments{
-\item{id}{league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
+\item{key}{League key or team key as a string in the form "000.l.0000" or "000.l.0000.t.0".}
 
-\item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{week}{week of fantasy season to return.  Accepts 3 arguments `current`, `NULL`, `a number`.
-`current` by default returns current week, null returns aggregated season stats, number returns stats for that week.}
+\item{week}{Week of fantasy season to return.
+-Accepts 3 arguments:
+  - `current` returns current week of season.
+  - An integer corresponding to a week of season.
+  - If NULL will return aggregated season stats.}
 
 \item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list
+A tibble
 }
 \description{
-returns team or league stats depending on what id (league or team) is supplied to `id`
+Returns team or league stats depending on what type of key is
+  provided as an argument to key.
 }

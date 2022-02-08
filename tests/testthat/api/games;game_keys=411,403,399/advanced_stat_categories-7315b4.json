@@ -1,0 +1,434 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/games;game_keys=411,403,399/advanced_stat_categories",
+        "games": {
+            "0": {
+                "game": [
+                    {
+                        "game_key": "411",
+                        "game_id": "411",
+                        "name": "Hockey",
+                        "code": "nhl",
+                        "type": "full",
+                        "url": "https://hockey.fantasysports.yahoo.com/hockey",
+                        "season": "2021",
+                        "is_registration_over": 0,
+                        "is_game_over": 0,
+                        "is_offseason": 0
+                    },
+                    {
+                        "advanced_stat_categories": {
+                            "glossary_url": "https://hockey.fantasysports.yahoo.com/hockey/advancedstats",
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": "1001",
+                                        "name": "Power Play Time",
+                                        "display_name": "PPT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1002",
+                                        "name": "Average Power Play Time",
+                                        "display_name": "Avg-PPT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1003",
+                                        "name": "Short-Handed Time",
+                                        "display_name": "SHT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1004",
+                                        "name": "Average Short-Handed Time",
+                                        "display_name": "Avg-SHT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1005",
+                                        "name": "Corsi",
+                                        "display_name": "COR",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1006",
+                                        "name": "Fenwick",
+                                        "display_name": "FEN",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1007",
+                                        "name": "Offensive Zone Starts",
+                                        "display_name": "Off-ZS",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1008",
+                                        "name": "Defensive Zone Starts",
+                                        "display_name": "Def-ZS",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1009",
+                                        "name": "Zone Start Percentage",
+                                        "display_name": "ZS-Pct",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1010",
+                                        "name": "Game Star",
+                                        "display_name": "GStr",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1011",
+                                        "name": "Shifts",
+                                        "display_name": "Shifts",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "1": {
+                "game": [
+                    {
+                        "game_key": "403",
+                        "game_id": "403",
+                        "name": "Hockey",
+                        "code": "nhl",
+                        "type": "full",
+                        "url": "https://hockey.fantasysports.yahoo.com/2020/hockey",
+                        "season": "2020",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    },
+                    {
+                        "advanced_stat_categories": {
+                            "glossary_url": "https://hockey.fantasysports.yahoo.com/hockey/advancedstats",
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": "1001",
+                                        "name": "Power Play Time",
+                                        "display_name": "PPT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1002",
+                                        "name": "Average Power Play Time",
+                                        "display_name": "Avg-PPT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1003",
+                                        "name": "Short-Handed Time",
+                                        "display_name": "SHT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1004",
+                                        "name": "Average Short-Handed Time",
+                                        "display_name": "Avg-SHT",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1005",
+                                        "name": "Corsi",
+                                        "display_name": "COR",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1006",
+                                        "name": "Fenwick",
+                                        "display_name": "FEN",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1007",
+                                        "name": "Offensive Zone Starts",
+                                        "display_name": "Off-ZS",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1008",
+                                        "name": "Defensive Zone Starts",
+                                        "display_name": "Def-ZS",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1009",
+                                        "name": "Zone Start Percentage",
+                                        "display_name": "ZS-Pct",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1010",
+                                        "name": "Game Star",
+                                        "display_name": "GStr",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1011",
+                                        "name": "Shifts",
+                                        "display_name": "Shifts",
+                                        "sort_order": "1",
+                                        "stat_position_types": [
+                                            {
+                                                "stat_position_type": {
+                                                    "position_type": "P",
+                                                    "is_only_display_stat": "1"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "game": [
+                    {
+                        "game_key": "399",
+                        "game_id": "399",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2020/f1",
+                        "season": "2020",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    },
+                    {
+                        "advanced_stat_categories": {
+                            "glossary_url": "https://football.fantasysports.yahoo.com/f1/advancedstats",
+                            "stats": [
+
+                            ]
+                        }
+                    }
+                ]
+            },
+            "count": 3
+        },
+        "time": "27.914047241211ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

@@ -2,29 +2,37 @@
 % Please edit documentation in R/y_scoreboard.R
 \name{y_scoreboard}
 \alias{y_scoreboard}
-\title{Get scoreboard stats and results data from Yahoo! Fantasy API}
+\title{Get scoreboard stats and results data from Yahoo! Fantasy API.}
 \usage{
-y_scoreboard(league_id = NULL, token_name = NULL, weeks = NULL, debug = FALSE)
+y_scoreboard(
+  league_key = NULL,
+  token_name = NULL,
+  week = NULL,
+  debug = FALSE,
+  quiet = TRUE
+)
 }
 \arguments{
-\item{league_id}{league as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{league_key}{league as a string in the form "000.l.0000".  League key can be found with `y_games()`.}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{weeks}{The week of fantasy season to return. Default NULL will return current week of season.}
+\item{week}{A integer referring to a week of fantasy season to return.
+Default NULL will return current week of season.}
 
 \item{debug}{Returns a list of data uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list or tibble
+A tibble
 }
 \description{
-`y_scoreboard()` gets scoreboard stats and results for a given league and week.
-It is similar to `y_matchups()` but takes a league_id as opposed to a team_id and
-returns league wide matchup data.  This eliminates mapping over team_id's with `y_matchups()`
-to get league matchup data.
+This function gets scoreboard stats and results for a given league and week.
+It is similar to `y_matchups()` but takes a league key as opposed to a team key and
+returns league wide match-up data.
 }
 \details{
-`y_scoreboard()` takes a league id and returns matchup data for all teams in requested week.
-`y_matchups()` takes a team id and returns matchup data for requested weeks and team.
+`y_scoreboard()` takes a league key and returns match-up data for all teams in requested week.
+`y_matchups()` takes a team key and returns match-up data for requested weeks and team.
 }

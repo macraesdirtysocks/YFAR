@@ -2,12 +2,14 @@
 % Please edit documentation in R/helper_functions.R
 \name{.transaction_parse_fn}
 \alias{.transaction_parse_fn}
-\title{Parse transactions resource}
+\title{Parse transactions resource.}
 \usage{
-.transaction_parse_fn(x)
+.transaction_parse_fn(x, ...)
 }
 \arguments{
 \item{x}{element to parse}
+
+\item{...}{element to parse}
 }
 \value{
 a tibble

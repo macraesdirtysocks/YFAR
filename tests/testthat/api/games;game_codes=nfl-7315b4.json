@@ -1,0 +1,380 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/games;game_codes=nfl",
+        "games": {
+            "0": {
+                "game": [
+                    {
+                        "game_key": "49",
+                        "game_id": "49",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2002/f1",
+                        "season": "2002",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "1": {
+                "game": [
+                    {
+                        "game_key": "50",
+                        "game_id": "50",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/1999/f1",
+                        "season": "1999",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "2": {
+                "game": [
+                    {
+                        "game_key": "53",
+                        "game_id": "53",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2000/f1",
+                        "season": "2000",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "3": {
+                "game": [
+                    {
+                        "game_key": "57",
+                        "game_id": "57",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2001/f1",
+                        "season": "2001",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "4": {
+                "game": [
+                    {
+                        "game_key": "79",
+                        "game_id": "79",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2003/f1",
+                        "season": "2003",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "5": {
+                "game": [
+                    {
+                        "game_key": "101",
+                        "game_id": "101",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2004/f1",
+                        "season": "2004",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "6": {
+                "game": [
+                    {
+                        "game_key": "124",
+                        "game_id": "124",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2005/f1",
+                        "season": "2005",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "7": {
+                "game": [
+                    {
+                        "game_key": "153",
+                        "game_id": "153",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2006/f1",
+                        "season": "2006",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "8": {
+                "game": [
+                    {
+                        "game_key": "175",
+                        "game_id": "175",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2007/f1",
+                        "season": "2007",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "9": {
+                "game": [
+                    {
+                        "game_key": "199",
+                        "game_id": "199",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2008/f1",
+                        "season": "2008",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "10": {
+                "game": [
+                    {
+                        "game_key": "222",
+                        "game_id": "222",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2009/f1",
+                        "season": "2009",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "11": {
+                "game": [
+                    {
+                        "game_key": "242",
+                        "game_id": "242",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2010/f1",
+                        "season": "2010",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "12": {
+                "game": [
+                    {
+                        "game_key": "257",
+                        "game_id": "257",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2011/f1",
+                        "season": "2011",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "13": {
+                "game": [
+                    {
+                        "game_key": "273",
+                        "game_id": "273",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2012/f1",
+                        "season": "2012",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "14": {
+                "game": [
+                    {
+                        "game_key": "314",
+                        "game_id": "314",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2013/f1",
+                        "season": "2013",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "15": {
+                "game": [
+                    {
+                        "game_key": "331",
+                        "game_id": "331",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2014/f1",
+                        "season": "2014",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "16": {
+                "game": [
+                    {
+                        "game_key": "348",
+                        "game_id": "348",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2015/f1",
+                        "season": "2015",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "17": {
+                "game": [
+                    {
+                        "game_key": "359",
+                        "game_id": "359",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2016/f1",
+                        "season": "2016",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "18": {
+                "game": [
+                    {
+                        "game_key": "371",
+                        "game_id": "371",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2017/f1",
+                        "season": "2017",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "19": {
+                "game": [
+                    {
+                        "game_key": "380",
+                        "game_id": "380",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2018/f1",
+                        "season": "2018",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "20": {
+                "game": [
+                    {
+                        "game_key": "390",
+                        "game_id": "390",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2019/f1",
+                        "season": "2019",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "21": {
+                "game": [
+                    {
+                        "game_key": "399",
+                        "game_id": "399",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2020/f1",
+                        "season": "2020",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    }
+                ]
+            },
+            "22": {
+                "game": [
+                    {
+                        "game_key": "406",
+                        "game_id": "406",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/f1",
+                        "season": "2021",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 0
+                    }
+                ]
+            },
+            "count": 23
+        },
+        "time": "151.66807174683ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

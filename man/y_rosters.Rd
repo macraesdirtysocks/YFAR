@@ -2,28 +2,37 @@
 % Please edit documentation in R/y_rosters.R
 \name{y_rosters}
 \alias{y_rosters}
-\title{Get roster data for a Yahoo Fantasy League.}
+\title{Get roster data from Yahoo! Fantasy API.}
 \usage{
-y_rosters(id = NULL, token_name = NULL, game_date = NULL, debug = FALSE)
+y_rosters(
+  key = NULL,
+  token_name = NULL,
+  game_date = NULL,
+  debug = FALSE,
+  quiet = TRUE
+)
 }
 \arguments{
-\item{id}{League id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
+\item{key}{League key or team key as a string in the form "000.l.0000" or "000.l.0000.t.0".  These keys can be found with `y_games()` and `y_teams()`.}
 
-\item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{game_date}{Date of fantasy season in form YYYY-MM-DD to return.  Default is null and will return current date.}
+\item{game_date}{A vector of dates of fantasy season in form YYYY-MM-DD to return.
+Default is null and will return current date.}
 
 \item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list or tibble
+A tibble.
 }
 \description{
-Supply a team or league id to the function to retrieve roster data.  If a date
+Supply a vector of team or league keys to the function to retrieve roster data.  If a date
 is supplied the roster data for that date will be returned.
 }
 \details{
-Function accepts a vector of dates and can be mapped over for multiple teams
+Function accepts a vector of dates.
 
 Function is memoised
 }

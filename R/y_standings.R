@@ -1,138 +1,149 @@
-#' Get standings data from Yahoo! Fantasy API
+#' Get standings data from Yahoo! Fantasy API.
 #'
-#' Get standings data, divison data playoff seed and team matchup results.
+#' Supply a team key or vector of team keys to return standings data.
+#' This function is best use with y_teams to supply a vector to team keys from a league.
+#' It seems you should be able to supply a league key to this function but for some reason the request returns
+#' a bunch of team stats data and I wanted to keep that in the `y_team_stats()` function.
+#'
 #' This function does not return individual category win data form H2H leagues.
 #'
-#' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
-#' @param token_name Assigned object name used when creating token with y_create_token().
-#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
+#' @param team_key A vector of team keys as a string in the form 000.l.0000.t.0".
+#' @param token_name Name used for assignment when creating token object with `y_create_token()`.
+#' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
+#' @param quiet Print function activity.
 #'
-#' @return a list
+#' @return A tibble.
 #' @export
-y_standings <- function(league_id = NULL, token_name = NULL, debug = FALSE) {
+y_standings <- function(team_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE) {
 
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    TOKEN                                 ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    api_token <- token_name
+    .token_check(token_name, api_token, name = .GlobalEnv)
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-    resource <- "league"
+    resource <- "teams"
     subresource <- "standings"
-    api_token <- token_name
-
+    uri_out <- "team_keys="
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                    CHECKS                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    stopifnot(!is.null(team_key))
+    stopifnot(!is.null(token_name))
 
-    .league_id_check(league_id)
-    .token_check(token_name, api_token, name = .GlobalEnv)
+    # Check if keys are type league, remove FALSE and duplicates.
+    key <- .single_resource_key_check(team_key, .team_key_check)
 
+    # quiet
+    if(!quiet){cat(crayon::cyan("Resource is", resource, "\n"), sep = "")}
+    if(!quiet){cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                     URI                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    # Initial uri components
+    uri_parsed <- structure(
+        list(
+            scheme = "https",
+            hostname = "fantasysports.yahooapis.com/fantasy/v2",
+            port = NULL,
+            path = resource,
+            query = list(format = "json"),
+            params = NULL
+        ),
+        class = "url"
+    )
 
-    uri <-
-        httr::modify_url(
-            url = "https://fantasysports.yahooapis.com",
-            path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
-            query = "format=json"
-        )
+    key_paths <-
+        .uri_path_packer(key, 25)
 
+    uri_parsed$params <-
+        stringr::str_c(uri_out, key_paths, "/", subresource, sep = "")
+
+    uri <- httr::build_url(uri_parsed)
+
+    if(!quiet){cat(crayon::cyan("uri is...\n", uri), sep = "\n")}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                GET RESPONSE                              ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
     r <-
-        .y_get_response(uri, api_token)
+        purrr::map(uri, .y_get_response, api_token)
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                          CHECK RESPONSE FOR ERRORS                       ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    if(sum(!purrr::map_lgl(r, httr::http_error)) <= 0){
+        stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
+    }
+
+    r <- r[!purrr::map_lgl(r, httr::http_error)]
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                   CONTENT                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
     r_parsed <-
-        .y_parse_response(r, "fantasy_content", "league", 2, "standings", 1, "teams") %>%
-        purrr::map(purrr::pluck, "team") %>%
-        purrr::compact()
-
-
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                PARSE FUNCTION                            ----
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    standings_parse <- function(x){
-
-        team_meta <-
-            x %>%
-            purrr::pluck(1) %>%
-            magrittr::extract(1:3) %>%
-            purrr::flatten_df()
-
-        team_stats <-
-            x %>%
-            purrr::pluck(2, "team_stats", "stats") %>%
-            purrr::flatten_df() %>%
-            dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
-            dplyr::select("display_name", "value") %>%
-            tidyr::pivot_wider(
-                id_cols = display_name,
-                names_from = display_name,
-                values_from = value)
-
-        team_points <-
-            x %>%
-            purrr::pluck(2, "team_points") %>%
-            purrr::flatten_df()
-
-        standings <-
-            x %>%
-            purrr::pluck(3, "team_standings") %>%
-            purrr::keep(purrr::negate(purrr::is_list)) %>%
-            dplyr::bind_cols()
-
-        outcomes <-
-            x %>%
-            purrr::pluck(3, "team_standings", "outcome_totals") %>%
-            dplyr::bind_cols()
-
-        df <- dplyr::bind_cols(team_meta, team_points, standings, outcomes, team_stats)
-
-        return(df)
-
-    }
-
+        purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                      DF                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    if(!debug){
+    if(!debug) {
 
-    df <-
-        purrr::map_df(r_parsed, standings_parse)
+        preprocess <-
+            r_parsed %>%
+            purrr::flatten() %>%
+            purrr::keep(purrr::is_list)
 
-    return(df)
+        subresource_parse_fn <- function(x) {
+            x %>%
+                unlist() %>%
+                dplyr::bind_rows() %>%
+                janitor::clean_names()
+        }
 
+        df <-
+            tryCatch(
+                expr =
+                    purrr::map_df(
+                        preprocess,
+                        .team_resource_parse_fn,
+                        subresource_parse_fn
+                    ),
+
+                error = function(e) {
+                    message(
+                        crayon::cyan(
+                            "Function failed while parsing games resource with .team_resource_parse_fn. Returning debug list."
+                        )
+                    )
+                }
+            )
+
+            if(tibble::is_tibble(df)) {return(df)}
     }
 
-
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                    RETURN                                ----
+    ##                                DEBUG RETURN                              ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
     data_list <-
         structure(
             list(
+                resource = resource,
                 response = r,
                 content = r_parsed,
                 uri = uri

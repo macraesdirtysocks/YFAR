@@ -1,0 +1,577 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/players;player_keys=411.p.6369,411.p.6391/stats",
+        "players": {
+            "0": {
+                "player": [
+                    [
+                        {
+                            "player_key": "411.p.6369"
+                        },
+                        {
+                            "player_id": "6369"
+                        },
+                        {
+                            "name": {
+                                "full": "Leon Draisaitl",
+                                "first": "Leon",
+                                "last": "Draisaitl",
+                                "ascii_first": "Leon",
+                                "ascii_last": "Draisaitl"
+                            }
+                        },
+                        {
+                            "editorial_player_key": "nhl.p.6369"
+                        },
+                        {
+                            "editorial_team_key": "nhl.t.6"
+                        },
+                        {
+                            "editorial_team_full_name": "Edmonton Oilers"
+                        },
+                        {
+                            "editorial_team_abbr": "Edm"
+                        },
+                        {
+                            "uniform_number": "29"
+                        },
+                        {
+                            "display_position": "C,LW"
+                        },
+                        {
+                            "headshot": {
+                                "url": "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png",
+                                "size": "small"
+                            },
+                            "image_url": "https://s.yimg.com/iu/api/res/1.2/pYXAdCBAE_Co3reLWMZxQQ--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11042021/6369.png"
+                        },
+                        {
+                            "is_undroppable": "0"
+                        },
+                        {
+                            "position_type": "P"
+                        },
+                        [
+
+                        ],
+                        {
+                            "eligible_positions": [
+                                {
+                                    "position": "C"
+                                },
+                                {
+                                    "position": "LW"
+                                }
+                            ]
+                        },
+                        {
+                            "has_player_notes": 1
+                        },
+                        [
+
+                        ],
+                        {
+                            "player_notes_last_timestamp": 1643566536
+                        }
+                    ],
+                    {
+                        "player_stats": {
+                            "0": {
+                                "coverage_type": "season",
+                                "season": "2021"
+                            },
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": "0",
+                                        "value": "42"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "29",
+                                        "value": "42"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1",
+                                        "value": "32"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "2",
+                                        "value": "31"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "3",
+                                        "value": "63"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "4",
+                                        "value": "6"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "5",
+                                        "value": "22"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "6",
+                                        "value": "13"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "7",
+                                        "value": "12"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "8",
+                                        "value": "25"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "9",
+                                        "value": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "10",
+                                        "value": "0"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "11",
+                                        "value": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "12",
+                                        "value": "8"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "13",
+                                        "value": "-"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "14",
+                                        "value": "149"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "15",
+                                        "value": ".215"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "16",
+                                        "value": "459"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "17",
+                                        "value": "388"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "31",
+                                        "value": "25"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "32",
+                                        "value": "6"
+                                    }
+                                }
+                            ]
+                        },
+                        "player_advanced_stats": {
+                            "0": {
+                                "coverage_type": "season",
+                                "season": "2021"
+                            },
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": "1001",
+                                        "value": "9278"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1002",
+                                        "value": "221"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1003",
+                                        "value": "1928"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1004",
+                                        "value": "46"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1005",
+                                        "value": "84"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1006",
+                                        "value": "34"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1007",
+                                        "value": "423"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1008",
+                                        "value": "294"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1009",
+                                        "value": "59.00"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1010",
+                                        "value": "5"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1011",
+                                        "value": "934"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "1": {
+                "player": [
+                    [
+                        {
+                            "player_key": "411.p.6391"
+                        },
+                        {
+                            "player_id": "6391"
+                        },
+                        {
+                            "name": {
+                                "full": "David Pastrnak",
+                                "first": "David",
+                                "last": "Pastrnak",
+                                "ascii_first": "David",
+                                "ascii_last": "Pastrnak"
+                            }
+                        },
+                        {
+                            "editorial_player_key": "nhl.p.6391"
+                        },
+                        {
+                            "editorial_team_key": "nhl.t.1"
+                        },
+                        {
+                            "editorial_team_full_name": "Boston Bruins"
+                        },
+                        {
+                            "editorial_team_abbr": "Bos"
+                        },
+                        {
+                            "uniform_number": "88"
+                        },
+                        {
+                            "display_position": "RW"
+                        },
+                        {
+                            "headshot": {
+                                "url": "https://s.yimg.com/iu/api/res/1.2/YrwqWQevy16ghhT.xhE.Nw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11012021/6391.png",
+                                "size": "small"
+                            },
+                            "image_url": "https://s.yimg.com/iu/api/res/1.2/YrwqWQevy16ghhT.xhE.Nw--~C/YXBwaWQ9eXNwb3J0cztjaD0yMzM2O2NyPTE7Y3c9MTc5MDtkeD04NTc7ZHk9MDtmaT11bGNyb3A7aD02MDtxPTEwMDt3PTQ2/https://s.yimg.com/xe/i/us/sp/v/nhl_cutout/players_l/11012021/6391.png"
+                        },
+                        {
+                            "is_undroppable": "0"
+                        },
+                        {
+                            "position_type": "P"
+                        },
+                        [
+
+                        ],
+                        {
+                            "eligible_positions": [
+                                {
+                                    "position": "RW"
+                                }
+                            ]
+                        },
+                        {
+                            "has_player_notes": 1
+                        },
+                        [
+
+                        ],
+                        {
+                            "player_notes_last_timestamp": 1643774787
+                        }
+                    ],
+                    {
+                        "player_stats": {
+                            "0": {
+                                "coverage_type": "season",
+                                "season": "2021"
+                            },
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": "0",
+                                        "value": "43"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "29",
+                                        "value": "43"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1",
+                                        "value": "22"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "2",
+                                        "value": "21"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "3",
+                                        "value": "43"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "4",
+                                        "value": "2"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "5",
+                                        "value": "12"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "6",
+                                        "value": "11"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "7",
+                                        "value": "5"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "8",
+                                        "value": "16"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "9",
+                                        "value": "0"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "10",
+                                        "value": "0"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "11",
+                                        "value": "0"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "12",
+                                        "value": "5"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "13",
+                                        "value": "-"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "14",
+                                        "value": "188"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "15",
+                                        "value": ".117"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "16",
+                                        "value": "6"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "17",
+                                        "value": "7"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "31",
+                                        "value": "33"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "32",
+                                        "value": "7"
+                                    }
+                                }
+                            ]
+                        },
+                        "player_advanced_stats": {
+                            "0": {
+                                "coverage_type": "season",
+                                "season": "2021"
+                            },
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": "1001",
+                                        "value": "8864"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1002",
+                                        "value": "206"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1003",
+                                        "value": "88"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1004",
+                                        "value": "2"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1005",
+                                        "value": "215"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1006",
+                                        "value": "176"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1007",
+                                        "value": "469"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1008",
+                                        "value": "163"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1009",
+                                        "value": "74.21"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1010",
+                                        "value": "6"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": "1011",
+                                        "value": "907"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "count": 2
+        },
+        "time": "44.501066207886ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

@@ -1,0 +1,302 @@
+library(YFAR)
+
+test_that("y_team_stats uri generates properly",{
+
+    y_team_stats_uri_gen_test_fn <- function(key = NULL, week = NULL){
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                    CHECKS                                ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        # Eligible key types.
+        e_key_types <- c("leagues", "teams")
+
+        # Assign a resource to each key and count.
+        # Function then selects most frequently occurring resource and assigns value to resource.
+        c(resource, key, .) %<-% .multiple_resource_key_check(key, e_key_types = e_key_types)
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                  ARGUMENTS                               ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        subresource <- switch(resource, "leagues" = "teams", "teams" = NULL)
+        collection <- "stats"
+        uri_out <- switch(resource, "leagues" = "league_keys=", "teams" = "team_keys=")
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                     URI                                  ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        # Initial uri components
+        uri_parsed <- structure(
+            list(
+                scheme = "https",
+                hostname = "fantasysports.yahooapis.com/fantasy/v2",
+                port = NULL,
+                path = resource,
+                query = list(format = "json"),
+                params = NULL
+            ),
+            class = "url"
+        )
+
+        # Params
+        key_path <-
+            .uri_path_packer(key)
+
+        uri_parsed$params <-
+            stringr::str_c(uri_out, key_path, sep = "")
+
+        if(!is.null(subresource)){
+            uri_parsed$params <- stringr::str_c(uri_parsed$params, subresource, collection, sep = "/")
+        } else{
+            uri_parsed$params <- stringr::str_c(uri_parsed$params, collection, sep = "/")
+        }
+
+        if(!is.null(week)){
+            week_checked <-
+                suppressWarnings(week[!is.na(as.integer(as.character(week)))]) %>% vctrs::vec_unique()
+        } else{
+            week_checked <- NULL
+        }
+        # If week is not empty turn it into a param by pasting the name to the value and
+        # gluing to already existing param.
+        # i.e. week <- list(week=1) becomes week=1 and then type=week;week=1.
+        if(!is.null(week_checked)){
+            week_param <- stringr::str_c("type=week;week=", week_checked)
+            uri_parsed$params <- stringr::str_c(uri_parsed$params, week_param, sep = ";")
+        }
+
+        # Build uris.
+        uri <- httr::build_url(uri_parsed)
+    }
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn("411.l.1239"),
+        "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239/teams/stats?format=json"
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn("411.l.1239", week = 1),
+        "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239/teams/stats;type=week;week=1?format=json"
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn(c("411.l.1239", "411.l.1240"), week = 1),
+        "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=1?format=json"
+
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn(c("411.l.1239", "411.l.1240"), week = c(1,2)),
+        c("https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=1?format=json",
+          "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=2?format=json")
+
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn(c("411.l.1239", "411.l.1240", "411.p.1000"), week = c(1,2, "2022-01-01")),
+        c("https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=1?format=json",
+          "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=2?format=json")
+
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn(c("411.l.1239", "411.l.1239", "411.l.1240", "411.p.1000"), week = c(1,2, "2022-01-01", 1)),
+        c("https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=1?format=json",
+          "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240/teams/stats;type=week;week=2?format=json")
+
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn(c("411.l.1239.t.8", "411.l.1239.t.1", "411.l.1240", "411.p.1000")),
+        "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.8,411.l.1239.t.1/stats?format=json"
+    )
+
+    expect_identical(
+        y_team_stats_uri_gen_test_fn(c("411.l.1239.t.8", "411.l.1239.t.1", "411.l.1240", "411.p.1000"), week = c(1,2, "2022-01-01", 1)),
+        c("https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.8,411.l.1239.t.1/stats;type=week;week=1?format=json",
+          "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.8,411.l.1239.t.1/stats;type=week;week=2?format=json")
+
+    )
+
+    })
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                           LEAGUES RESPONSE PARSE                         ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+testthat::test_that("Leagues uri returns valid response and is parsed to a tibble",{
+
+    # Declare desired mock_uri.
+    mock_uri <-
+        c("https://fantasysports.yahooapis.com/fantasy/v2/leagues;411.l.1239/teams/stats?format=json")
+
+    # Expected resource
+    resource <-
+        "leagues"
+
+    # Get response.
+    r <-
+        with_mock_api({
+            purrr::map(mock_uri, .y_get_response)
+        })
+
+    # Parsed response.
+    r_parsed <-
+        purrr::map(r, .y_parse_response, "fantasy_content", resource)
+
+    # Test that response uri and declared uri are equal.
+    expect_equal(mock_uri,
+                 purrr::map_chr(r, purrr::pluck, "url"))
+
+    # Test not null.
+    expect_true(!is.null(r_parsed))
+
+    # Test not empty.
+    expect_true(!purrr::is_empty(r_parsed))
+
+    # Define parse function relative to resource value.
+
+
+    # Preprocess list.  This step is verbatim from y_matchups.
+    parse_fn <-
+        function(x) {
+            dplyr::bind_cols(
+                .team_meta_parse_fn(x),
+                .team_stats_parse_fn(x)
+            )
+        }
+
+    # Preprocess r_parsed.
+    preprocess <-
+        r_parsed %>%
+        purrr::flatten()
+
+    df <-
+        preprocess %>%
+        purrr::map_df(.league_resource_parse_fn, parse_fn)
+
+    # Test that a tibble was returned from parsing.
+    expect_true(tibble::is_tibble(df), TRUE)
+
+    # Expected colnames.
+    expected_colnames <-
+        c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+          "league_draft_status", "league_num_teams", "league_edit_key",
+          "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+          "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+          "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+          "league_current_week", "league_start_week", "league_start_date",
+          "league_end_week", "league_end_date", "league_game_code", "league_season",
+          "team_key", "team_id", "team_name", "team_url", "team_logo_size",
+          "team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
+          "team_coverage_value", "team_value", "team_league_scoring_type",
+          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
+          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
+          "team_manager_felo_tier", "count_g", "count_a", "count_x", "count_ppp",
+          "count_sog", "count_hit", "count_w", "count_ga", "count_gaa",
+          "count_sv", "count_sa", "count_sv_percent", "count_sho", "coverage_type",
+          "season", "total")
+
+    # Test df colnames
+    expect_named(df,
+                 expected_colnames,
+                 ignore.order = TRUE,
+                 ignore.case = TRUE)
+
+})
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                            TEAMS RESPONSE PARSE                          ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+testthat::test_that("Leagues uri returns valid response and is parsed to a tibble",{
+
+    # Declare desired mock uri.
+    mock_uri <-
+        c("https://fantasysports.yahooapis.com/fantasy/v2/teams;411.l.1239.t.1,411.l.1239.t.8/stats;type=week;week=1?format=json",
+          "https://fantasysports.yahooapis.com/fantasy/v2/teams;411.l.1239.t.1,411.l.1239.t.8/stats;type=week;week=2?format=json")
+
+
+    # Expected resource
+    resource <-
+        "teams"
+
+    # Get response.
+    r <-
+        with_mock_api({
+            purrr::map(mock_uri, .y_get_response)
+        })
+
+    # Parsed response.
+    r_parsed <-
+        purrr::map(r, .y_parse_response, "fantasy_content", resource)
+
+    # Test that response uri and declared uri are equal.
+    expect_equal(mock_uri,
+                 purrr::map_chr(r, purrr::pluck, "url"))
+
+    # Test not null.
+    expect_true(!is.null(r_parsed))
+
+    # Test not empty.
+    expect_true(!purrr::is_empty(r_parsed))
+
+    # Define parse function relative to resource value.
+
+
+    # Preprocess list.  This step is verbatim from y_matchups.
+    parse_fn <-
+        function(x) {
+            dplyr::bind_cols(
+                .team_meta_parse_fn(x),
+                .team_stats_parse_fn(x)
+            )
+        }
+
+    # Preprocess r_parsed.
+    preprocess <-
+        r_parsed %>%
+        purrr::flatten()
+
+    df <-
+        preprocess %>%
+        purrr::map_df(parse_fn)
+
+    # Test that a tibble was returned from parsing.
+    expect_true(tibble::is_tibble(df), TRUE)
+
+    # Expected colnames.
+    expected_colnames <-
+        c("team_key", "team_id", "team_name", "team_url", "team_logo_size",
+          "team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
+          "team_coverage_value", "team_value", "team_league_scoring_type",
+          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
+          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
+          "team_manager_felo_tier", "count_g", "count_a", "count_x", "count_ppp",
+          "count_sog", "count_hit", "count_w", "count_ga", "count_gaa",
+          "count_sv", "count_sa", "count_sv_percent", "count_sho", "coverage_type",
+          "week", "total", "total_remaining_games", "total_live_games",
+          "total_completed_games")
+
+    # Test df colnames
+    expect_named(df,
+                 expected_colnames,
+                 ignore.order = TRUE,
+                 ignore.case = TRUE)
+
+})

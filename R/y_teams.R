@@ -1,123 +1,133 @@
-#' Get team data of a given Yahoo! Fantasy league.
+#' Get team level meta data from Yahoo! Fantasy API.
 #'
 #' Teams in a league make moves, have co-managers, have a waiver prioity etc.  This function
 #' returns all team level meta data from the Yahoo! Fantasy API.
 #'
-#' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
-#' @param token_name Assigned object name used when creating token with y_create_token().
-#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
+#' @param league_key League key as a string in the form "000.l.0000".  League id can be found with `y_games()`.
+#' @param token_name Name used for assignment when creating token object with `y_create_token()`.
+#' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
+#' @param quiet Print function activity.
 #'
-#' @return a list
+#' @return A tibble.
 #' @export
-y_teams <- memoise::memoise(function(league_id = NULL, token_name = NULL, debug = FALSE){
+y_teams <- memoise::memoise(function(league_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE){
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    TOKEN                                 ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    api_token <- token_name
+    .token_check(token_name, api_token, name = .GlobalEnv)
+
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-    resource <- "league"
+    resource <- "leagues"
     subresource <- "teams"
-    api_token <- token_name
-
+    uri_out <- "league_keys="
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                    CHECKS                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    # Check if keys are type league, remove FALSE and duplicates.
+    key <- .single_resource_key_check(league_key, .league_key_check)
 
-    .league_id_check(league_id)
-    .token_check(token_name, api_token, name = .GlobalEnv)
-
+    if(!quiet){cat(crayon::cyan("Resource is", resource, "\n"), sep = "")}
+    if(!quiet){cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                     URI                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    # Initial uri components
+    uri_parsed <- structure(
+        list(
+            scheme = "https",
+            hostname = "fantasysports.yahooapis.com/fantasy/v2",
+            port = NULL,
+            path = resource,
+            query = list(format = "json"),
+            params = NULL
+        ),
+        class = "url"
+    )
 
-    uri <-
-        httr::modify_url(
-            url = "https://fantasysports.yahooapis.com",
-            path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
-            query = "format=json"
-        )
+    uri_path <-
+        .uri_path_packer(key, 25)
+
+    uri_parsed$params <-
+        stringr::str_c(uri_out, uri_path, "/", subresource)
+
+    uri <- httr::build_url(uri_parsed)
+
+    if(!quiet){cat(crayon::cyan("uri is...\n", uri), sep = "\n")}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                GET RESPONSE                              ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
     r <-
-        .y_get_response(uri, api_token)
+        purrr::map(uri, .y_get_response, api_token)
 
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                          CHECK RESPONSE FOR ERRORS                       ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    if(sum(!purrr::map_lgl(r, httr::http_error)) <= 0){
+        stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
+    }
+
+    r <- r[!purrr::map_lgl(r, httr::http_error)]
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                   CONTENT                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
     r_parsed <-
-        .y_parse_response(r, "fantasy_content", "league", 2, "teams") %>%
-        purrr::map(purrr::pluck, "team", 1) %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::map(purrr::flatten)
-
-
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                PARSE CONTENT                             ----
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-    team_meta <-
-        r_parsed %>%
-        purrr::map(purrr::keep, purrr::negate(purrr::is_list)) %>%
-        purrr::map(purrr::modify_if, is.numeric, as.character) %>%
-        dplyr::bind_rows()
-
-    team_logos <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, "team_logos", 1, "team_logo") %>%
-        purrr::map_df(dplyr::bind_rows) %>%
-        purrr::set_names(~paste("team", ., sep = "_"))
-
-    managers <-
-        r_parsed %>%
-        purrr::map(purrr::pluck, "managers") %>%
-        purrr::map(purrr::flatten) %>%
-        purrr::map(purrr::set_names, ~paste(., seq_along(.), sep = "_")) %>%
-        purrr::map(dplyr::bind_rows) %>%
-        dplyr::bind_rows(.id = "team") %>%
-        dplyr::mutate(dplyr::across(.cols = dplyr::everything(), tidyr::replace_na, "0")) %>%
-        dplyr::group_nest(team, .key = "manager_info", keep = FALSE) %>%
-        dplyr::select(-c(team))
-
+        purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                      DF                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    if(!debug){
 
-    df <-
-        dplyr::bind_cols(
-            team_meta,
-            team_logos,
-            managers
-            )
+        preprocess <-
+            r_parsed %>%
+            purrr::flatten()
 
+        df <-
+            tryCatch(
+                expr =
+                    preprocess %>%
+                    purrr::map_df(.league_resource_parse_fn, .team_meta_parse_fn
+                    ),
+                error = function(e) {
+                    message(crayon::cyan(
+                        "Function failed while parsing with .league_resource_parse_fn. Returning debug list."))
+                }
+                )
+
+        if(tibble::is_tibble(df)){return(df)}
+
+    }
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                    RETURN                                ----
+    ##                                DEBUG RETURN                              ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-    if(!debug){return(df)}
 
     data_list <-
         structure(
             list(
+                resource = resource,
+                response = r,
                 content = r_parsed,
-                uri = uri,
-                data = df
+                uri = uri
             ),
             class = "yahoo_fantasy_api")
 

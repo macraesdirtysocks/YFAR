@@ -4,14 +4,15 @@ date: "`r Sys.Date()`"
 output:
   github_document:
     # toc: true
-    # toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Overview of YFAR functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-> **BEFORE BEGINNING**
+*WooHoo!, finally an R package to get fantasy data from Yahoo!*
+
+> **Before begining**
 >
 > This vignette assumes user has created and registered an app with the YDN
 >
@@ -19,240 +20,251 @@ vignette: >
 ```{r, include = FALSE, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  eval = FALSE
 )
 ```
 
-```{r setup, message=FALSE}
+```{r setup, message=FALSE, include = FALSE}
 library(YFAR)
 library(dplyr)
 library(usethis)
-library(httptest)
+devtools::load_all()
 ```
 
-*WooHoo!, finally an R package to get fantasy data from Yahoo!*
+## INTRODUCTION
 
-## Getting started
+This is intended to be read like the opening crawl from Star Wars.
 
+In a world dominated by python where no R tools existed for getting fantasy sports data out of the Yahoo! API.  A world where Googling "Yahoo fantasy sports R" or "yahoo in R" or "please not more python stuff, just an R package for getting fantasy data from yahoo" would just return more python packages.  But not anymore!  Now because of one man - still in his 30's with enough hair he decided he could afford to sacrifice half - if you Google "yahoo fantasy R", scroll down to more results, and then more results and probably more results a couple more times.... At last!  DAAA DAAA:
+
+**YFAR - Yahoo Fantasy API w R**
+
+A collection of functions that help you, help yourself to public fantasy data as well the data from past or present private leagues.  Even the ones where you finished second last, just ahead of someone who quit the draft after the first round and never logged in again.  Hey some years you just don't got it.  We've all been there.
+
+A few notes for the user...
+
+### Terminology.
+
+I really try to use consistent language and labeling but this project but please don't hold me to it.  This is on account of the fact that I was deep into this and them someone gave me a "good idea" and I essentially started all over again.  Now this project has really dragged on and now my mind is mush.
+
+I will be referring to games or leagues and they are kinda synoymous but not really.  A game in this context is the fantasy sport you are playing or getting data for.  I.E. 2021 fantasy hockey is a game.
+
+The overall structure is Game>League>Team>Roster>Players
+ 
+This can be read as a game is made up of leagues, leagues are made up of teams, teams are made up of a roster, a roster is made up of players.
+
+So while all players exist in the context of a game, they might not all exist in terms of a league.  If your league doesn't use goalies or defense these players will not exist in your league.
+
+### A disclaimer.
+There are a lot of disclaimers in this package.  This package was designed with hockey in mind but I tried to write the functions in a way that will accommodate all leagues.
+
+### Tidyverse.
+This package is written mostly with the tidyverse.  Maybe that was a mistake.
+
+### Key nomenclature.
+As you may notice the first argument of nearly all the functions is a key.  Sometimes it's key, sometimes it league_key. Why is that?  When a function accepts multiple types of keys the first argument is called key.  If a function only accepts one type of key then the first argument is explicit.
+
+- Game key ex - 411
+- League key ex - 411.l.1239
+- Team key ex- 411.l.1239.t.1
+- Player key ex - 411.p.6369
+
+### Basic function heirarchy.
+  - At its core YFAR has 3 types of functions:
+    1. **Authentication**
+    2. **Accessory Functions** 
+    - Uninteresting but useful.  Mostly for acquiring data to supply as arguments to other functions i.e. weeks,            dates, team and league keys, etc.
+    3. **The Beef**  
+      - Probably why you are here.  Rosters, stats, standings, matchups etc.
+
+### Function feedback and debugging.    
+Each function is equipped with a `debug` argument and a `quiet` argument.
+
+  - `quiet` is fairly self explanatory and allows toggling of function feedback messages.
+  - `debug` allows the user to switch the return from a tibble to a list.  
+  - If a function fails it will almost certainly be due to parsing.  The debug list return will contain:
+    -  The response object.
+    -  The response content.
+    -  URI/s called.
+    -  The resource.
+
+This debug return will allow the user to still use the data or possibly parse the content oneself.
+
+The debug return will be returned by tryCatch if the function fails.
+
+### Memoisation.
+In an attempt to speed things up and take pity on the API some of the functions are memoised.
+
+
+## Getting started.
 I registered an app at YDN and have my key and secret.  What now?  How do I start using this package?
 
 - There are two core functions you will need to run to get started:
   1. `y_create_token()`
   2. `y_games()`
   
-### Create Token with y_create_token
-
-First a token is created using the KEY and SECRET given to you by the YDN.  
+### Create a token.
+The absolute first this you must do is create a token.  Every function has the `token_name` argument and the functions won't do function stuff without a token.
   
-```{r Create token, eval=FALSE}
+    y_create_token(my_key = NULL, my_secret = NULL, app_name = NULL)
+    
+A token is created using the **KEY** and **SECRET** given to you by the YDN as well as an app name. 
+  
+#### `y_create_token()`
 
-my_token <- y_create_token(my_key = "KEY", my_secret = "SECRET", app_name = "my_scraper")
+    my_token <- y_create_token(my_key = "KEY", my_secret = "SECRET", app_name = "my_scraper")
 
-```
-
-Alright I did that but what exactly happened?
+Done and done but what exactly happened?
 
 - This will create :
   - Token2.0 object.
   - Creates a file `.httr-oauth` which allows token refreshing.
   - If using version control will add `.httr-oauth` to `.gitignore`.
 
-The token has some features which can help if you are getting http errors, specifically 401.
+The token has some features which can help if you are getting http errors, specifically http error 401.
 
 - Some of these include:
   - `my_token$can_refresh()` - check if token is refreshable
   - `my_token$refresh()` - refresh token
 
-After creating your token you should not need to run `y_create_token()` again.  You can just keep refreshing your existing token.
+After creating a token you should not need to run `y_create_token()` again for the session.  You can just keep refreshing your existing token.  I've never actually timed how long between token refresh calls but it's around 20 minutes.
 
 Now whenever you call a function you supply this value to the argument `token_name`.
 
-### Get Game Info
+## ACCESSORY FUNCTIONS
+Next it a good idea to call some of the smaller accessory functions.  The returns from these functions are not all that interesting but will be used as inputs for the functions that probably brought you here.
 
+### Get game info.
 Now you can retrieve the general data from all the games you have participated in or are currently participating in.
 
-#### y_games
-
+#### `y_games()`
 Here's where you get to use your token for the first time.
 
-Get your game data
+Let's check out your games.
 
-  > A note on terminology for those who are wondering. 
-  >
-  > A game in this context is the fantasy sport you are playing or getting data for.  I.E. 2021 fantasy hockey is a game.
-  >
-  >  The overall structure is Game>League>Team>Roster>Players
-  >
-  > This can be read as a game is made up of leagues, leagues are made up of teams, teams are made up of a roster, a roster is made up of players.
-
-Having said all that lets get some game data.
-```{r, echo=FALSE}
-# Create a dummy token class to pacify functions checking for a token.
-my_token <-
-    structure(
-        list(),
-        class = "Token2.0, Token, R6")
-
-```
-
-```{r, include=FALSE}
-httptest::with_mock_api({
-  games <- y_games(my_token)
-})
-```
-
-```{r, eval = FALSE}
-games <- y_games(my_token)
-```
-
-```{r}
-games
-```
+    games <- y_games(token_name = NULL)
 
 **The league_key and league_id are what will be used to tell the functions from which leagues you want data**
 
-For the examples here-on-in I'll use the league_key for a Yahoo! Public Fantasy Hockey League.
-
+> Disclaimer
+>
+> For the examples here-on-in I'll use the league_key of a Yahoo! Public Fantasy Hockey League.
 >
 > 411.l.1239
 >
 
-## Functions
-
 OK enough with all this setup stuff.  Where the data at?
 
-### y_weeks
+### Get week info.
+The fantasy weeks corresponding to specific dates are handy to have.
 
+    weeks <- y_weeks(game_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE)
+
+#### `y_weeks()`
 Use `y_weeks()` to get the match-up schedule for a game.  Here only the game key is necessary because the schedule for a game is set across all leagues.  All that changes is what week the league commences and the week playoffs start.
 
 411 denotes 2021 Hockey
 
-```{r y_weeks, include=FALSE}
-with_mock_api({
-weeks <- y_weeks(411, my_token)
-})
-```
-
-```{r, eval=FALSE}
-weeks <- y_weeks(411, my_token)
-```
-
-```{r}
-weeks
-```
+    weeks <- y_weeks(game_key = 411, token_name = my_token)
 
 Well that return from `y_weeks()` wasn't exactly what I was hoping for.
 
-I know right? First we need to call some smaller functions to get the inputs for the functions that do the heavy lifting.
+I know right? Like I mentioned above we need to call some smaller functions to get the inputs for the functions that do the heavy lifting.
 
-### y_teams
+### Get team info.
+Many functions take team keys as arguments so you should go ahead and grab some, especially for you teams.
 
-Retrieve data about teams in the league.  It may be handy to run this function upfront as it will return a column named `team_key` which can be used to get data for specific teams.
+#### `y_teams()`
+Retrieve team data for teams in your league.  It may be handy to run this function upfront as it will return a column named `team_key` which can be used to get data for specific teams.
 
-```{r y_teams, include=FALSE}
-with_mock_api({
-league_teams <- y_teams(league_id = "411.l.1239", token_name = my_token)
-})
-```
+    y_teams(league_key = "411.l.1239", token_name = my_token)
 
-```{r, eval=FALSE}
-league_teams <- y_teams(league_id = "411.l.1239", token_name = my_token)
-```
 
-```{r}
-league_teams
-```
+> Disclaimer
+>
+> Most functions will accept a vector of keys.
+>
 
-> team keys can be supplied to a lot functions to get team specific data.
+## THE BEEF!
+Now can get into the functions that probably brought you here.  Team stats, rosters, player stats, standings info and more.
 
-### y_league_settings
+### Get league info.
 
-Retrieving the settings for a league will return a nested tibble of values
+#### `y_league_settings()`
+Retrieving the settings for a league will return nested tibbles of values pertaining to league settings, roster positions as well as other league information.
 
-```{r League Settings, include=FALSE}
-with_mock_api({
-  league_settings <- y_league_settings(league_id = "411.l.1239", my_token)
-})
-```
-
-```{r, eval=FALSE}
-league_settings <- y_league_settings(league_id = "411.l.1239", my_token)
-```
-
-```{r}
-league_settings
-```
-
+    y_league_settings(league_key = "411.l.1239", my_token, debug = FALSE, quiet = TRUE)
+    
 Extract an element to view the tibble.
-```{r League Settings Stat Categories}
-league_settings$data[4]
-```
 
-### y_team_stats
+    stat_cats <-league_settings$stat_categories
 
-A league id will return team stats for the current week.
+### Get team data.
 
-```{r, include=FALSE}
-httptest::with_mock_api(
-  team_stats_current_week <- y_team_stats(id = "411.l.1239", my_token)
-)
-```
+#### `y_team_stats()`
+Let's see some team stats.  I want to know how many goals my team has scored.
 
-```{r, eval=FALSE}
-team_stats_current_week <- y_team_stats(id = "411.l.1239", my_token)
-```
+Accepts a league or team key. 
 
-```{r}
-team_stats_current_week
-```
+    team_stats_current_week <- y_team_stats(key = "411.l.1239", my_token)
 
-Set week to NULL returns season stats
-```{r, include=FALSE}
-httptest::with_mock_api(
-  team_stats_season <- y_team_stats(id = "411.l.1239", my_token, week = NULL)
-)
-```
+The week param pertains to a particular week of the fantasy season.
 
-```{r, eval=FALSE}
-team_stats_season <- y_team_stats(id = "411.l.1239", my_token, week = NULL)
-```
+-Accepts 3 arguments:
+   - Default is NULL returns aggregated season stats.
+   - `current` returns current week of season.
+   - An integer corresponding to a week of season.
+   
+    `y_team_stats(key = "411.l.1239", my_token, week = NULL)`
 
-```{r}
-team_stats_season
-```
+Or select a week of season.
 
-Or select a week
-```{r, inlcude=FALSE}
-httptest::with_mock_api(
-  week_5_team_stats <- y_team_stats(id = "411.l.1239", my_token, week = 5)
-)
-```
+    y_team_stats(key = "411.l.1239", my_token, week = 5)
 
-```{r, eval=FALSE}
-week_5_team_stats <- y_team_stats(id = "411.l.1239", my_token, week = 5)
-```
+Or maybe you're only interested in your team.
 
-```{r}
-week_5_team_stats
-```
+    my_team_stats <- y_team_stats(key = "411.l.1239.t.1", my_token)
 
-### y_transactions
+Or multiple teams.  Hey I'm not judging, been know to have 5 or 10 myself.
 
-I want to see all the moves made in my league this year. Can I do that?
+    my_team_stats <- y_team_stats(key = c("411.l.1239.t.1", "411.l.1239.t.2"), my_token)
+    
+#### `y_matchups()`
+How do I see my matchups? Default arguments return past and current matchups
 
-Use `y_transactions` to retrieve transactions for a league or team.
+    my_matchups <- y_matchups("411.l.1239.t.1", my_token)
 
-> Note :
+Also takes a week argument. Return week 8 matchup.
+
+    my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
+
+##### Examples
+
+Multiple weeks
+
+    y_matchups(team_key = "411.l.1239.t.1", my_token, week = c(1, 8))
+
+Multiple teams
+
+    y_matchups(c(team_key = "411.l.1239.t.1", "411.l.1239.t.8"), my_token, week = 1)
+
+Multiple teams with multiple weeks
+
+    y_matchups(team_key = c("411.l.1239.t.1", "411.l.1239.t.8"), my_token, week = c(1, 8))
+
+### Get transaction data.
+I want to see all the moves made in my league this year. Can I do that? Yeah Baby!
+
+> Disclaimer :
 >
-> waiver claims are special transaction not covered by `y_transactions`
+> Waiver claims are special transaction not covered by `y_transactions()`.
 >
 
-Return all non-waiver transactions from a league
-```{r, eval=FALSE}
-# Not run
-all_transactions <-
-  y_transactions(id = "411.l.1239", token_name = my_token)
-```
+#### `y_transactions()`
+Return all non-waiver transactions from a league.
+
+     y_transactions(key = "411.l.1239", token_name = my_token, count = NULL, transaction_type = NULL, debug = FALSE, quiet = TRUE)
 
   - Arguments count and transaction_type can be supplied filter the return:
     - count :
@@ -263,82 +275,69 @@ all_transactions <-
       - "drop"
       - "trade"
 
-Here are the last 5 transactions for team 1.
+##### Examples
 
-```{r team transactions count 5, include=FALSE}
-with_mock_api({
-  team_trans <- y_transactions(id = "411.l.1239.t.1", token_name = my_token, count = 5)
-})
-```
+Here are the last 5 transactions for team 1.  Notice that the length of the return will not necessarily be 5 because multiple players can be part of a transaction.
 
-```{r, eval=FALSE}
-team_trans <- y_transactions(id = "411.l.1239.t.1", token_name = my_token, count = 5)
-```
-
-```{r}
-team_trans %>%
-  select(type, timestamp, player_full)
-```
+    y_transactions(key = "411.l.1239.t.1", token_name = my_token, count = 5)
 
 The last 10 transactions in the league.
 
-    y_transactions(id = "411.l.1239", token_name = my_token, count = 10)
+    y_transactions(key = "411.l.1239", token_name = my_token, count = 10)
 
 The last trade in the league.
 
-    y_transactions(id = "411.l.1239", token_name = my_token, count = 1, transaction_type = "trade")
+    y_transactions(key = "411.l.1239", token_name = my_token, count = 1, transaction_type = "trade")
 
-Unfortunately as of right now you can filter by date or sort with this function.
+Unfortunately as of right now you can't filter by date or sort with this function.
 
-### y_players vs y_player_slate
+### Get player data.
 
-> Note
+These functions return meta data on players such as position eligibility, full name, jersey number etc.
+
+#### `y_players()` vs `y_player_slate()`
+
+> Disclaimer
 >
 > These functions don't return player stats.  Use `y_player_stats()` to retrieve player stats.
 >
 
-y_players is intended to get a slice of players and takes arguments for specifying which and how many players to return.
+`y_players()` is intended to get a slice of players and takes arguments for specifying which and how many players to return.
 
-y_player_slate is a while loop that will return all players that exist in your league.
+The reason for this is that leagues contain a different number of players.  Due the Yahoo api only returning 25 players at a time a while loop is used to get the next 25 players until a response contains less than 25 players which is assumed to be the end of the resource.
 
+Having said all that or TLDR use `y_player_slate()` to return all players that exist in your league.
 
-#### y_player_slate
+#### `y_player_slate()`
+Get all the players that exist in your league.  This function can be slow so it includes a progress bar.
 
-Used to get all the players that exist in your league.  This function includes a progress bar.
-
-> Note
+> Disclaimer
 >
-> This function may be somewhat slow due to its use of janitor::make_clean_names
+> This function may be somewhat slow due to its use of janitor::make_clean_names.  I would/should change it but you don't love your dog as much as I love janitor.
 >
 
-```{r y_player_slate, eval=FALSE}
-# Not run
-all_players_in_my_league <- y_player_slate(league_id = "411.l.1239", token_name = my_token)
-```
+league key
 
-#### y_players
+    y_player_slate(league_key = "411.l.1239", token_name = my_token)
+    
+game key
 
-To get a slice of the players in your league.  By default returns 100 players sorted by "AR".
+    y_player_slate(game_key = "411", token_name = my_token)
+    
+A game and league key may have different returns depending on sorting and filtering arguments. This is due to the fact that ranking depends on league settings.
 
-```{r basic y_players, include=FALSE}
-with_mock_api({
-players <- y_players("411.l.1239", token_name = my_token)
-})
-```
+#### `y_players()`
+To get a slice of the players in your league.  By default starts at 0 and returns 100 players sorted by "AR" (actual rank).
 
-```{r, eval=FALSE}
-players <- y_players("411.l.1239", token_name = my_token)
-```
+    y_players("411.l.1239", token_name = my_token, start = 0, 
+              number_of_players = 100, quiet = TRUE, debug = FALSE, ...)
 
-```{r}
-players
-```
-
-Pass filters as ... arguments to customize your return.
+Pass filters as key value pairs to ... arguments to customize your return.  The value should be a string i.e. status = "FA".
 
 - Valid filters :
-  - position (Valid player positions, e.g. "C")
+  - position (Valid player positions, e.g. position = "C")
   - status
+    - All (all players)
     - A (all available players),
     - FA (free agents only),
     - W (waivers only),
@@ -354,296 +353,178 @@ Pass filters as ... arguments to customize your return.
     - start (Any integer 0 or greater e.g. /players;start=25)
     - count (Any integer b/t 0 & 25 /players;count=5)
 
-Top 10 players by actual rank ("OR")
-```{r y_players top 10, include=FALSE}
-with_mock_api({
-top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "OR", status = "ALL", debug = FALSE)
-})
-```
+#### Examples.
 
-```{r, eval=FALSE}
-top_10_ar_players <- y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "AR", status = "ALL", debug = FALSE)
-```
+Top 10 players filtered by all ownership types sorted by original (preseason) rank ("OR").
 
-```{r}
-top_10_ar_players
-```
+    y_players("411.l.1239", token_name = my_token, number_of_players = 10, sort = "OR", status = "ALL")
 
-Top 10 players sorted by goals (stat="1")
+Top 10 players filtered by all ownership types and sorted by goals (stat="1").
 
-```{r y_players top 10 goals, include=FALSE}
-with_mock_api({
-  top_10_ar_players <-
-  y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "1", status = "ALL", debug = FALSE)
-})
-```
+    y_players("411.l.1239", token_name = my_token, number_of_players = 10, sort = "1", status = "ALL")
 
-```{r, eval=FALSE}
-top_10_ar_players <-
-  y_players("411.l.1239", token_name = my_token, number_of_players = 10, start = 0, sort = "1", status = "ALL", debug = FALSE)
-```
+### Get draft results and ADP's.
 
-```{r}
-top_10_ar_players
-```
+I want to see the draft results from my league.  You must be able to that? Right you are! And average draft positions too?? ;)
 
-### y_draft_results
+#### `y_draft_results()`
 
-Takes a league or team id.
-```{r y_draft_results, eval=FALSE}
-# Not run
-league_draft <- y_draft_results("411.l.1239", token_name = my_token, debug = FALSE)
+League key:
 
-or
+    y_draft_results("411.l.1239", token_name = my_token, debug = FALSE, quiet = TRUE)
 
-team_draft <- y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE)
-```
+Or a team key:
 
-```{r, include=FALSE}
-with_mock_api({
-  team_draft <- y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE)
-})
-```
+    y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE, quiet = TRUE)
 
-Here's the draft for team 1
-```{r, eval=FALSE}
-team_draft <- y_draft_results("411.l.1239.t.1", token_name = my_token, debug = FALSE)
-```
 
-```{r}
-team_draft
-```
+Who is player 411.p.2453? What is this mess?
 
-The Yahoo! API doesn't return player names with this call but can be used with `y_players()` or `y_rosters()`
+The resource return from draft results is underwhelming as it doesn't include the player names or positions or anything intelligible.  Unless maybe you're Pierre Mcguire who surely has all these keys memorized.  But fear not....
 
-#### Examples
+Because the functions accept a vector of keys the player_key vector from draft_results can be used with `y_players()` or `y_rosters()`.
 
+#### `y_draft_adp()`
+I'm sure some viz enthusiasts will enjoy gettign their mitts on these numbers.  If given a game or league key the return will be eerily similar to `y_player_slate()` except it will have those 4 extra columns provided by the draft analysis sub-resource.  Ta Da!
+
+Game key.
+    `y_draft_adp(key = "411", token_name = my_token)`
+    
+League key.
+    `y_draft_adp(key = "411.l.1239", token_name = my_token)`
+    
+Player key.
+Last but not least probably the most succinct way to use `y_draft_adp()`, supply a vector of player keys. The player resource will contain the least amount of additional overhead information.
+
+    y_draft_adp(key = vector_of_player_keys, token_name = my_token)
+
+##### Examples
+
+    unreadable_drafted_players <- y_draft_results("411.l.1239.t.1", token_name = my_token)
+    
+    my_player_keys <- unreadable_drafted_players$draft_result_player_key
+    
+    readable_drafted_players <- y_players(key = my_player_keys, token_name = my_token
+    
 See which players drafted by a team are still currently on the team's roster.
 
-```{r, include=FALSE}
-with_mock_api({
-remaining_players <-
-  dplyr::inner_join(
-    y_rosters(id = "411.l.1239.t.1", my_token, debug = FALSE),
-    y_draft_results(id = "411.l.1239.t.1", my_token, debug = FALSE),
-    by = "player_key"
-  ) %>%
-  dplyr::select("player_full")
-})
-```
+    dplyr::inner_join(
+      y_rosters(key = "411.l.1239.t.1", my_token, debug = FALSE),
+      y_draft_results(key = "411.l.1239.t.1", my_token, debug = FALSE),
+      by = "player_key"
+    ) %>% 
+      dplyr::select("player_full")
 
-```{r, eval=FALSE}
-remaining_players <-
-  dplyr::inner_join(
-    y_rosters(id = "411.l.1239.t.1", my_token, debug = FALSE),
-    y_draft_results(id = "411.l.1239.t.1", my_token, debug = FALSE),
-    by = "player_key"
-  ) %>%
-  dplyr::select("name_full")
-```
+### Get scoreboard data.
+Is there a way to see all the league matchups?  YFAR says hold my beer and returns league wide matchup data.  Takes an integer week argument and the NULL default returns the current week.
 
-```{r}
-remaining_players
-```
+#### `y_scoreboard()`
 
-### y_matchups vs y_scoreboard
+    y_scoreboard(league_key = "411.l.1239", token_name = my_token, week = NULL, debug = FALSE, quiet = TRUE)
 
-Well what's the difference between y_matchups and y_scoreboard?  They are similar and "under the hood" they use the same parsing functions but y_matchups takes a team_id where y_scoreboard takes a league_id.
+An inevitable question :
+
+Well what's the difference between y_matchups and y_scoreboard?  
+
+They are similar and "under the hood" they use the same parsing functions but y_matchups takes a team key where y_scoreboard takes a league key.
 
 In theory one could achieve the same return using y_matchups and mapping over the team_id's of a league but calling y_scoreboard is obviously easier.
 
 So.....
 
-#### y_matchups
+##### Examples
 
-How do I see my matchups? Default arguments return past and current matchups
-```{r y_matchup, include=FALSE}
-with_mock_api({
-my_matchups <- y_matchups("411.l.1239.t.1", my_token)
-})
-```
+Multiple leagues
 
-```{r, eval=FALSE}
-my_matchups <- y_matchups("411.l.1239.t.1", my_token)
-```
-
-```{r}
-my_matchups
-```
-
-Also takes a week argument. Return week 8 matchup.
-```{r y_matchup week 8, include=FALSE}
-with_mock_api({
-my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
-})
-```
-
-```{r, eval=FALSE}
-my_week_8_matchup <- y_matchups("411.l.1239.t.1", my_token, week = 8)
-```
-
-```{r}
-my_week_8_matchup
-```
-
-#### Examples
+    y_scoreboard(league_key = c(league_1_key, league_2_key), token_name = my_token)
 
 Multiple weeks
 
-    y_matchups("411.l.1239.t.1", my_token, week = c(1, 8))
+    y_scoreboard(league_key = "411.l.1239", token_name = my_token, week = c(4, 5))
+    
+Both
+    
+    y_scoreboard(league_key = c(league_1_key, league_2_key), my_token, week = c(4, 5))
+    
+### Get standings data.
+Wins, losses, win percentages, ya dig? Lets see some standings info!
+
+#### `y_standings()`
+Sad story,
+
+This function is best use with `y_teams()` to supply a vector to team keys from a league.
+It seems you should be able to supply a league key to this function but for some reason the request returns a bunch of team stats data and I wanted to keep that in the `y_team_stats()` function.
+
+So lets start with one team.  This returns team and standings info.
+
+    y_standings("41l.l.1239.t.1", my_token, debug = FALSE, quiet = TRUE)
+
+##### Examples
+
+All teams in your league
+
+    teams_in_my_league <- y_teams(team_key = "411.l.1239", my_token)
+    
+    y_standings(team_key = teams_in_my_league, my_token)
+    
+### Get roster data.
+
+If you are looking for the roster function here it is.  I put it at the bottle in a silly attempt to troll. I figure this is gonna be the most used function in the package but wanted to advertise the rest
+
+#### `y_rosters()`
+
+    y_rosters(key = NULL, token_name = NULL, game_date = NULL, debug = FALSE,                    quiet = TRUE)
+
+##### Examples
+
+League rosters
+
+    y_rosters(key = "411.l.1239", token_name = my_token, game_date = NULL, debug = FALSE, quiet = TRUE)
+
+Team Roster
+
+    y_rosters(key = "411.l.1239.t.1", token_name = my_token, game_date = NULL, debug = FALSE, quiet = TRUE)
+
+Date argument
+
+A date argument can be supplied in the form YYYY-MM-DD.
+
+    team_roster_w_date <- y_rosters(key = "411.l.1239.t.1", token_name = my_token, game_date = "2021-10-12")
+
+Multiple dates
+
+Create a date sequence from fantasy week 1 using return from `y_weeks()`.
+
+    weeks <- y_weeks(game_key = 411, token_name = my_token)
+
+    week_1 <- seq.Date(
+                from = lubridate::ymd(weeks$start[1]), 
+                to = lubridate::ymd(weeks$end[1]), 
+                by = 1)
+
+Use dates in `week_1` as `game_date` argument in `y_rosters`.
+
+    y_rosters(key = "411.l.1239.t.1", token_name = my_token, game_date = week_1)
 
 Multiple teams
 
-    teams <- c("411.l.1239.t.1", "411.l.1239.t.8")
+    y_rosters(key = c(team_1, team_2), token_name = my_token, game_date = week_1)
 
-    purrr::map_df(teams, y_matchups, my_token, week = 1)
+Multiple Teams and Dates
 
-Multiple teams with multiple weeks
+    y_rosters(key = c(team_1, team_2), token_name = my_token, game_date = c("2021-12-01", "2021-12-02"))
 
-    purrr::map_df(teams, y_matchups, my_token, week = c(1, 8))
+### Get player stats.
+The survey says this is the number 2 answer to "why are you here?".  Let's see some player stats! 
+Unfortunately again this function is dependent on those pesky keys.  To get stats for players use a vector of player keys.
 
-#### y_scoreboard
+#### `y_player_stats()`
 
-```{r, include=FALSE}
-with_mock_api({
-league_matchups <- y_scoreboard("411.l.1239", my_token)
-})
-```
-
-```{r, eval=FALSE}
-league_matchups <- y_scoreboard("411.l.1239", my_token)
-```
-
-```{r}
-league_matchups
-```
-
-#### Examples
-
-Multiple weeks
-
-    y_scoreboard("411.l.1239", my_token, week = c(4, 5))
-
-### y_standings
-
-Get standings data
-```{r, include=FALSE}
-with_mock_api({
-standings <- y_standings("411.l.1239", my_token)
-})
-```
-
-```{r, eval=FALSE}
-standings <- y_standings("411.l.1239", my_token)
-```
-
-```{r}
-standings
-```
-
-### y_rosters
-
-I want to see the current roster for each team in my league.
-
-To retrieve the players which makeup a roster or rosters.  Accepts a team_key or league_key.
-
-### League Rosters
-
-Here a league key is supplied and a tibble with the current roster for each team is returned.
-```{r Rosters, eval=FALSE}
-# Not run
-rosters <- y_rosters(id = "411.l.1239", token_name = my_token)
-```
-
-#### Team Roster
-
-Alternatively supplying a team key will return the current roster for that team.
-```{r y_roster team, include=FALSE}
-with_mock_api({
-team_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
-})
-```
-
-```{r, eval=FALSE}
-team_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
-```
-
-```{r}
-team_roster
-```
-
-#### Date
-
-A date argument can be supplied.
-```{r team roster with date, include=FALSE}
-with_mock_api({
-team_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token, game_date = "2021-10-12")
-})
-```
-
-```{r, eval=FALSE}
-team_roster_w_date <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
-```
-
-```{r}
-team_roster_w_date
-```
-
-#### Examples
-
-##### Multiple dates
-
-Map over multiple dates
-```{r map over multiple dates}
-# create a date sequence from fantasy week 1 using return from `y_weeks()`
-week_1 <-
-  seq.Date(from = lubridate::ymd(weeks$start[1]), to = lubridate::ymd(weeks$end[1]), by = 1)
-```
-
-```{r, eval=FALSE}
-# map over the date sequence to get roster for those dates
-#Not run
-purrr::map_df(.x = week_1, .f = y_rosters, id = "411.l.1239.t.1", token_name = my_token)
-```
-
-##### Multiple teams
-
-You can map over multiple teams.  Here team 1 and 2 are returned in a list.
-
-    purrr::map(
-    c("411.l.1239.t.1", "411.l.1239.t.2"),
-    y_rosters,
-    token_name = my_token,
-    debug = FALSE)
-
-##### Multiple Teams and Dates
-
-    purrr::map_df(
-    .x = c("411.l.1239.t.1", "411.l.1239.t.1"),
-    .f = y_rosters,
-    token_name = my_token,
-    game_date = c("2021-12-01", "2021-12-02"),
-    debug = FALSE)
-
-### y_player_stats
-
-Let's see some player stats! To get stats for players using player keys.
-
+    y_player_stats(player_key = NULL, token_name = NULL, game_date = NULL, debug = FALSE, quiet = TRUE)
+    
 Here's a basic example using Leon Draisaitl.
-```{r y_player_stats, include=FALSE}
-with_mock_api({
-draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token)
-})
-```
 
-```{r, eval=FALSE}
-draisaitl_stats <- y_player_stats(players = "411.p.6369", token_name = my_token)
-```
-
-```{r}
-draisaitl_stats %>%
-  dplyr::select(g:sog)
-```
+    draisaitl_stats <- y_player_stats(player_key = "411.p.6369", token_name = my_token)
 
 Well that's bs why can't I just use the player's name!? Where did you get that player key number anyways?
 
@@ -652,43 +533,28 @@ Well that's bs why can't I just use the player's name!? Where did you get that p
       - `y_players()`
       - `y_rosters()`
 
+#### Examples
+
 Here's an example from the public league.
 
-```{r, include=FALSE}
-with_mock_api({
-team_1_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
-})
-```
-
-```{r, eval=FALSE}
-team_1_roster <- y_rosters(id = "411.l.1239.t.1", token_name = my_token)
-```
-
-```{r}
-team_1_roster %>%
-  dplyr::select(player_key, player_full)
-```
+    y_rosters(id = "411.l.1239.t.1", token_name = my_token)
 
 OK so what? I have to write down those numbers and run this function for each player?
 
 Nope! `y_player_stats()` can take a vector of player keys.  Here's how using our roster from the last example.
 
-```{r, eval=FALSE}
-# Not run
-  my_player_stats <- y_player_stats(players = team_1_roster$player_key, token_name = my_token)
-```
+    y_player_stats(player_key = team_1_roster$player_key, token_name = my_token)
 
 OK well that's pretty good but what if I only want stats for my players from yesterday?
 
-    yesterday_stats <- 
-      y_player_stats(
-      players = team_1_roster$player_key,
-      token_name = my_token,
-      game_date = Sys.Date() - 1)
+      y_player_stats(player_key = team_1_roster$player_key, token_name = my_token, 
+                      game_date = Sys.Date() - 1)
 
-And can it get my players stats for week 7?  Yes! You can supply a vector of dates to `y_player_stats()`
+And can it get my players stats for week 7?  Yes! You can supply a vector of dates.
 
 Using y_weeks we can find the start and end date for week 7.
+
+    weeks <- y_weeks(game_key = 411, token_name = my_token)
 
     week_7 <- 
       weeks %>%

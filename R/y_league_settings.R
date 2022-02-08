@@ -1,96 +1,138 @@
-#' Get specific league settings from Yahoo! Fantasy API.
+#' Get league settings data from Yahoo! Fantasy API.
 #'
-#' Each Yahoo! Fantasy league can have it's own specific settings and this function will
-#' get them for you.
+#' Each Yahoo! Fantasy league can have unique settings.  Given a valid league key this
+#'   function and this function will get those settings for you.
 #'
-#' @param league_id League id as a string in the form "000.l.0000".  League id can be found with y_games().
-#' @param token_name Assigned object name used when creating token with y_create_token().
-#' @param debug returns a list of data such as uri call and content.  Useful for debugging.
-#'
-#' @return a list
+#' @param league_key League key as a string or vector of strings in the form "000.l.0000".
+#'    League key can be found with `y_games()`.
+#' @param token_name Name used for assignment when creating token object with `y_create_token()`.
+#' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
+#' @param quiet Print function activity.
+#' @importFrom zeallot `%<-%`
+#' @return A tibble
 #' @export
-y_league_settings <- function(league_id = NULL, token_name = NULL, debug = FALSE){
+y_league_settings <- function(league_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE){
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                    TOKEN                                 ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # Standardize token name.
+    api_token <- token_name
+    .token_check(token_name, api_token, name = .GlobalEnv)
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    resource <- "league"
+    resource <- "leagues"
     subresource <- "settings"
-    api_token <- token_name
+    uri_out <- "league_keys="
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                    CHECKS                                ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    .league_id_check(league_id)
-    .token_check(token_name, api_token, name = .GlobalEnv)
+    # Check if keys are type league, remove FALSE and duplicates.
+    key <- .single_resource_key_check(league_key, .league_key_check)
+
+    # quiet
+    if(!quiet){cat(crayon::cyan("Resource is", resource, "\n"), sep = "")}
+    if(!quiet){cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                     URI                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    uri <-
-        httr::modify_url(
-            url = "https://fantasysports.yahooapis.com",
-            path = paste("fantasy/v2", resource, league_id, subresource, sep = "/"),
-            query = "format=json"
-        )
+
+    # Initial uri components
+    uri_parsed <- structure(
+        list(
+            scheme = "https",
+            hostname = "fantasysports.yahooapis.com/fantasy/v2",
+            port = NULL,
+            path = resource,
+            query = list(format = "json"),
+            params = NULL
+        ),
+        class = "url"
+    )
+
+    key_path <-
+        .uri_path_packer(key)
+
+    # Create paths using .uri_path_package(key) to pack player keys into groups of 25.
+    uri_parsed$params <- stringr::str_c(uri_out, key_path, "/", subresource, sep = "")
+
+    # Build uris.
+    uri <- httr::build_url(uri_parsed)
+
+    if(!quiet){cat(crayon::cyan("uri is...\n", uri), sep = "\n")}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                GET RESPONSE                              ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     r <-
-        .y_get_response(uri, api_token)
+        purrr::map(uri, .y_get_response, api_token)
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                   CONTENT                                ----
+    ##                          CHECK RESPONSE FOR ERRORS                       ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    r_parsed <-
-        .y_parse_response(r, "fantasy_content", "league")
+    if(sum(!purrr::map_lgl(r, httr::http_error)) <= 0){
+        stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
+    }
 
-    #...................... league scoring type......................
-
-    # Get league scoring type
-
-    scoring_type <-
-        r_parsed[[1]][["scoring_type"]]
-
-    cat(league_id, "is a", scoring_type, "league, returning league settings\n")
+    r <- r[!purrr::map_lgl(r, httr::http_error)]
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                PARSE CONTENT                             ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    # decide which helper to run based on scoring type, "points" or "categories"
-    # this is found in the response content league info > scoring type
+    r_parsed <-
+        purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
-    df <- if(scoring_type != "point") {
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                      DF                                  ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        .category_league_settings(r_parsed)
 
-    } else if (scoring_type == "point") {
+    if(!debug) {
 
-        .point_league_settings(r_parsed)
+        preprocess <-
+            r_parsed %>%
+            purrr::flatten() %>%
+            purrr::keep(purrr::is_list)
+
+        df <-
+            tryCatch(
+                expr =
+                    purrr::map_df(preprocess, .settings_subresource_parse_fn, .league_settings_parse_fn),
+
+                error = function(e) {
+                    message(crayon::cyan(
+                        "Function failed while parsing games resource with settings_parse_fn. Returning debug list."))
+                }
+            )
+
+        if(tibble::is_tibble(df)){return(df)}
     }
 
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##                                    RETURN                                ----
-    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    if(!debug){return(df)}
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                DEBUG RETURN                              ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     data_list <-
-        structure(
-            list(
-                content = r_parsed,
-                uri = uri,
-                scoring_type = scoring_type,
-                data = df
-            ),
-            class = "yahoo_fantasy_api")
+        structure(list(
+            resource = resource,
+            response = r,
+            content = r_parsed,
+            uri = uri
+        ),
+        class = "yahoo_fantasy_api")
 
     return(data_list)
 }

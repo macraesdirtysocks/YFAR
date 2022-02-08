@@ -2,24 +2,25 @@
 % Please edit documentation in R/y_games.R
 \name{y_games}
 \alias{y_games}
-\title{Get all Yahoo! Fantasy hockey meta data.}
+\title{Get user game data from Yahoo! Fantasy API}
 \usage{
-y_games(token_name = NULL, quiet = FALSE, debug = FALSE)
+y_games(token_name = NULL, debug = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
-
-\item{quiet}{Toggle function messages.}
+\item{token_name}{Name used for assignment when creating token object with y_create_token().}
 
 \item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Toggle function messages.}
 }
 \value{
-a tibble
+A tibble
 }
 \description{
-Returns a tibble containing all the meta data for all fantasy hockey
-games and leagues participated in by the logged in user including those which
-are currently active.
+Returns a tibble containing descriptive meta data for all Yahoo! fantasy
+   games and leagues participated in by the logged in user.  Data returned
+   describes both past and current games and includes but is not limited to
+   game codes, year, scoring type and league name.
 }
 \details{
 Function is memoised

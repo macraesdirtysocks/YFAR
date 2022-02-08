@@ -34,7 +34,11 @@ Imports:
     lubridate,
     progress,
     usethis,
-    tidyselect
+    tidyselect,
+    crayon,
+    vctrs,
+    sjmisc,
+    zeallot
 URL: https://github.com/macraesdirtysocks/YFAR
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
 Remotes: 

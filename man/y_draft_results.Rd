@@ -2,20 +2,35 @@
 % Please edit documentation in R/y_draft_results.R
 \name{y_draft_results}
 \alias{y_draft_results}
-\title{Get draft results}
+\title{Get draft results data from Yahoo! Fantasy API}
 \usage{
-y_draft_results(id = NULL, token_name = NULL, debug = FALSE)
+y_draft_results(key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE)
 }
 \arguments{
-\item{id}{League id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.}
+\item{key}{A vector of league or team keys as strings in the form "000.l.0000" or "000.l.0000.t.0".
+Keys can be found with `y_games()` and `y_teams()`.}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
 
 \item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list or tibble
+A tibble
 }
 \description{
-Get draft results
+This function returns the draft results for a league or team key.  Function accepts a vector of keys
+  however they cannot be mixed.  If a mixed type of key is provided the function will select the majority
+  key type and query the uri using those keys.
+}
+\details{
+Oddly the only reference to the players this resource returns are the player keys and player ids so
+  this function is best used in tandem with `y_players()` or having a local copy of a league's
+  player slate for joining player names.
+}
+\examples{
+# Not run
+# y_draft_results("411.l.1239", my_token)
+
 }

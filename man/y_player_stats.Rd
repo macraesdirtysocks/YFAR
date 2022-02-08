@@ -2,29 +2,37 @@
 % Please edit documentation in R/y_player_stats.R
 \name{y_player_stats}
 \alias{y_player_stats}
-\title{Get player stats}
+\title{Get player stats data from Yahoo! Fantasy API.}
 \usage{
 y_player_stats(
-  players = NULL,
+  player_key = NULL,
   token_name = NULL,
   game_date = NULL,
-  debug = FALSE
+  debug = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
-\item{players}{player keys.  Keys are in the form xxx.p.xxxx and found using
-`y_players()`, `y_player_slate()` or `y_rosters()`}
+\item{player_key}{Vector of player keys. Key usually in the form xxx.p.xxxx.
+Found with `y_players()`, `y_player_slate()` or `y_rosters()`}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{game_date}{Date of fantasy season in form YYYY-MM-DD to return.
-Default is NULL which will return aggregate stats for current season.  Accepts a vector of dates.}
+\item{game_date}{Date or week of fantasy season.
+Default NULL will return aggregate stats for current season.  Accepts a vector of dates.}
 
 \item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a tibble or list
+A tibble
 }
 \description{
-Get player stats
+Want stats for a player or group of players?  Provide a vector of player keys and ye shall receive.
+}
+\details{
+Want stats for a specific date? Provide a vector of game dates in form YYYY-MM-DD (%Y-%m-%d).
+  Default game date NUll will return aggregate stats for the season.
+  For weekly sports such as nfl you can provide an integer denoting a fantasy week.
 }

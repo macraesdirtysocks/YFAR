@@ -1,34 +1,149 @@
 library(YFAR)
 
-with_mock_api({
+test_that("y_transactions uri generates properly",{
 
-    testthat::test_that("request returns valid response and is parsed to a tibble",{
+    y_weeks_uri_gen_test_fn <- function(game_key = NULL){
 
-        uri <- "https://fantasysports.yahooapis.com/fantasy/v2/game/411/game_weeks?format=json"
-        r <- .y_get_response(uri = uri)
-        testthat::expect_identical(r$url, uri)
-        testthat::expect_s3_class(r, class = "response")
-        testthat::expect_identical(httr::http_type(r), "application/json")
-        testthat::expect_false(httr::http_error(r))
-        testthat::expect_identical(
-            names(.y_parse_response(r, "fantasy_content")), "game")
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                  ARGUMENTS                               ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        r_parsed <- .y_parse_response(r, "fantasy_content", "game")
+        resource <- "games"
+        subresource <- "game_weeks"
+        uri_out <- "game_keys="
 
-        testthat::expect_equal(length(r_parsed), 2)
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                    CHECKS                                ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        df <-
-            r_parsed %>%
-            purrr::pluck(1) %>%
-            dplyr::bind_rows()
+        # Check if keys are type league, remove FALSE and duplicates.
+        key <- .single_resource_key_check(game_key, .game_key_check)
 
-        testthat::expect_equal(tibble::is_tibble(df), TRUE)
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                     URI                                  ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        x <- c("game_key",
-               "game_id", "name", "code", "type", "url", "season", "is_registration_over",
-               "is_game_over", "is_offseason")
+        # Initial uri components
+        uri_parsed <- structure(
+            list(
+                scheme = "https",
+                hostname = "fantasysports.yahooapis.com/fantasy/v2",
+                port = NULL,
+                path = resource,
+                query = list(format = "json"),
+                params = NULL
+            ),
+            class = "url"
+        )
 
-        testthat::expect_named(df, x, ignore.order = TRUE, ignore.case = TRUE)
+        key_path <-
+            .uri_path_packer(key, 25)
 
-    })
+        uri_parsed$params <-
+            stringr::str_c(uri_out, key_path, "/", subresource, sep = "")
+
+        uri <- httr::build_url(uri_parsed)
+    }
+
+
+    expect_identical(
+        y_weeks_uri_gen_test_fn("411"),
+        "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=411/game_weeks?format=json")
+
+    expect_identical(
+        y_weeks_uri_gen_test_fn(c("411", "406")),
+        "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=411,406/game_weeks?format=json")
+
+    expect_identical(
+        y_weeks_uri_gen_test_fn(c("411", "406", "411.l.1239")),
+        "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=411,406/game_weeks?format=json")
+
+    expect_identical(
+        y_weeks_uri_gen_test_fn(c("411", "406", "411.l.1239", "411.l.1239", "411.l.1240")),
+        "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=411,406/game_weeks?format=json")
+
+    expect_identical(
+        y_weeks_uri_gen_test_fn(c("411", "406", "411.l.1239", "411.l.1239", "411.l.1240")),
+        "https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=411,406/game_weeks?format=json")
+
+    expect_error(
+        y_weeks_uri_gen_test_fn()
+        )
+
+})
+
+
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                                                            ~~
+##                                GAMES PARSE                               ----
+##                                                                            ~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+test_that("y_weeks response is valid and parsed to a tibble",{
+
+    # Declare desired mock uri.
+    mock_uri <-
+        "https://fantasysports.yahooapis.com/fantasy/v2/games;411/game_weeks?format=json"
+
+    # Expected resource
+    resource <-
+        "games"
+
+    # Get response.
+    r <-
+        with_mock_api({
+            purrr::map(mock_uri, .y_get_response)
+        })
+
+    # Parsed response.
+    r_parsed <-
+        purrr::map(r, .y_parse_response, "fantasy_content", resource)
+
+    # Test that response uri and declared uri are equal.
+    expect_equal(mock_uri,
+                 purrr::map_chr(r, purrr::pluck, "url"))
+
+    # Test not null.
+    expect_true(!is.null(r_parsed))
+
+    # Test not empty.
+    expect_true(!purrr::is_empty(r_parsed))
+
+    # Define parse function relative to resource value.
+
+    # Resource parse function dependent on resource.
+    subresource_parse_fn <- function(x){
+        x %>%
+            purrr::pluck("game_week") %>%
+            dplyr::bind_cols()
+    }
+
+    preprocess <-
+        r_parsed %>%
+        purrr::flatten()
+
+    # DF
+    df <-
+        purrr::map_df(preprocess, .game_resource_parse_fn, subresource_parse_fn) %>%
+        dplyr::mutate(matchup_length = difftime(end, start))
+
+    # Test that a tibble was returned from parsing.
+    expect_true(tibble::is_tibble(df), TRUE)
+
+    # Expected colnames.
+    expected_colnames <-
+        c("game_key", "game_id", "game_name", "game_code", "game_type",
+          "game_url", "game_season", "game_is_registration_over", "game_is_game_over",
+          "game_is_offseason", "week", "display_name", "start", "end",
+          "matchup_length")
+
+    # Test df colnames
+    expect_named(df,
+                 expected_colnames,
+                 ignore.order = TRUE,
+                 ignore.case = TRUE)
+
 })

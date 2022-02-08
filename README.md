@@ -30,11 +30,11 @@ devtools::install_github("https://github.com/macraesdirtysocks/YFAR")
 
   - At its core YFAR has 3 types of functions:
       - **Authentication**
-      - **Auxiliary data functions**
+      - **Accessory Functions**
           - Uninteresting but useful. Mostly for acquiring data to
             supply as arguments to other functions i.e. weeks, dates,
             team ids, league ids, etc.
-      - **Mains**
+      - **The Beef**
           - Probably why you are here. Rosters, stats, standings,
             matchups etc.
 

@@ -1,0 +1,1767 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/teams;team_keys=411.l.1239.t.1/transactions",
+        "teams": {
+            "0": {
+                "team": [
+                    [
+                        {
+                            "team_key": "411.l.1239.t.1"
+                        },
+                        {
+                            "team_id": "1"
+                        },
+                        {
+                            "name": "Shoe's Extraordinary Team"
+                        },
+                        [
+
+                        ],
+                        {
+                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/1"
+                        },
+                        {
+                            "team_logos": [
+                                {
+                                    "team_logo": {
+                                        "size": "large",
+                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
+                                    }
+                                }
+                            ]
+                        },
+                        [
+
+                        ],
+                        {
+                            "waiver_priority": 10
+                        },
+                        {
+                            "faab_balance": "75"
+                        },
+                        {
+                            "number_of_moves": "17"
+                        },
+                        {
+                            "number_of_trades": 0
+                        },
+                        {
+                            "roster_adds": {
+                                "coverage_type": "week",
+                                "coverage_value": 16,
+                                "value": "0"
+                            }
+                        },
+                        [
+
+                        ],
+                        {
+                            "league_scoring_type": "head"
+                        },
+                        [
+
+                        ],
+                        {
+                            "draft_position": 2
+                        },
+                        {
+                            "has_draft_grade": 0
+                        },
+                        [
+
+                        ],
+                        [
+
+                        ],
+                        {
+                            "managers": [
+                                {
+                                    "manager": {
+                                        "manager_id": "1",
+                                        "nickname": "--hidden--",
+                                        "guid": "KOSXQIEKZPXPGVTDOYXJM7NTM4",
+                                        "felo_score": "910",
+                                        "felo_tier": "diamond"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    {
+                        "transactions": {
+                            "0": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.293",
+                                        "transaction_id": "293",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1643011856"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5992"
+                                                        },
+                                                        {
+                                                            "player_id": "5992"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Josh Morrissey",
+                                                                "first": "Josh",
+                                                                "last": "Morrissey",
+                                                                "ascii_first": "Josh",
+                                                                "ascii_last": "Morrissey"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Wpg"
+                                                        },
+                                                        {
+                                                            "display_position": "D"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5958"
+                                                        },
+                                                        {
+                                                            "player_id": "5958"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Nick Jensen",
+                                                                "first": "Nick",
+                                                                "last": "Jensen",
+                                                                "ascii_first": "Nick",
+                                                                "ascii_last": "Jensen"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Was"
+                                                        },
+                                                        {
+                                                            "display_position": "D"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "1": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.270",
+                                        "transaction_id": "270",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1642406937",
+                                        "faab_bid": "3"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3982"
+                                                        },
+                                                        {
+                                                            "player_id": "3982"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Nicklas Backstrom",
+                                                                "first": "Nicklas",
+                                                                "last": "Backstrom",
+                                                                "ascii_first": "Nicklas",
+                                                                "ascii_last": "Backstrom"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Was"
+                                                        },
+                                                        {
+                                                            "display_position": "C"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7528"
+                                                        },
+                                                        {
+                                                            "player_id": "7528"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Nick Suzuki",
+                                                                "first": "Nick",
+                                                                "last": "Suzuki",
+                                                                "ascii_first": "Nick",
+                                                                "ascii_last": "Suzuki"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "C,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "2": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.269",
+                                        "transaction_id": "269",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1642406937",
+                                        "faab_bid": "4"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.8291"
+                                                        },
+                                                        {
+                                                            "player_id": "8291"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Spencer Knight",
+                                                                "first": "Spencer",
+                                                                "last": "Knight",
+                                                                "ascii_first": "Spencer",
+                                                                "ascii_last": "Knight"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Fla"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.4589"
+                                                        },
+                                                        {
+                                                            "player_id": "4589"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Jake Allen",
+                                                                "first": "Jake",
+                                                                "last": "Allen",
+                                                                "ascii_first": "Jake",
+                                                                "ascii_last": "Allen"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "3": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.238",
+                                        "transaction_id": "238",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1641197359"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.4961"
+                                                        },
+                                                        {
+                                                            "player_id": "4961"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Taylor Hall",
+                                                                "first": "Taylor",
+                                                                "last": "Hall",
+                                                                "ascii_first": "Taylor",
+                                                                "ascii_last": "Hall"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Bos"
+                                                        },
+                                                        {
+                                                            "display_position": "LW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7083"
+                                                        },
+                                                        {
+                                                            "player_id": "7083"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Brandon Tanev",
+                                                                "first": "Brandon",
+                                                                "last": "Tanev",
+                                                                "ascii_first": "Brandon",
+                                                                "ascii_last": "Tanev"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Sea"
+                                                        },
+                                                        {
+                                                            "display_position": "LW,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "4": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.236",
+                                        "transaction_id": "236",
+                                        "type": "drop",
+                                        "status": "successful",
+                                        "timestamp": "1641008771"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3980"
+                                                        },
+                                                        {
+                                                            "player_id": "3980"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Jordan Staal",
+                                                                "first": "Jordan",
+                                                                "last": "Staal",
+                                                                "ascii_first": "Jordan",
+                                                                "ascii_last": "Staal"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Car"
+                                                        },
+                                                        {
+                                                            "display_position": "C"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "5": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.176",
+                                        "transaction_id": "176",
+                                        "type": "add",
+                                        "status": "successful",
+                                        "timestamp": "1638518932"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.4003"
+                                                        },
+                                                        {
+                                                            "player_id": "4003"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Semyon Varlamov",
+                                                                "first": "Semyon",
+                                                                "last": "Varlamov",
+                                                                "ascii_first": "Semyon",
+                                                                "ascii_last": "Varlamov"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "NYI"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "6": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.163",
+                                        "transaction_id": "163",
+                                        "type": "drop",
+                                        "status": "successful",
+                                        "timestamp": "1638326233"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5053"
+                                                        },
+                                                        {
+                                                            "player_id": "5053"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Bryan Rust",
+                                                                "first": "Bryan",
+                                                                "last": "Rust",
+                                                                "ascii_first": "Bryan",
+                                                                "ascii_last": "Rust"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Pit"
+                                                        },
+                                                        {
+                                                            "display_position": "LW,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "7": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.159",
+                                        "transaction_id": "159",
+                                        "type": "add",
+                                        "status": "successful",
+                                        "timestamp": "1638259729"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6726"
+                                                        },
+                                                        {
+                                                            "player_id": "6726"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Evan Rodrigues",
+                                                                "first": "Evan",
+                                                                "last": "Rodrigues",
+                                                                "ascii_first": "Evan",
+                                                                "ascii_last": "Rodrigues"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Pit"
+                                                        },
+                                                        {
+                                                            "display_position": "C,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "8": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.158",
+                                        "transaction_id": "158",
+                                        "type": "drop",
+                                        "status": "successful",
+                                        "timestamp": "1638232255"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6744"
+                                                        },
+                                                        {
+                                                            "player_id": "6744"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Jack Eichel",
+                                                                "first": "Jack",
+                                                                "last": "Eichel",
+                                                                "ascii_first": "Jack",
+                                                                "ascii_last": "Eichel"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "VGK"
+                                                        },
+                                                        {
+                                                            "display_position": "C"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "9": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.141",
+                                        "transaction_id": "141",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1637482124",
+                                        "faab_bid": "2"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3351"
+                                                        },
+                                                        {
+                                                            "player_id": "3351"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Dustin Brown",
+                                                                "first": "Dustin",
+                                                                "last": "Brown",
+                                                                "ascii_first": "Dustin",
+                                                                "ascii_last": "Brown"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "LA"
+                                                        },
+                                                        {
+                                                            "display_position": "RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5120"
+                                                        },
+                                                        {
+                                                            "player_id": "5120"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Brendan Gallagher",
+                                                                "first": "Brendan",
+                                                                "last": "Gallagher",
+                                                                "ascii_first": "Brendan",
+                                                                "ascii_last": "Gallagher"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "10": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.116",
+                                        "transaction_id": "116",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1636963724",
+                                        "faab_bid": "3"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5958"
+                                                        },
+                                                        {
+                                                            "player_id": "5958"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Nick Jensen",
+                                                                "first": "Nick",
+                                                                "last": "Jensen",
+                                                                "ascii_first": "Nick",
+                                                                "ascii_last": "Jensen"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Was"
+                                                        },
+                                                        {
+                                                            "display_position": "D"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3614"
+                                                        },
+                                                        {
+                                                            "player_id": "3614"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Mark Giordano",
+                                                                "first": "Mark",
+                                                                "last": "Giordano",
+                                                                "ascii_first": "Mark",
+                                                                "ascii_last": "Giordano"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Sea"
+                                                        },
+                                                        {
+                                                            "display_position": "D"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "11": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.107",
+                                        "transaction_id": "107",
+                                        "type": "add",
+                                        "status": "successful",
+                                        "timestamp": "1636618156"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6890"
+                                                        },
+                                                        {
+                                                            "player_id": "6890"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Troy Terry",
+                                                                "first": "Troy",
+                                                                "last": "Terry",
+                                                                "ascii_first": "Troy",
+                                                                "ascii_last": "Terry"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Anh"
+                                                        },
+                                                        {
+                                                            "display_position": "RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "12": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.106",
+                                        "transaction_id": "106",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1636618156"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3980"
+                                                        },
+                                                        {
+                                                            "player_id": "3980"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Jordan Staal",
+                                                                "first": "Jordan",
+                                                                "last": "Staal",
+                                                                "ascii_first": "Jordan",
+                                                                "ascii_last": "Staal"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Car"
+                                                        },
+                                                        {
+                                                            "display_position": "C"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5691"
+                                                        },
+                                                        {
+                                                            "player_id": "5691"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Filip Forsberg",
+                                                                "first": "Filip",
+                                                                "last": "Forsberg",
+                                                                "ascii_first": "Filip",
+                                                                "ascii_last": "Forsberg"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Nsh"
+                                                        },
+                                                        {
+                                                            "display_position": "LW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "13": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.90",
+                                        "transaction_id": "90",
+                                        "type": "drop",
+                                        "status": "successful",
+                                        "timestamp": "1636239330"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.8641"
+                                                        },
+                                                        {
+                                                            "player_id": "8641"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Alexis Lafreniere",
+                                                                "first": "Alexis",
+                                                                "last": "Lafreniere",
+                                                                "ascii_first": "Alexis",
+                                                                "ascii_last": "Lafreniere"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "NYR"
+                                                        },
+                                                        {
+                                                            "display_position": "LW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "14": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.79",
+                                        "transaction_id": "79",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1635928224",
+                                        "faab_bid": "2"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7083"
+                                                        },
+                                                        {
+                                                            "player_id": "7083"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Brandon Tanev",
+                                                                "first": "Brandon",
+                                                                "last": "Tanev",
+                                                                "ascii_first": "Brandon",
+                                                                "ascii_last": "Tanev"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Sea"
+                                                        },
+                                                        {
+                                                            "display_position": "LW,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6485"
+                                                        },
+                                                        {
+                                                            "player_id": "6485"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Michael Bunting",
+                                                                "first": "Michael",
+                                                                "last": "Bunting",
+                                                                "ascii_first": "Michael",
+                                                                "ascii_last": "Bunting"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Tor"
+                                                        },
+                                                        {
+                                                            "display_position": "LW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "15": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.78",
+                                        "transaction_id": "78",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1635928224",
+                                        "faab_bid": "11"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3782"
+                                                        },
+                                                        {
+                                                            "player_id": "3782"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Carey Price",
+                                                                "first": "Carey",
+                                                                "last": "Price",
+                                                                "ascii_first": "Carey",
+                                                                "ascii_last": "Price"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6818"
+                                                        },
+                                                        {
+                                                            "player_id": "6818"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Adin Hill",
+                                                                "first": "Adin",
+                                                                "last": "Hill",
+                                                                "ascii_first": "Adin",
+                                                                "ascii_last": "Hill"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "SJ"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "16": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.33",
+                                        "transaction_id": "33",
+                                        "type": "add",
+                                        "status": "successful",
+                                        "timestamp": "1634713740"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6485"
+                                                        },
+                                                        {
+                                                            "player_id": "6485"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Michael Bunting",
+                                                                "first": "Michael",
+                                                                "last": "Bunting",
+                                                                "ascii_first": "Michael",
+                                                                "ascii_last": "Bunting"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Tor"
+                                                        },
+                                                        {
+                                                            "display_position": "LW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "17": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.22",
+                                        "transaction_id": "22",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1634454535"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6818"
+                                                        },
+                                                        {
+                                                            "player_id": "6818"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Adin Hill",
+                                                                "first": "Adin",
+                                                                "last": "Hill",
+                                                                "ascii_first": "Adin",
+                                                                "ascii_last": "Hill"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "SJ"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7886"
+                                                        },
+                                                        {
+                                                            "player_id": "7886"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Kevin Lankinen",
+                                                                "first": "Kevin",
+                                                                "last": "Lankinen",
+                                                                "ascii_first": "Kevin",
+                                                                "ascii_last": "Lankinen"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Chi"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "18": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.11",
+                                        "transaction_id": "11",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1634108952"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5039"
+                                                        },
+                                                        {
+                                                            "player_id": "5039"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Radko Gudas",
+                                                                "first": "Radko",
+                                                                "last": "Gudas",
+                                                                "ascii_first": "Radko",
+                                                                "ascii_last": "Gudas"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Fla"
+                                                        },
+                                                        {
+                                                            "display_position": "D"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3782"
+                                                        },
+                                                        {
+                                                            "player_id": "3782"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Carey Price",
+                                                                "first": "Carey",
+                                                                "last": "Price",
+                                                                "ascii_first": "Carey",
+                                                                "ascii_last": "Price"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "19": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.10",
+                                        "transaction_id": "10",
+                                        "type": "add",
+                                        "status": "successful",
+                                        "timestamp": "1634108952"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.4589"
+                                                        },
+                                                        {
+                                                            "player_id": "4589"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Jake Allen",
+                                                                "first": "Jake",
+                                                                "last": "Allen",
+                                                                "ascii_first": "Jake",
+                                                                "ascii_last": "Allen"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "G"
+                                                        },
+                                                        {
+                                                            "position_type": "G"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "20": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1239.tr.9",
+                                        "transaction_id": "9",
+                                        "type": "add/drop",
+                                        "status": "successful",
+                                        "timestamp": "1634108952"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.4687"
+                                                        },
+                                                        {
+                                                            "player_id": "4687"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Nazem Kadri",
+                                                                "first": "Nazem",
+                                                                "last": "Kadri",
+                                                                "ascii_first": "Nazem",
+                                                                "ascii_last": "Kadri"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Col"
+                                                        },
+                                                        {
+                                                            "display_position": "C"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "add",
+                                                                "source_type": "waivers",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1239.t.1",
+                                                                "destination_team_name": "Shoe's Extraordinary Team"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3638"
+                                                        },
+                                                        {
+                                                            "player_id": "3638"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Evgeni Malkin",
+                                                                "first": "Evgeni",
+                                                                "last": "Malkin",
+                                                                "ascii_first": "Evgeni",
+                                                                "ascii_last": "Malkin"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Pit"
+                                                        },
+                                                        {
+                                                            "display_position": "C"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": {
+                                                            "type": "drop",
+                                                            "source_type": "team",
+                                                            "source_team_key": "411.l.1239.t.1",
+                                                            "source_team_name": "Shoe's Extraordinary Team",
+                                                            "destination_type": "waivers"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "count": 21
+                        }
+                    }
+                ]
+            },
+            "count": 1
+        },
+        "time": "40.853023529053ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

@@ -2,21 +2,29 @@
 % Please edit documentation in R/y_league_settings.R
 \name{y_league_settings}
 \alias{y_league_settings}
-\title{Get specific league settings from Yahoo! Fantasy API.}
+\title{Get league settings data from Yahoo! Fantasy API.}
 \usage{
-y_league_settings(league_id = NULL, token_name = NULL, debug = FALSE)
+y_league_settings(
+  league_key = NULL,
+  token_name = NULL,
+  debug = FALSE,
+  quiet = TRUE
+)
 }
 \arguments{
-\item{league_id}{League id as a string in the form "000.l.0000".  League id can be found with y_games().}
+\item{league_key}{League key as a string or vector of strings in the form "000.l.0000".
+League key can be found with `y_games()`.}
 
-\item{token_name}{Assigned object name used when creating token with y_create_token().}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
 
-\item{debug}{returns a list of data such as uri call and content.  Useful for debugging.}
+\item{debug}{Returns a list of data such as uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a list
+A tibble
 }
 \description{
-Each Yahoo! Fantasy league can have it's own specific settings and this function will
-get them for you.
+Each Yahoo! Fantasy league can have unique settings.  Given a valid league key this
+  function and this function will get those settings for you.
 }

@@ -1,0 +1,2218 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/games;game_keys=411,403,399/stat_categories",
+        "games": {
+            "0": {
+                "game": [
+                    {
+                        "game_key": "411",
+                        "game_id": "411",
+                        "name": "Hockey",
+                        "code": "nhl",
+                        "type": "full",
+                        "url": "https://hockey.fantasysports.yahoo.com/hockey",
+                        "season": "2021",
+                        "is_registration_over": 0,
+                        "is_game_over": 0,
+                        "is_offseason": 0
+                    },
+                    {
+                        "stat_categories": {
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": 0,
+                                        "name": "Games Played",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            },
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 1,
+                                        "name": "Goals",
+                                        "display_name": "G",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 2,
+                                        "name": "Assists",
+                                        "display_name": "A",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 3,
+                                        "name": "Points",
+                                        "display_name": "P",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 4,
+                                        "name": "Plus/Minus",
+                                        "display_name": "+/-",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 5,
+                                        "name": "Penalty Minutes",
+                                        "display_name": "PIM",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 6,
+                                        "name": "Powerplay Goals",
+                                        "display_name": "PPG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 7,
+                                        "name": "Powerplay Assists",
+                                        "display_name": "PPA",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 8,
+                                        "name": "Powerplay Points",
+                                        "display_name": "PPP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 9,
+                                        "name": "Shorthanded Goals",
+                                        "display_name": "SHG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 10,
+                                        "name": "Shorthanded Assists",
+                                        "display_name": "SHA",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 11,
+                                        "name": "Shorthanded Points",
+                                        "display_name": "SHP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 12,
+                                        "name": "Game-Winning Goals",
+                                        "display_name": "GWG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 13,
+                                        "name": "Game-Tying Goals",
+                                        "display_name": "GTG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 14,
+                                        "name": "Shots on Goal",
+                                        "display_name": "SOG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 15,
+                                        "name": "Shooting Percentage",
+                                        "display_name": "SH%",
+                                        "sort_order": "1",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "1"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "14"
+                                                }
+                                            }
+                                        ],
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 16,
+                                        "name": "Faceoffs Won",
+                                        "display_name": "FW",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 17,
+                                        "name": "Faceoffs Lost",
+                                        "display_name": "FL",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 18,
+                                        "name": "Games Started",
+                                        "display_name": "GS",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 19,
+                                        "name": "Wins",
+                                        "display_name": "W",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 20,
+                                        "name": "Losses",
+                                        "display_name": "L",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 21,
+                                        "name": "Ties",
+                                        "display_name": "T",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 22,
+                                        "name": "Goals Against",
+                                        "display_name": "GA",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 23,
+                                        "name": "Goals Against Average",
+                                        "display_name": "GAA",
+                                        "sort_order": "0",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "22"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "28"
+                                                }
+                                            }
+                                        ],
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 24,
+                                        "name": "Shots Against",
+                                        "display_name": "SA",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 25,
+                                        "name": "Saves",
+                                        "display_name": "SV",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 26,
+                                        "name": "Save Percentage",
+                                        "display_name": "SV%",
+                                        "sort_order": "1",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "25"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "24"
+                                                }
+                                            }
+                                        ],
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 27,
+                                        "name": "Shutouts",
+                                        "display_name": "SHO",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 28,
+                                        "name": "Time on Ice",
+                                        "display_name": "TOI",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 29,
+                                        "name": "F/D Games",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 30,
+                                        "name": "Goalie Games",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 31,
+                                        "name": "Hits",
+                                        "display_name": "HIT",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 32,
+                                        "name": "Blocks",
+                                        "display_name": "BLK",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 33,
+                                        "name": "Time on Ice",
+                                        "display_name": "TOI",
+                                        "sort_order": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 34,
+                                        "name": "Average Time on Ice",
+                                        "display_name": "TOI/G",
+                                        "sort_order": "1",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "33"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "29"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "1": {
+                "game": [
+                    {
+                        "game_key": "403",
+                        "game_id": "403",
+                        "name": "Hockey",
+                        "code": "nhl",
+                        "type": "full",
+                        "url": "https://hockey.fantasysports.yahoo.com/2020/hockey",
+                        "season": "2020",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    },
+                    {
+                        "stat_categories": {
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": 0,
+                                        "name": "Games Played",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            },
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 1,
+                                        "name": "Goals",
+                                        "display_name": "G",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 2,
+                                        "name": "Assists",
+                                        "display_name": "A",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 3,
+                                        "name": "Points",
+                                        "display_name": "P",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 4,
+                                        "name": "Plus/Minus",
+                                        "display_name": "+/-",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 5,
+                                        "name": "Penalty Minutes",
+                                        "display_name": "PIM",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 6,
+                                        "name": "Powerplay Goals",
+                                        "display_name": "PPG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 7,
+                                        "name": "Powerplay Assists",
+                                        "display_name": "PPA",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 8,
+                                        "name": "Powerplay Points",
+                                        "display_name": "PPP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 9,
+                                        "name": "Shorthanded Goals",
+                                        "display_name": "SHG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 10,
+                                        "name": "Shorthanded Assists",
+                                        "display_name": "SHA",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 11,
+                                        "name": "Shorthanded Points",
+                                        "display_name": "SHP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 12,
+                                        "name": "Game-Winning Goals",
+                                        "display_name": "GWG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 13,
+                                        "name": "Game-Tying Goals",
+                                        "display_name": "GTG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 14,
+                                        "name": "Shots on Goal",
+                                        "display_name": "SOG",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 15,
+                                        "name": "Shooting Percentage",
+                                        "display_name": "SH%",
+                                        "sort_order": "1",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "1"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "14"
+                                                }
+                                            }
+                                        ],
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 16,
+                                        "name": "Faceoffs Won",
+                                        "display_name": "FW",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 17,
+                                        "name": "Faceoffs Lost",
+                                        "display_name": "FL",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 18,
+                                        "name": "Games Started",
+                                        "display_name": "GS",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 19,
+                                        "name": "Wins",
+                                        "display_name": "W",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 20,
+                                        "name": "Losses",
+                                        "display_name": "L",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 21,
+                                        "name": "Ties",
+                                        "display_name": "T",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 22,
+                                        "name": "Goals Against",
+                                        "display_name": "GA",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 23,
+                                        "name": "Goals Against Average",
+                                        "display_name": "GAA",
+                                        "sort_order": "0",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "22"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "28"
+                                                }
+                                            }
+                                        ],
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 24,
+                                        "name": "Shots Against",
+                                        "display_name": "SA",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 25,
+                                        "name": "Saves",
+                                        "display_name": "SV",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 26,
+                                        "name": "Save Percentage",
+                                        "display_name": "SV%",
+                                        "sort_order": "1",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "25"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "24"
+                                                }
+                                            }
+                                        ],
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 27,
+                                        "name": "Shutouts",
+                                        "display_name": "SHO",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 28,
+                                        "name": "Time on Ice",
+                                        "display_name": "TOI",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 29,
+                                        "name": "F/D Games",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 30,
+                                        "name": "Goalie Games",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "G"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 31,
+                                        "name": "Hits",
+                                        "display_name": "HIT",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 32,
+                                        "name": "Blocks",
+                                        "display_name": "BLK",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "P"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 33,
+                                        "name": "Time on Ice",
+                                        "display_name": "TOI",
+                                        "sort_order": "1"
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 34,
+                                        "name": "Average Time on Ice",
+                                        "display_name": "TOI/G",
+                                        "sort_order": "1",
+                                        "is_composite_stat": 1,
+                                        "base_stats": [
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "33"
+                                                }
+                                            },
+                                            {
+                                                "base_stat": {
+                                                    "stat_id": "29"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "2": {
+                "game": [
+                    {
+                        "game_key": "399",
+                        "game_id": "399",
+                        "name": "Football",
+                        "code": "nfl",
+                        "type": "full",
+                        "url": "https://football.fantasysports.yahoo.com/2020/f1",
+                        "season": "2020",
+                        "is_registration_over": 1,
+                        "is_game_over": 1,
+                        "is_offseason": 1
+                    },
+                    {
+                        "stat_categories": {
+                            "stats": [
+                                {
+                                    "stat": {
+                                        "stat_id": 0,
+                                        "name": "Games Played",
+                                        "display_name": "GP",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            },
+                                            {
+                                                "position_type": "DP"
+                                            },
+                                            {
+                                                "position_type": "K"
+                                            },
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 1,
+                                        "name": "Passing Attempts",
+                                        "display_name": "Pass Att",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 2,
+                                        "name": "Completions",
+                                        "display_name": "Comp",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 3,
+                                        "name": "Incomplete Passes",
+                                        "display_name": "Inc",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 4,
+                                        "name": "Passing Yards",
+                                        "display_name": "Pass Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 5,
+                                        "name": "Passing Touchdowns",
+                                        "display_name": "Pass TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 6,
+                                        "name": "Interceptions",
+                                        "display_name": "Int",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 7,
+                                        "name": "Sacks",
+                                        "display_name": "Sack",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 8,
+                                        "name": "Rushing Attempts",
+                                        "display_name": "Rush Att",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 9,
+                                        "name": "Rushing Yards",
+                                        "display_name": "Rush Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 10,
+                                        "name": "Rushing Touchdowns",
+                                        "display_name": "Rush TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 11,
+                                        "name": "Receptions",
+                                        "display_name": "Rec",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 12,
+                                        "name": "Receiving Yards",
+                                        "display_name": "Rec Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 13,
+                                        "name": "Receiving Touchdowns",
+                                        "display_name": "Rec TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 14,
+                                        "name": "Return Yards",
+                                        "display_name": "Ret Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 15,
+                                        "name": "Return Touchdowns",
+                                        "display_name": "Ret TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 16,
+                                        "name": "2-Point Conversions",
+                                        "display_name": "2-PT",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 17,
+                                        "name": "Fumbles",
+                                        "display_name": "Fum",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 18,
+                                        "name": "Fumbles Lost",
+                                        "display_name": "Fum Lost",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 19,
+                                        "name": "Field Goals 0-19 Yards",
+                                        "display_name": "FG 0-19",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 20,
+                                        "name": "Field Goals 20-29 Yards",
+                                        "display_name": "FG 20-29",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 21,
+                                        "name": "Field Goals 30-39 Yards",
+                                        "display_name": "FG 30-39",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 22,
+                                        "name": "Field Goals 40-49 Yards",
+                                        "display_name": "FG 40-49",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 23,
+                                        "name": "Field Goals 50+ Yards",
+                                        "display_name": "FG 50+",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 24,
+                                        "name": "Field Goals Missed 0-19 Yards",
+                                        "display_name": "FGM 0-19",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 25,
+                                        "name": "Field Goals Missed 20-29 Yards",
+                                        "display_name": "FGM 20-29",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 26,
+                                        "name": "Field Goals Missed 30-39 Yards",
+                                        "display_name": "FGM 30-39",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 27,
+                                        "name": "Field Goals Missed 40-49 Yards",
+                                        "display_name": "FGM 40-49",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 28,
+                                        "name": "Field Goals Missed 50+ Yards",
+                                        "display_name": "FGM 50+",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 29,
+                                        "name": "Point After Attempt Made",
+                                        "display_name": "PAT Made",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 30,
+                                        "name": "Point After Attempt Missed",
+                                        "display_name": "PAT Miss",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 31,
+                                        "name": "Points Allowed",
+                                        "display_name": "Pts Allow",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 32,
+                                        "name": "Sack",
+                                        "display_name": "Sack",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 33,
+                                        "name": "Interception",
+                                        "display_name": "Int",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 34,
+                                        "name": "Fumble Recovery",
+                                        "display_name": "Fum Rec",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 35,
+                                        "name": "Touchdown",
+                                        "display_name": "TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 36,
+                                        "name": "Safety",
+                                        "display_name": "Safe",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 37,
+                                        "name": "Block Kick",
+                                        "display_name": "Blk Kick",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 38,
+                                        "name": "Tackle Solo",
+                                        "display_name": "Tack Solo",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 39,
+                                        "name": "Tackle Assist",
+                                        "display_name": "Tack Ast",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 40,
+                                        "name": "Sack",
+                                        "display_name": "Sack",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 41,
+                                        "name": "Interception",
+                                        "display_name": "Int",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 42,
+                                        "name": "Fumble Force",
+                                        "display_name": "Fum Force",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 43,
+                                        "name": "Fumble Recovery",
+                                        "display_name": "Fum Rec",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 44,
+                                        "name": "Defensive Touchdown",
+                                        "display_name": "TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 45,
+                                        "name": "Safety",
+                                        "display_name": "Safe",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 46,
+                                        "name": "Pass Defended",
+                                        "display_name": "Pass Def",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 47,
+                                        "name": "Block Kick",
+                                        "display_name": "Blk Kick",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 48,
+                                        "name": "Return Yards",
+                                        "display_name": "Ret Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 49,
+                                        "name": "Kickoff and Punt Return Touchdowns",
+                                        "display_name": "Ret TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 50,
+                                        "name": "Points Allowed 0 points",
+                                        "display_name": "Pts Allow 0",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 51,
+                                        "name": "Points Allowed 1-6 points",
+                                        "display_name": "Pts Allow 1-6",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 52,
+                                        "name": "Points Allowed 7-13 points",
+                                        "display_name": "Pts Allow 7-13",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 53,
+                                        "name": "Points Allowed 14-20 points",
+                                        "display_name": "Pts Allow 14-20",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 54,
+                                        "name": "Points Allowed 21-27 points",
+                                        "display_name": "Pts Allow 21-27",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 55,
+                                        "name": "Points Allowed 28-34 points",
+                                        "display_name": "Pts Allow 28-34",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 56,
+                                        "name": "Points Allowed 35+ points",
+                                        "display_name": "Pts Allow 35+",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 57,
+                                        "name": "Offensive Fumble Return TD",
+                                        "display_name": "Fum Ret TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 58,
+                                        "name": "Pick Sixes Thrown",
+                                        "display_name": "Pick Six",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 59,
+                                        "name": "40+ Yard Completions",
+                                        "display_name": "40 Yd Comp",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 60,
+                                        "name": "40+ Yard Passing Touchdowns",
+                                        "display_name": "40 Yd Pass TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 61,
+                                        "name": "40+ Yard Run",
+                                        "display_name": "40 Yd Rush",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 62,
+                                        "name": "40+ Yard Rushing Touchdowns",
+                                        "display_name": "40 Yd Rush TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 63,
+                                        "name": "40+ Yard Receptions",
+                                        "display_name": "40 Yd Rec",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 64,
+                                        "name": "40+ Yard Receiving Touchdowns",
+                                        "display_name": "40 Yd Rec TD",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 65,
+                                        "name": "Tackles for Loss",
+                                        "display_name": "TFL",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 66,
+                                        "name": "Turnover Return Yards",
+                                        "display_name": "TO Ret Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 67,
+                                        "name": "4th Down Stops",
+                                        "display_name": "4 Dwn Stops",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 68,
+                                        "name": "Tackles for Loss",
+                                        "display_name": "TFL",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 69,
+                                        "name": "Defensive Yards Allowed",
+                                        "display_name": "Def Yds Allow",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 70,
+                                        "name": "Defensive Yards Allowed - Negative",
+                                        "display_name": "Yds Allow Neg",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 71,
+                                        "name": "Defensive Yards Allowed 0-99",
+                                        "display_name": "Yds Allow 0-99",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 72,
+                                        "name": "Defensive Yards Allowed 100-199",
+                                        "display_name": "Yds Allow 100-199",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 73,
+                                        "name": "Defensive Yards Allowed 200-299",
+                                        "display_name": "Yds Allow 200-299",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 74,
+                                        "name": "Defensive Yards Allowed 300-399",
+                                        "display_name": "Yds Allow 300-399",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 75,
+                                        "name": "Defensive Yards Allowed 400-499",
+                                        "display_name": "Yds Allow 400-499",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 76,
+                                        "name": "Defensive Yards Allowed 500+",
+                                        "display_name": "Yds Allow 500+",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 77,
+                                        "name": "Three and Outs Forced",
+                                        "display_name": "3 and Outs",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 78,
+                                        "name": "Targets",
+                                        "display_name": "Targets",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 79,
+                                        "name": "Passing 1st Downs",
+                                        "display_name": "Pass 1st Downs",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 80,
+                                        "name": "Receiving 1st Downs",
+                                        "display_name": "Rec 1st Downs",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 81,
+                                        "name": "Rushing 1st Downs",
+                                        "display_name": "Rush 1st Downs",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "O"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 82,
+                                        "name": "Extra Point Returned",
+                                        "display_name": "XPR",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DT"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 83,
+                                        "name": "Extra Point Returned",
+                                        "display_name": "XPR",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "DP"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 84,
+                                        "name": "Field Goals Total Yards",
+                                        "display_name": "FG Yds",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 85,
+                                        "name": "Field Goals Made",
+                                        "display_name": "FG Made",
+                                        "sort_order": "1",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "stat": {
+                                        "stat_id": 86,
+                                        "name": "Field Goals Missed",
+                                        "display_name": "FG Miss",
+                                        "sort_order": "0",
+                                        "position_types": [
+                                            {
+                                                "position_type": "K"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "count": 3
+        },
+        "time": "25.131940841675ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

@@ -1,92 +1,204 @@
-#' Get team level stats for scoring categories
+#' Get team scoring stats from Yahoo! Fantasy API.
 #'
-#' returns team or league stats depending on what id (league or team) is supplied to `id`
+#' Returns team or league stats depending on what type of key is
+#'   provided as an argument to key.
 #'
-#' @param id league id or team id as a string in the form "000.l.0000" or "000.l.0000.t.0".  These ids can be found with `y_games()` and `y_teams()`.
-#' @param token_name Assigned object name used when creating token with `y_create_token()`.
-#' @param week week of fantasy season to return.  Accepts 3 arguments `current`, `NULL`, `a number`.
-#' `current` by default returns current week, null returns aggregated season stats, number returns stats for that week.
+#' @param key League key or team key as a string in the form "000.l.0000" or "000.l.0000.t.0".
+#' @param token_name Name used for assignment when creating token object with `y_create_token()`.
+#' @param week Week of fantasy season to return.
+#'   -Accepts 3 arguments:
+#'     - `current` returns current week of season.
+#'     - An integer corresponding to a week of season.
+#'     - If NULL will return aggregated season stats.
 #' @param debug returns a list of data such as uri call and content.  Useful for debugging.
-#'
-#' @return a list
+#' @param quiet Print function activity.
+#' @return A tibble
 #' @export
 y_team_stats <-
-    function(id = NULL, token_name = NULL, week = "current", debug = FALSE) {
+    function(key = NULL, token_name = NULL, week = NULL, debug = FALSE, quiet = TRUE) {
+
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                    TOKEN                                 ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         api_token <- token_name
-
         .token_check(token_name, api_token, name = .GlobalEnv)
-        stopifnot(is.numeric(week) | is.null(week) | week == "current")
 
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                    CHECKS                                ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        #.......................RESOURCE VARIABLES.......................
+        stopifnot(!is.null(key))
+        stopifnot(!is.null(api_token))
 
-        resource <- .id_check(id)
-        subresource <- ifelse(identical(resource, "league"), "teams/stats", "stats")
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                    CHECKS                                ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        #..............................URI...............................
+        stopifnot(!is.null(key))
+        stopifnot(!is.null(token_name))
 
-        uri <-
-            httr::modify_url(
-                url = "https://fantasysports.yahooapis.com",
-                path = paste("fantasy/v2",
-                             resource,
-                             id,
-                             subresource,
-                             sep = "/"),
-                param = glue::glue("type=week;week={week}"),
-                query = "format=json"
-            )
+        # Eligible key types.
+        e_key_types <- c("leagues", "teams")
 
-        #............................RESPONSE............................
+        # Assign a resource to each key and count.
+        # Function then selects most frequently occurring resource and assigns value to resource.
+        c(resource, key, .) %<-% .multiple_resource_key_check(key, e_key_types = e_key_types)
+
+        if(!quiet){cat(crayon::cyan("Resource is", resource, "\n"), sep = "")}
+        if(!quiet){cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")}
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                  ARGUMENTS                               ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        # resource assigned in if statement above.
+        subresource <- switch(resource, "leagues" = "teams", "teams" = NULL)
+        collection <- "stats"
+        uri_out <- switch(resource, "leagues" = "league_keys=", "teams" = "team_keys=")
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                     URI                                  ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        # Initial uri components
+        uri_parsed <- structure(
+            list(
+                scheme = "https",
+                hostname = "fantasysports.yahooapis.com/fantasy/v2",
+                port = NULL,
+                path = resource,
+                query = list(format = "json"),
+                params = NULL
+            ),
+            class = "url"
+        )
+
+        # Params
+        key_path <-
+            .uri_path_packer(key)
+
+        uri_parsed$params <-
+            stringr::str_c(uri_out, key_path, sep = "")
+
+        if(!is.null(subresource)){
+            uri_parsed$params <- stringr::str_c(uri_parsed$params, subresource, collection, sep = "/")
+        } else{
+            uri_parsed$params <- stringr::str_c(uri_parsed$params, collection, sep = "/")
+        }
+
+        # If week is not empty tunr it into a param by pasting the name to the value and
+        # gluing to already existing param.
+        # i.e. week <- list(week=1) becomes week=1 and then type=week;week=1.
+        if(!is.null(week)){
+            week <- suppressWarnings(week[!is.na(as.integer(as.character(week)))]) %>% vctrs::vec_unique()
+            week_param <- stringr::str_c("type=week;week=", week)
+            uri_parsed$params <- stringr::str_c(uri_parsed$params, week_param, sep = ";")
+        }
+
+        # Build uris.
+        uri <- httr::build_url(uri_parsed)
+
+        if(!quiet){cat(crayon::cyan("uri is...\n", uri), sep = "\n")}
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                GET RESPONSE                              ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         r <-
-            .y_get_response(uri, api_token)
+            purrr::map(uri, .y_get_response, api_token)
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                          CHECK RESPONSE FOR ERRORS                       ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        if(sum(!purrr::map_lgl(r, httr::http_error)) <= 0){
+            stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
+        }
+
+        r <- r[!purrr::map_lgl(r, httr::http_error)]
+
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                PARSE CONTENT                             ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         r_parsed <-
-            .y_parse_response(r, "fantasy_content")
+            purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
-
-        #...............................DF...............................
-
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                      DF                                  ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if (!debug) {
-            if (identical(resource, "league")) {
 
-                preprocess <-
-                    r_parsed %>%
-                    purrr::pluck(2, "teams") %>%
-                    purrr::keep(purrr::is_list)
+            # Defining parse_fn is necessary because the team stats resource is not in a list.
+            # As soon as you drill down into team[[2]] the team stats are there as elements so the parse functions
+            # can be applied directly without mapping in.  It's annoying honesty.  Feeding the parse functions
+            # to .league_parse_fn will cause the .team_stats_data_func to map which won't work here.
+            parse_fn <-
+                function(x) {
+                    dplyr::bind_cols(
+                        .team_meta_parse_fn(x),
+                        .team_stats_parse_fn(x)
+                        )
+                }
 
-                df <-
-                    preprocess %>%
-                    purrr::map_df(.stats_data_func)
+            # Preprocess r_parsed.
+            preprocess <-
+                r_parsed %>%
+                purrr::flatten()
 
-                return(df)
+            if (identical(resource, "leagues")) {
 
-            } else if (identical(resource, "team")) {
+                  df <-
+                      tryCatch(
+                          expr =
+                              preprocess %>%
+                              purrr::map_df(.league_resource_parse_fn, parse_fn),
 
-                df <-
-                    .stats_data_func(r_parsed)
+                          error = function(e) {
+                              message(crayon::cyan(
+                                  "Function failed while parsing leagues resource with .league_resource_parse_fn. Returning debug list."))
+                          }
+                      )
 
-                return(df)
+                  if(tibble::is_tibble(df)){return(df)}
+
+            } else if (identical(resource, "teams")) {
+
+               df <-
+                   tryCatch(
+                       expr =
+                           preprocess %>%
+                           purrr::map_df(parse_fn),
+
+                       error = function(e) {
+                           message(crayon::cyan(
+                               "Function failed while parsing teams resource with parse_fn. Returning debug list."))
+                           }
+                   )
+
+               if(tibble::is_tibble(df)){return(df)}
+
             } else {
-                stop(message(
-                    "unknown resource, please supply a league_id or team_id"
-                ))
+                message(crayon::cyan("Unknown resource, please supply a valid league or team key.  Returning debug list."))
             }
         }
 
-
-        #.............................RETURN.............................
-
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                                DEBUG RETURN                              ----
+        ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         data_list <-
             structure(list(
+                resource = resource,
                 response = r,
                 content = r_parsed,
                 uri = uri
             ),
             class = "yahoo_fantasy_api")
+
+        return(data_list)
 
     }

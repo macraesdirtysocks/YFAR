@@ -1,0 +1,508 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/teams;team_keys=411.l.1239.t.1,411.l.1240.t.8/draftresults",
+        "teams": {
+            "0": {
+                "team": [
+                    [
+                        {
+                            "team_key": "411.l.1239.t.1"
+                        },
+                        {
+                            "team_id": "1"
+                        },
+                        {
+                            "name": "Shoe's Extraordinary Team"
+                        },
+                        [
+
+                        ],
+                        {
+                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1239/1"
+                        },
+                        {
+                            "team_logos": [
+                                {
+                                    "team_logo": {
+                                        "size": "large",
+                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/6c0bf899289a4a4e5c63f936ee46c9d27487f128701ba60e3a9d586ed4742136.jpg"
+                                    }
+                                }
+                            ]
+                        },
+                        [
+
+                        ],
+                        {
+                            "waiver_priority": 10
+                        },
+                        {
+                            "faab_balance": "75"
+                        },
+                        {
+                            "number_of_moves": "17"
+                        },
+                        {
+                            "number_of_trades": 0
+                        },
+                        {
+                            "roster_adds": {
+                                "coverage_type": "week",
+                                "coverage_value": 16,
+                                "value": "0"
+                            }
+                        },
+                        [
+
+                        ],
+                        {
+                            "league_scoring_type": "head"
+                        },
+                        [
+
+                        ],
+                        {
+                            "draft_position": 2
+                        },
+                        {
+                            "has_draft_grade": 0
+                        },
+                        [
+
+                        ],
+                        [
+
+                        ],
+                        {
+                            "managers": [
+                                {
+                                    "manager": {
+                                        "manager_id": "1",
+                                        "nickname": "--hidden--",
+                                        "guid": "KOSXQIEKZPXPGVTDOYXJM7NTM4",
+                                        "felo_score": "910",
+                                        "felo_tier": "diamond"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    {
+                        "draft_results": {
+                            "0": {
+                                "draft_result": {
+                                    "pick": 2,
+                                    "round": 1,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.6369"
+                                }
+                            },
+                            "1": {
+                                "draft_result": {
+                                    "pick": 23,
+                                    "round": 2,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.6448"
+                                }
+                            },
+                            "2": {
+                                "draft_result": {
+                                    "pick": 26,
+                                    "round": 3,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.4503"
+                                }
+                            },
+                            "3": {
+                                "draft_result": {
+                                    "pick": 47,
+                                    "round": 4,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.7905"
+                                }
+                            },
+                            "4": {
+                                "draft_result": {
+                                    "pick": 50,
+                                    "round": 5,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.6367"
+                                }
+                            },
+                            "5": {
+                                "draft_result": {
+                                    "pick": 71,
+                                    "round": 6,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.6744"
+                                }
+                            },
+                            "6": {
+                                "draft_result": {
+                                    "pick": 74,
+                                    "round": 7,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.3782"
+                                }
+                            },
+                            "7": {
+                                "draft_result": {
+                                    "pick": 95,
+                                    "round": 8,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.7886"
+                                }
+                            },
+                            "8": {
+                                "draft_result": {
+                                    "pick": 98,
+                                    "round": 9,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.7528"
+                                }
+                            },
+                            "9": {
+                                "draft_result": {
+                                    "pick": 119,
+                                    "round": 10,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.5053"
+                                }
+                            },
+                            "10": {
+                                "draft_result": {
+                                    "pick": 122,
+                                    "round": 11,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.5691"
+                                }
+                            },
+                            "11": {
+                                "draft_result": {
+                                    "pick": 143,
+                                    "round": 12,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.3614"
+                                }
+                            },
+                            "12": {
+                                "draft_result": {
+                                    "pick": 146,
+                                    "round": 13,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.3638"
+                                }
+                            },
+                            "13": {
+                                "draft_result": {
+                                    "pick": 167,
+                                    "round": 14,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.5120"
+                                }
+                            },
+                            "14": {
+                                "draft_result": {
+                                    "pick": 170,
+                                    "round": 15,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.8641"
+                                }
+                            },
+                            "15": {
+                                "draft_result": {
+                                    "pick": 191,
+                                    "round": 16,
+                                    "team_key": "411.l.1239.t.1",
+                                    "player_key": "411.p.6445"
+                                }
+                            },
+                            "count": 16
+                        }
+                    }
+                ]
+            },
+            "1": {
+                "team": [
+                    [
+                        {
+                            "team_key": "411.l.1240.t.8"
+                        },
+                        {
+                            "team_id": "8"
+                        },
+                        {
+                            "name": "Neurotic Mist"
+                        },
+                        [
+
+                        ],
+                        {
+                            "url": "https://hockey.fantasysports.yahoo.com/hockey/1240/8"
+                        },
+                        {
+                            "team_logos": [
+                                {
+                                    "team_logo": {
+                                        "size": "large",
+                                        "url": "https://yahoofantasysports-res.cloudinary.com/image/upload/t_s192sq/fantasy-logos/25299342085_3cd3a3607a.jpg"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "division_id": "2"
+                        },
+                        {
+                            "waiver_priority": 7
+                        },
+                        [
+
+                        ],
+                        {
+                            "number_of_moves": "41"
+                        },
+                        {
+                            "number_of_trades": "8"
+                        },
+                        {
+                            "roster_adds": {
+                                "coverage_type": "week",
+                                "coverage_value": 16,
+                                "value": "1"
+                            }
+                        },
+                        [
+
+                        ],
+                        {
+                            "league_scoring_type": "head"
+                        },
+                        [
+
+                        ],
+                        [
+
+                        ],
+                        {
+                            "has_draft_grade": 0
+                        },
+                        [
+
+                        ],
+                        [
+
+                        ],
+                        {
+                            "managers": [
+                                {
+                                    "manager": {
+                                        "manager_id": "9",
+                                        "nickname": "--hidden--",
+                                        "guid": "FQ5ARRUFY4OKIU2SF3MUHQQPQI",
+                                        "felo_score": "604",
+                                        "felo_tier": "silver"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    {
+                        "draft_results": {
+                            "0": {
+                                "draft_result": {
+                                    "pick": 1,
+                                    "round": 1,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.6877"
+                                }
+                            },
+                            "1": {
+                                "draft_result": {
+                                    "pick": 17,
+                                    "round": 2,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7518"
+                                }
+                            },
+                            "2": {
+                                "draft_result": {
+                                    "pick": 33,
+                                    "round": 3,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7110"
+                                }
+                            },
+                            "3": {
+                                "draft_result": {
+                                    "pick": 49,
+                                    "round": 4,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.5985"
+                                }
+                            },
+                            "4": {
+                                "draft_result": {
+                                    "pick": 65,
+                                    "round": 5,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.8642"
+                                }
+                            },
+                            "5": {
+                                "draft_result": {
+                                    "pick": 81,
+                                    "round": 6,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.5846"
+                                }
+                            },
+                            "6": {
+                                "draft_result": {
+                                    "pick": 97,
+                                    "round": 7,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.8646"
+                                }
+                            },
+                            "7": {
+                                "draft_result": {
+                                    "pick": 113,
+                                    "round": 8,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7112"
+                                }
+                            },
+                            "8": {
+                                "draft_result": {
+                                    "pick": 129,
+                                    "round": 9,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7517"
+                                }
+                            },
+                            "9": {
+                                "draft_result": {
+                                    "pick": 145,
+                                    "round": 10,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7267"
+                                }
+                            },
+                            "10": {
+                                "draft_result": {
+                                    "pick": 161,
+                                    "round": 11,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.8284"
+                                }
+                            },
+                            "11": {
+                                "draft_result": {
+                                    "pick": 177,
+                                    "round": 12,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7564"
+                                }
+                            },
+                            "12": {
+                                "draft_result": {
+                                    "pick": 193,
+                                    "round": 13,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.5559"
+                                }
+                            },
+                            "13": {
+                                "draft_result": {
+                                    "pick": 209,
+                                    "round": 14,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7618"
+                                }
+                            },
+                            "14": {
+                                "draft_result": {
+                                    "pick": 225,
+                                    "round": 15,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7530"
+                                }
+                            },
+                            "15": {
+                                "draft_result": {
+                                    "pick": 241,
+                                    "round": 16,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.5336"
+                                }
+                            },
+                            "16": {
+                                "draft_result": {
+                                    "pick": 257,
+                                    "round": 17,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7541"
+                                }
+                            },
+                            "17": {
+                                "draft_result": {
+                                    "pick": 273,
+                                    "round": 18,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.7163"
+                                }
+                            },
+                            "18": {
+                                "draft_result": {
+                                    "pick": 295,
+                                    "round": 19,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.6908"
+                                }
+                            },
+                            "19": {
+                                "draft_result": {
+                                    "pick": 299,
+                                    "round": 19,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.5994"
+                                }
+                            },
+                            "20": {
+                                "draft_result": {
+                                    "pick": 300,
+                                    "round": 19,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.8890"
+                                }
+                            },
+                            "21": {
+                                "draft_result": {
+                                    "pick": 321,
+                                    "round": 21,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.6390"
+                                }
+                            },
+                            "22": {
+                                "draft_result": {
+                                    "pick": 337,
+                                    "round": 22,
+                                    "team_key": "411.l.1240.t.8",
+                                    "player_key": "411.p.4740"
+                                }
+                            },
+                            "count": 23
+                        }
+                    }
+                ]
+            },
+            "count": 2
+        },
+        "time": "38.083076477051ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

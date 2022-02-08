@@ -2,18 +2,27 @@
 % Please edit documentation in R/y_stats_categories.R
 \name{y_stats_categories}
 \alias{y_stats_categories}
-\title{Get all exisiting stats categories for a game.}
+\title{Get all existing stats categories for a game from the Yahoo! Fantasy API.}
 \usage{
-y_stats_categories(game_key = 411, token_name = NULL)
+y_stats_categories(
+  game_key = NULL,
+  token_name = NULL,
+  debug = FALSE,
+  quiet = TRUE
+)
 }
 \arguments{
-\item{game_key}{3 digit number of the game your league is playing.  Found with `y_games()`.}
+\item{game_key}{2 or 3 digit number of the game your league is playing.  Found with `y_games()`.}
 
-\item{token_name}{Assigned object name used when creating token with `y_create_token()`.}
+\item{token_name}{Name used for assignment when creating token object with `y_create_token()`.}
+
+\item{debug}{Returns a list of data uri call and content.  Useful for debugging.}
+
+\item{quiet}{Print function activity.}
 }
 \value{
-a tibble
+A nested tibble with a game_key column and nested stats column.
 }
 \description{
-Get all exisiting stats categories for a game.
+Note not all stats that exist in a game will be used by your league.
 }

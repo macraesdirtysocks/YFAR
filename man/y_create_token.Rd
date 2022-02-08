@@ -11,20 +11,20 @@ y_create_token(my_key = NULL, my_secret = NULL, app_name = NULL, ...)
 
 \item{my_secret}{String provided my registering an application with Yahoo Developer Network}
 
-\item{app_name}{String name of app, not necessarily what you provided to Yahoo Developer Network}
+\item{app_name}{String name of app you provided to Yahoo Developer Network}
 
-\item{...}{Arguments passed on to httr::oauth2.0_token()}
+\item{...}{Arguments passed on to `httr::oauth2.0_token()`.}
 }
 \value{
 Token2.0 object.
 }
 \description{
 Creates an Oauth2.0 token object used to access the Yahoo Fantasy API
-See httr::Token2.0 for details and functionality.
+See `httr::Token2.0` for details and functionality.
 }
 \details{
-The first time `y_create_token()` is run the console will ask for a code and a web browser will open to display the code.
-Copy and paste this code into the console to create your access token.
+The first time `y_create_token()` is run the console will ask for a code and a web browser should open and ask you to log
+in to YAHOO! and after it will give the user a code.  Copy and paste this code into the console to create your access token.
 If this step is being a nuisance and your default browser is Chrome try Firefox.
 
 By default caching is enabled and httr will create a .httr-oauth file and you can refresh your token with `my_token$refresh()`.

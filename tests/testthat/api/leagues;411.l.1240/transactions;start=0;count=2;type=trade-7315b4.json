@@ -1,0 +1,346 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/leagues;league_keys=411.l.1240/transactions;start=0;count=2;type=trade",
+        "leagues": {
+            "0": {
+                "league": [
+                    {
+                        "league_key": "411.l.1240",
+                        "league_id": "1240",
+                        "name": "FSC Hockey Dynasty 7",
+                        "url": "https://hockey.fantasysports.yahoo.com/hockey/1240",
+                        "logo_url": false,
+                        "draft_status": "postdraft",
+                        "num_teams": 16,
+                        "edit_key": "2022-02-02",
+                        "weekly_deadline": "intraday",
+                        "league_update_timestamp": "1643788592",
+                        "scoring_type": "head",
+                        "league_type": "private",
+                        "renew": "403_1516",
+                        "renewed": "",
+                        "iris_group_chat_id": "",
+                        "allow_add_to_dl_extra_pos": 0,
+                        "is_pro_league": "0",
+                        "is_cash_league": "0",
+                        "current_week": 16,
+                        "start_week": "1",
+                        "start_date": "2021-10-12",
+                        "end_week": "26",
+                        "end_date": "2022-04-29",
+                        "game_code": "nhl",
+                        "season": "2021"
+                    },
+                    {
+                        "transactions": {
+                            "0": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1240.tr.629",
+                                        "transaction_id": "629",
+                                        "type": "trade",
+                                        "status": "successful",
+                                        "timestamp": "1643357383",
+                                        "trader_team_key": "411.l.1240.t.4",
+                                        "trader_team_name": "Jagrrrrr",
+                                        "tradee_team_key": "411.l.1240.t.16",
+                                        "tradee_team_name": "Nooli"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7115"
+                                                        },
+                                                        {
+                                                            "player_id": "7115"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Clayton Keller",
+                                                                "first": "Clayton",
+                                                                "last": "Keller",
+                                                                "ascii_first": "Clayton",
+                                                                "ascii_last": "Keller"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Ari"
+                                                        },
+                                                        {
+                                                            "display_position": "LW,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "trade",
+                                                                "source_type": "team",
+                                                                "source_team_key": "411.l.1240.t.4",
+                                                                "source_team_name": "Jagrrrrr",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1240.t.16",
+                                                                "destination_team_name": "Nooli"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.6055"
+                                                        },
+                                                        {
+                                                            "player_id": "6055"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Pavel Buchnevich",
+                                                                "first": "Pavel",
+                                                                "last": "Buchnevich",
+                                                                "ascii_first": "Pavel",
+                                                                "ascii_last": "Buchnevich"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "StL"
+                                                        },
+                                                        {
+                                                            "display_position": "LW,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "trade",
+                                                                "source_type": "team",
+                                                                "source_team_key": "411.l.1240.t.4",
+                                                                "source_team_name": "Jagrrrrr",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1240.t.16",
+                                                                "destination_team_name": "Nooli"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "2": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7528"
+                                                        },
+                                                        {
+                                                            "player_id": "7528"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Nick Suzuki",
+                                                                "first": "Nick",
+                                                                "last": "Suzuki",
+                                                                "ascii_first": "Nick",
+                                                                "ascii_last": "Suzuki"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Mon"
+                                                        },
+                                                        {
+                                                            "display_position": "C,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "trade",
+                                                                "source_type": "team",
+                                                                "source_team_key": "411.l.1240.t.16",
+                                                                "source_team_name": "Nooli",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1240.t.4",
+                                                                "destination_team_name": "Jagrrrrr"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "3": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.5362"
+                                                        },
+                                                        {
+                                                            "player_id": "5362"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Ryan Nugent-Hopkins",
+                                                                "first": "Ryan",
+                                                                "last": "Nugent-Hopkins",
+                                                                "ascii_first": "Ryan",
+                                                                "ascii_last": "Nugent-Hopkins"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "Edm"
+                                                        },
+                                                        {
+                                                            "display_position": "C,LW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "trade",
+                                                                "source_type": "team",
+                                                                "source_team_key": "411.l.1240.t.16",
+                                                                "source_team_name": "Nooli",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1240.t.4",
+                                                                "destination_team_name": "Jagrrrrr"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 4
+                                        }
+                                    }
+                                ]
+                            },
+                            "1": {
+                                "transaction": [
+                                    {
+                                        "transaction_key": "411.l.1240.tr.619",
+                                        "transaction_id": "619",
+                                        "type": "trade",
+                                        "status": "successful",
+                                        "timestamp": "1643098140",
+                                        "trader_team_key": "411.l.1240.t.4",
+                                        "trader_team_name": "Jagrrrrr",
+                                        "tradee_team_key": "411.l.1240.t.8",
+                                        "tradee_team_name": "Neurotic Mist"
+                                    },
+                                    {
+                                        "players": {
+                                            "0": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.7535"
+                                                        },
+                                                        {
+                                                            "player_id": "7535"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Robert Thomas",
+                                                                "first": "Robert",
+                                                                "last": "Thomas",
+                                                                "ascii_first": "Robert",
+                                                                "ascii_last": "Thomas"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "StL"
+                                                        },
+                                                        {
+                                                            "display_position": "C,RW"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "trade",
+                                                                "source_type": "team",
+                                                                "source_team_key": "411.l.1240.t.4",
+                                                                "source_team_name": "Jagrrrrr",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1240.t.8",
+                                                                "destination_team_name": "Neurotic Mist"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "1": {
+                                                "player": [
+                                                    [
+                                                        {
+                                                            "player_key": "411.p.3358"
+                                                        },
+                                                        {
+                                                            "player_id": "3358"
+                                                        },
+                                                        {
+                                                            "name": {
+                                                                "full": "Brent Burns",
+                                                                "first": "Brent",
+                                                                "last": "Burns",
+                                                                "ascii_first": "Brent",
+                                                                "ascii_last": "Burns"
+                                                            }
+                                                        },
+                                                        {
+                                                            "editorial_team_abbr": "SJ"
+                                                        },
+                                                        {
+                                                            "display_position": "D"
+                                                        },
+                                                        {
+                                                            "position_type": "P"
+                                                        }
+                                                    ],
+                                                    {
+                                                        "transaction_data": [
+                                                            {
+                                                                "type": "trade",
+                                                                "source_type": "team",
+                                                                "source_team_key": "411.l.1240.t.8",
+                                                                "source_team_name": "Neurotic Mist",
+                                                                "destination_type": "team",
+                                                                "destination_team_key": "411.l.1240.t.4",
+                                                                "destination_team_name": "Jagrrrrr"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "count": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            "count": 2
+                        }
+                    }
+                ]
+            },
+            "count": 1
+        },
+        "time": "27.854919433594ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

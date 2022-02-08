@@ -13,11 +13,14 @@ utils::globalVariables(
         "league_key",
         "value",
         "n",
-        "timestamp",
+        "transaction_timestamp",
         "start",
         "end",
         "type",
         "display_name",
-        "winner_team_key"
+        "winner_team_key",
+        "game_key",
+        "resource",
+        "key"
     )
 )
