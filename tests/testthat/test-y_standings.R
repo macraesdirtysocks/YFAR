@@ -49,6 +49,17 @@ expect_identical(
     y_standings__uri_gen_test_fn(c("411.l.1239.t.1", "411.l.1239.t.8", "411.l.1239.t.5")),
     "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.1,411.l.1239.t.8,411.l.1239.t.5/standings?format=json")
 
+expect_identical(
+    y_standings__uri_gen_test_fn(c("411", "406", "411.l.1239.t.5")),
+    "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.5/standings?format=json")
+
+expect_identical(
+    y_standings__uri_gen_test_fn(c("411", "406", "411.l.1239.t.5", "406.l.1239.t.5", "406.l.1239.t.6")),
+    "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.5,406.l.1239.t.5,406.l.1239.t.6/standings?format=json")
+
+expect_identical(
+    y_standings__uri_gen_test_fn(c("411", "406", "411.l.1239.t.5", "406.l.1239.t.5", "406.l.1239.t.6", "406.l.1239")),
+    "https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=411.l.1239.t.5,406.l.1239.t.5,406.l.1239.t.6/standings?format=json")
 
 })
 

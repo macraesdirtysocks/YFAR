@@ -92,10 +92,10 @@ test_that("y_rosters uri generates properly",{
         )
 
     # expect_identical(
-    #     y_rosters_uri_gen_test_fn(c("411.l.1245.t.8", "411.l.1239"), game_date = c("2022-01-30", "2022-01-31")),
+    #     y_rosters_uri_gen_test_fn(c("411.l.1239.t.8", "411.l.1239"), game_date = c("2022-01-30", "2022-01-31")),
     #     c(
-    #         "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239/teams/roster;type=date;date=2022-01-30?format=json",
-    #         "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239/teams/roster;type=date;date=2022-01-31?format=json"
+    #         "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239.t.8/teams/roster;type=date;date=2022-01-30?format=json",
+    #         "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239.t.8/teams/roster;type=date;date=2022-01-31?format=json"
     #     ))
 
     expect_identical(

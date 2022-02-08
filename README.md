@@ -3,28 +3,64 @@
 
 # YFAR
 
-A collection of functions for retrieving fantasy hockey league data from
-the Yahoo Fantasy API.
+A collection of functions to get data from the Yahoo\! Fantasy API.
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-## Intro
+## Introduction
 
 The functions in this package can retrieve data from public leagues and
 the private leagues participated in by the current user logged into
-Yahoo. You will notice this in some of the uri’s as `use_login=1`.
+Yahoo.
+
+The Yahoo Fantasy API uses Oauth2.0 for authentication. To use the
+functions in this package you will need a client id and client secret
+obtained by registering an app with the [Yahoo Developer
+Network](https://developer.yahoo.com/apps/create/).
 
 After creating a token and retrieving some simple input data you can use
-the functions to return data from your league and teams.
+the functions to return data from games, leagues and teams.
+
+  - There are no extensive instructions in this package for registering
+    an app with the Yahoo Developer Network but here are some resources
+    :
+    
+      - Edward Distel’s Github [Yahoo Fantasy Baseball API
+        Reader](https://github.com/edwarddistel/yahoo-fantasy-baseball-reader)
+      - Maëlle Salmon’s Blog [How to deal with OAuth2.0 in R
+        packages?](https://blog.r-hub.io/2021/01/25/oauth-2.0/)
+      - YDN [Yahoo Fanatsy Developer
+        Website](https://developer.yahoo.com/fantasysports/guide/)
+
+  - Package highlights:
+    
+      - 18 functions to get data from various resource of the API.
+      - Notable functions include `y_rosters()`, `y_players()`,
+        `y_draft_results()`, `y_draft_adp()`.
+      - Return data from both current and past leagues.
+      - Functions by default return tibbles with an option to return a
+        list.
+      - Functions are written using the tidyverse.
+
+  - Function mechanics in a nutshell:
+    
+      - Takes the keys and other provided arguments to generate a uri.
+      - Using the internal function `.y_get_request()` sends a get
+        request to the yahoo api.
+      - The api returns a response which containts fantasy content in
+        JSON format.
+      - JSON fantasy content is parsed using internal functions heavily
+        reliant on the [purrr package](https://purrr.tidyverse.org/).
+      - Return a tibble.
+      - Option to return a list which includes uri, response, content
+        and the api resource.
 
 ## Installation
 
-``` r
-# install.packages("devtools")
-devtools::install_github("https://github.com/macraesdirtysocks/YFAR")
-```
+    # install.packages("devtools")
+    devtools::install_github("https://github.com/macraesdirtysocks/YFAR")
 
 ## The Basics
 
@@ -33,17 +69,12 @@ devtools::install_github("https://github.com/macraesdirtysocks/YFAR")
       - **Accessory Functions**
           - Uninteresting but useful. Mostly for acquiring data to
             supply as arguments to other functions i.e. weeks, dates,
-            team ids, league ids, etc.
+            team and league keys, etc.
       - **The Beef**
           - Probably why you are here. Rosters, stats, standings,
-            matchups etc.
+            match-ups etc.
 
 ### Authentication
-
-The Yahoo Fantasy API uses Oauth2.0 for authentication. To use the
-functions in this package you will need a client id and client secret
-obtained by registering an app with the [Yahoo Developer
-Network](https://developer.yahoo.com/apps/create/).
 
 After creating and registering your app you should receive a client id
 and client secret.
@@ -54,7 +85,7 @@ token.
 
 This token is an argument to all functions in this package.
 
-`my_token <- y_create_token(my_key, my_secret)`
+    my_token <- y_create_token(my_key, my_secret, app_name)
 
 ### Auxiliary data functions
 
@@ -63,23 +94,23 @@ function will return a tibble containing information on all your fantasy
 leagues which can be used as arguments for the more interesting
 functions.
 
-`my_games <- y_games(my_token)`
+    y_games(my_token)
 
 ### Mains
 
-> Some functions accept a team\_id or league\_id. Any function with an
-> `id` argument as opposed to the more explicit league\_id or team\_id
-> will accept either or.
+> Some functions accept a team\_key or league\_key. Any function with an
+> key argument as opposed to the more explicit league\_key or team\_key
+> can accept a varitey of keys.
 
-A few examples
-
-Get League Rosters
-
-    rosters <- y_rosters(id, my_token)
-
-Get Draft Results
-
-    y_draft_results <- function(id, token_name)
+  - A few examples
+    
+      - Get League Rosters
+        
+        `rosters <- y_rosters(key, my_token)`
+    
+      - Get Draft Results
+        
+        `y_draft_results <- function(key, token_name)`
 
 And much more. See the vignette for more info.
 

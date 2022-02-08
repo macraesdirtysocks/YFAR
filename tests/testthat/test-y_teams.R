@@ -78,6 +78,12 @@ test_that("y_teams uri generates properly",{
         y_teams_uri_gen_test_fn(c("411.p.1240"))
         )
 
+    # 3 good league key and 1 bad
+    expect_identical(
+      y_teams_uri_gen_test_fn(c("411.l.1239", "411.p.1240", "411.l.1240", "406.l.1111")),
+      "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=411.l.1239,411.l.1240,406.l.1111/teams?format=json"
+    )
+
 
 })
 

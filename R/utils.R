@@ -22,36 +22,39 @@
 #'
 #' @param key Vector of keys
 #' @param key_check_fn One of internal .key_check functions.
+#' @importFrom sjmisc `%nin%`
 #' @return A Vector
 #' @keywords internal
 
 .single_resource_key_check <- function(key, key_check_fn){
 
-  # Check if keys are type game, remove FALSE and duplicates.
-  if(sum(!purrr::map_lgl(key, key_check_fn) > 0)) {
+  key_unique <-
+    vctrs::vec_unique(key)
 
-    invalid_key <-
-      key[!purrr::map_lgl(key, key_check_fn)]
+  key_clean <-
+    key_unique[key_check_fn(key_unique)]
+
+  invalid_key <-
+    key[key %nin% key_clean]
+
+  duplicate_key <-
+    key[vctrs::vec_duplicate_detect(key)]
+
+  removed_key <- vctrs::vec_c(invalid_key, duplicate_key) %>% vctrs::vec_unique()
+
+  # Check if keys are type game, remove FALSE and duplicates.
+  if(!vctrs::vec_is_empty(removed_key)){
 
     cat(crayon::cyan("The following failed", match.call()[3], "and were removed:\n"), sep = " ")
-    cat(crayon::cyan(stringr::str_flatten(invalid_key, collapse = "\n")), sep = "\n")
+    cat(crayon::cyan(stringr::str_flatten(removed_key, collapse = "\n")), sep = "\n")
 
-    key <-
-      key[purrr::map_lgl(key, key_check_fn)] %>%
-      vctrs::vec_unique()
-
-  } else{
-
-    key <-
-      key %>%
-      vctrs::vec_unique()
   }
 
-  if(vctrs::vec_size(key) < 1){
-    stop(message(crayon::cyan("No valid game keys provided.")), call. = FALSE)
+  if(vctrs::vec_size(key_clean) < 1){
+    stop(message(crayon::cyan("No valid keys provided.")), call. = FALSE)
   }
 
-  return(key)
+  return(key_clean)
 }
 
 
@@ -105,8 +108,6 @@
   #Remove keys.
   valid_key <- .single_resource_key_check(key_unique, key_check_fn)
 
-  # valid_key <- vctrs::vec_unique(x[key_validity_check_fn(x)])
-  #
   # Find keys not equal to resource, these will be removed.
   invalid_key <- key_unique[key_unique %nin% valid_key]
 
