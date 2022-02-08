@@ -21,6 +21,7 @@ utils::globalVariables(
         "winner_team_key",
         "game_key",
         "resource",
-        "key"
+        "key",
+        "count"
     )
 )

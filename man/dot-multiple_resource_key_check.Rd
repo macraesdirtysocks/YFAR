@@ -24,6 +24,7 @@ the function will select the key type appearing most often and removes the rest.
 \details{
 This function assigns resource variable.
 This function alters key argument.
-This function calls `.key_resource_assign()`
+This function calls `.key_resource_assign()`.
+This function calls `.single_resource_key_check()`.
 }
 \keyword{internal}

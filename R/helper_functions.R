@@ -196,7 +196,8 @@ game_meta <-
         purrr::flatten() %>%
         purrr::map_if(purrr::is_list, ~unlist(.x) %>% tibble::as_tibble_row(.name_repair = janitor::make_clean_names)) %>%
         dplyr::bind_cols(.name_repair = janitor::make_clean_names) %>%
-        dplyr::rename_with(~ paste("player", .x, sep = "_"), .cols = !tidyselect::matches("^player_"))
+        dplyr::rename_with(~ paste("player", .x, sep = "_"), .cols = !tidyselect::matches("^player_")) %>%
+        dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), .fns = as.character))
 
     return(df)
 }
@@ -687,7 +688,7 @@ game_meta <-
 #'
 #' @param x List containing a draft analysis element.
 #' @keywords internal
-.draft_analysis_func <- function(x) {
+.draft_analysis_fn <- function(x) {
 
     # Parse player meta data with internal function.
     player_meta <-

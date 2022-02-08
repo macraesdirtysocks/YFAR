@@ -28,21 +28,26 @@
 
 .single_resource_key_check <- function(key, key_check_fn){
 
+  # Get unique keys.  Don't need the same one twice.
   key_unique <-
     vctrs::vec_unique(key)
 
+  # Subset keys that pass key_check_fn.
   key_clean <-
     key_unique[key_check_fn(key_unique)]
 
+  # Invaild keys are those not in key_clean
   invalid_key <-
     key[key %nin% key_clean]
 
+  # Get duplicates.  This is for message purposes.
   duplicate_key <-
     key[vctrs::vec_duplicate_detect(key)]
 
+  # Create a vector of key that were removed from key argumnet.
   removed_key <- vctrs::vec_c(invalid_key, duplicate_key) %>% vctrs::vec_unique()
 
-  # Check if keys are type game, remove FALSE and duplicates.
+  # Message if keys were removed.
   if(!vctrs::vec_is_empty(removed_key)){
 
     cat(crayon::cyan("The following failed", match.call()[3], "and were removed:\n"), sep = " ")
@@ -69,7 +74,8 @@
 #'
 #' This function assigns resource variable.
 #' This function alters key argument.
-#' This function calls `.key_resource_assign()`
+#' This function calls `.key_resource_assign()`.
+#' This function calls `.single_resource_key_check()`.
 #'
 #' @param key Vector of keys
 #' @param e_key_types Vector of eligible key types, default is c("games", "leagues", "teams", "players").
@@ -81,14 +87,16 @@
   # Get unique keys
   key_unique <- vctrs::vec_unique(key)
 
+  # Assign key types
   key_types <-
     purrr::map_chr(key_unique, .key_resource_assign)
 
   # Count key types present and select type which occurs most frequently and assign to resource.
   resource <-
     key_types[!is.na(key_types)] %>%
-    vctrs::vec_count(sort = "count") %>%
+    vctrs::vec_count() %>%
     dplyr::filter(key %in% e_key_types) %>%
+    dplyr::arrange(dplyr::desc(count), dplyr::desc(key)) %>%
     vctrs::vec_slice(1) %>%
     dplyr::pull(key)
 
