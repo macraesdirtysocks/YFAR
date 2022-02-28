@@ -4,12 +4,14 @@
 \alias{.transaction_parse_fn}
 \title{Parse transactions resource.}
 \usage{
-.transaction_parse_fn(x, ...)
+.transaction_parse_fn(x, pluck_args, fn)
 }
 \arguments{
 \item{x}{element to parse}
 
-\item{...}{element to parse}
+\item{pluck_args}{List of arguments passed to purrr::pluck.}
+
+\item{fn}{Function to run on subresource.}
 }
 \value{
 a tibble

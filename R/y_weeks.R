@@ -102,25 +102,29 @@ y_weeks <- memoise::memoise(
 
     if(!debug){
 
-        subresource_parse_fn <- function(x){
-            x %>%
-                purrr::pluck("game_week") %>%
-                dplyr::bind_cols()
-        }
-
+        # General list pre-processing
         preprocess <-
             r_parsed %>%
-            purrr::flatten()
+            purrr::flatten() %>%
+            purrr::map(list_pre_process_fn)
 
+        # df
         df <-
             tryCatch(
                 expr =
-                    purrr::map_df(preprocess, .game_resource_parse_fn, subresource_parse_fn) %>%
+                    preprocess %>%
+                    purrr::map_df(
+                        .game_resource_parse_fn,
+                        pluck_args = list("game", 2, 1),
+                        fn = function(x) purrr::map_df(x, purrr::flatten_df)
+                        ) %>%
                     dplyr::mutate(matchup_length = difftime(end, start)),
-
                 error = function(e) {
-                    message(crayon::cyan(
-                        "Function failed while parsing games resource with .game_resource_parse_fn. Returning debug list."))
+                    message(
+                        crayon::cyan(
+                            "Function failed while parsing games resource with .game_resource_parse_fn. Returning debug list."
+                        )
+                    )
                 }
             )
 
@@ -135,10 +139,10 @@ y_weeks <- memoise::memoise(
     data_list <-
         structure(
             list(
+                uri = uri,
                 resource = resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 

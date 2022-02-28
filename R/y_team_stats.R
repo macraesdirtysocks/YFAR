@@ -132,57 +132,69 @@ y_team_stats <-
 
         if (!debug) {
 
-            # Defining parse_fn is necessary because the team stats resource is not in a list.
-            # As soon as you drill down into team[[2]] the team stats are there as elements so the parse functions
-            # can be applied directly without mapping in.  It's annoying honesty.  Feeding the parse functions
-            # to .league_parse_fn will cause the .team_stats_data_func to map which won't work here.
-            parse_fn <-
-                function(x) {
-                    dplyr::bind_cols(
-                        .team_meta_parse_fn(x),
-                        .team_stats_parse_fn(x)
-                        )
-                }
-
             # Preprocess r_parsed.
             preprocess <-
                 r_parsed %>%
-                purrr::flatten()
+                purrr::flatten() %>%
+                purrr::keep(purrr::is_list) %>%
+                purrr::map(list_pre_process_fn)
 
-            if (identical(resource, "leagues")) {
 
-                  df <-
-                      tryCatch(
-                          expr =
-                              preprocess %>%
-                              purrr::map_df(.league_resource_parse_fn, parse_fn),
 
-                          error = function(e) {
-                              message(crayon::cyan(
-                                  "Function failed while parsing leagues resource with .league_resource_parse_fn. Returning debug list."))
-                          }
-                      )
+            if(resource == "leagues") {
 
-                  if(tibble::is_tibble(df)){return(df)}
+                df <-
+                    tryCatch(
+                        expr =
+                            purrr::map_df(
+                                preprocess,
+                                .league_resource_parse_fn,
+                                pluck_args = list("league", 2, "teams"),
+                                fn = function(x)
+                                    purrr::map_df(
+                                        x,
+                                        .team_resource_parse_fn,
+                                        pluck_args = list("team", 2),
+                                        fn = .team_stats_parse_fn
+                                    )
+                            ),
+                        error = function(e) {
+                            message(
+                                crayon::cyan(
+                                    "Function failed while parsing leagues resource with .league_resource_parse_fn. Returning debug list."
+                                )
+                            )
+                        }
+                    )
 
-            } else if (identical(resource, "teams")) {
+                # if (tibble::is_tibble(df)) {return(df)}
 
-               df <-
-                   tryCatch(
-                       expr =
-                           preprocess %>%
-                           purrr::map_df(parse_fn),
+            } else if (resource == "teams") {
 
-                       error = function(e) {
-                           message(crayon::cyan(
-                               "Function failed while parsing teams resource with parse_fn. Returning debug list."))
-                           }
-                   )
+                df <-
+                    tryCatch(
+                        expr =
+                            purrr::map_df(
+                                preprocess,
+                                .team_resource_parse_fn,
+                                pluck_args = list("team", 2),
+                                fn = .team_stats_parse_fn
+                            ),
 
-               if(tibble::is_tibble(df)){return(df)}
+                        error = function(e) {
+                            message(
+                                crayon::cyan(
+                                    "Function failed while parsing leagues resource with .team_resource_parse_fn. Returning debug list."
+                                )
+                            )
+                        }
+                    )
 
-            } else {
-                message(crayon::cyan("Unknown resource, please supply a valid league or team key.  Returning debug list."))
+                if (tibble::is_tibble(df)) {return(df)
+                }
+
+            } else{
+                message(crayon::cyan("Could not determine resource type, returning debug list."))
             }
         }
 
@@ -192,10 +204,10 @@ y_team_stats <-
 
         data_list <-
             structure(list(
+                uri = uri,
                 resource = resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 

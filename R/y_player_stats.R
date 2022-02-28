@@ -3,7 +3,7 @@
 #' Want stats for a player or group of players?  Provide a vector of player keys and ye shall receive.
 #'
 #' Want stats for a specific date? Provide a vector of game dates in form YYYY-MM-DD (%Y-%m-%d).
-#'   Default game date NUll will return aggregate stats for the season.
+#'   Default game date NULL will return aggregate stats for the season.
 #'   For weekly sports such as nfl you can provide an integer denoting a fantasy week.
 #'
 #' @param player_key Vector of player keys. Key usually in the form xxx.p.xxxx.
@@ -14,7 +14,7 @@
 #' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
 #' @param quiet Print function activity.
 #'
-#' @return A tibble
+#' @return A tibble.
 #' @export
 y_player_stats <-
     function(player_key = NULL, token_name = NULL, game_date = NULL, debug = FALSE, quiet = TRUE) {
@@ -43,10 +43,12 @@ y_player_stats <-
         stopifnot(!is.null(player_key))
 
         # Check if keys are type league, remove FALSE and duplicates.
-        key <- .single_resource_key_check(player_key, .player_key_check)
+        key <-
+            .single_resource_key_check(player_key, .player_key_check)
 
         # Determine what game the player_key belongs to.
-        game_key <- .game_key_assign_fn(key)
+        game_key <-
+            .game_key_assign_fn(key)
 
         if(!quiet){cat(crayon::cyan("game is", game_key), sep = " ")}
 
@@ -140,13 +142,16 @@ y_player_stats <-
             preprocess <-
                 r_parsed %>%
                 purrr::flatten() %>%
-                purrr::keep(purrr::is_list)
+                purrr::map(list_pre_process_fn)
 
             df <-
                 tryCatch(
                     expr =
                         preprocess %>%
-                        purrr::map_df(.player_resource_parse_fn, .player_stats_parse),
+                        purrr::map_df(
+                            .player_resource_parse_fn,
+                            pluck_args = list("player", 2),
+                            fn = function(x) purrr::imap_dfc(x, ~.player_stats_parse(.x) %>% tidyr::nest(!!.y := tidyselect::everything()))),
 
                     error = function(e) {
                         message(
@@ -168,10 +173,10 @@ y_player_stats <-
 
         data_list <-
             structure(list(
+                uri = uri,
                 resource= resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed,
             ),
             class = "yahoo_fantasy_api")
 

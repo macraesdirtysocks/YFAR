@@ -4,10 +4,17 @@
 \alias{.roster_resource_parse_fn}
 \title{Parse roster resource.}
 \usage{
-.roster_resource_parse_fn(x)
+.roster_resource_parse_fn(x, pluck_args, fn)
 }
 \arguments{
 \item{x}{Roster resource.}
+
+\item{pluck_args}{List of arguments passed to purrr::pluck.}
+
+\item{fn}{Function to run on sub-resource.}
+}
+\value{
+A tibble.
 }
 \description{
 This function parses the rosters resource.

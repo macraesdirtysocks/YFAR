@@ -479,8 +479,89 @@
 
 }
 
+#' Test if a list is flattenable.
+#'
+#' Usually combined with `rlang::flatten_if` or `YFAR::.unlist_and_bind`
+#'
+#' @param List to test.
+#'
+#' @return A boolean.
+#' @keywords internal
+is_flattenable <- function(x) {
+  vctrs::vec_is_list(x) && !rlang::is_named(x)
+}
 
 
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                is pluckable                              ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Test if a list is pluckable.
+#'
+#' Pluckability is defined as a list which contains a names list of length 1 which is flattenable.
+#'
+#' @param Element to test
+#'
+#' @return A list.
+#' @keywords internal
+is_pluckable <- function(x){
+  vctrs::vec_is_list(x) && rlang::is_named(x) && length(x) == 1L && is_flattenable(x[[1]])
+}
+
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+##                                   unlist2                                ----
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Unlist with janitor::make_clean_names.
+#'
+#' This function is a wrapper around `base::unlist` where the names attributes are clean with janitor::make_clean_names.
+#'
+#' @param x Object to unlist.
+#' @param ... Arguments passed to `base::unlist`.
+#'
+#' @return A vector.
+#' @keywords internal
+unlist2 <- function(x, ...){
+
+  x_unlisted <- unlist(x, ...)
+
+  x_unlisted <- vctrs::vec_set_names(x = x_unlisted, names = janitor::make_clean_names(attributes(x_unlisted)$names))
+
+  return(x_unlisted)
+
+}
+
+
+ ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ ##                               unlist and bind                            ----
+ ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#' Unlist an element and bind.
+#'
+#' This function combines `YFAR::unlist2` and `dplyr::bind_rows`.
+#'
+#' @param x Object to unlist and bind.
+#' @param ... Arguments passed onto unlist2.
+#'
+#' @return A tibble.
+#'
+#' @keywords internal
+.unlist_and_bind_fn <- function(x, ...){
+
+  is_flattenable <- function(x) purrr::is_list(x) && purrr::every(x[[1]], purrr::is_list)
+
+  x <- rlang::flatten_if(x, is_flattenable)
+
+  df <-
+    x %>%
+    unlist2(...) %>%
+    dplyr::bind_rows()
+
+  return(df)
+}
 
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

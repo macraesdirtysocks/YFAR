@@ -46,9 +46,9 @@ A few notes for the user...
 
 ### Terminology.
 
-I really try to use consistent language and labeling but this project but please don't hold me to it.  This is on account of the fact that I was deep into this and them someone gave me a "good idea" and I essentially started all over again.  Now this project has really dragged on and now my mind is mush.
+I really try to use consistent language and labeling throoughout this project but please don't hold me to it.  This is on account of the fact that I was deep into this and them someone gave me a "good idea" and I essentially started all over again.  Now this project has really dragged on and now my mind is mush.
 
-I will be referring to games or leagues and they are kinda synoymous but not really.  A game in this context is the fantasy sport you are playing or getting data for.  I.E. 2021 fantasy hockey is a game.
+I will be referring to games or leagues and they are kinda synonymous but not really.  A game in this context is the fantasy sport you are playing or getting data for.  I.E. 2021 fantasy hockey is a game.
 
 The overall structure is Game>League>Team>Roster>Players
  

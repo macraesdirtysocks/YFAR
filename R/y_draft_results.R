@@ -129,7 +129,7 @@ y_draft_results <- memoise::memoise(
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::keep(purrr::is_list)
+            list_pre_process_fn()
 
         #.....................If resource == leagues.....................
 
@@ -138,11 +138,14 @@ y_draft_results <- memoise::memoise(
             df <-
                 tryCatch(
                     expr =
+                        preprocess %>%
                         purrr::map_df(
-                            preprocess,
                             .league_resource_parse_fn,
-                            .team_resource_parse_fn,
-                            .two_deep_subresource_parse
+                            pluck_args = list("league", 2, 1),
+                            fn = function(x) purrr:::map_df(x,
+                                                            .team_resource_parse_fn,
+                                                            pluck_args = list("team", 2, 1),
+                                                            fn = function(x) purrr::map_df(x, .unlist_and_bind_fn))
                         ),
 
                     error = function(e) {
@@ -162,9 +165,12 @@ y_draft_results <- memoise::memoise(
             df <-
                 tryCatch(
                     expr =
-                        purrr::map_df(preprocess,
-                                      .team_resource_parse_fn,
-                                      .two_deep_subresource_parse),
+                        preprocess %>%
+                        purrr::map_df(
+                            .team_resource_parse_fn,
+                            list("team", 2, 1),
+                            fn = function(x) purrr::map_df(x, .unlist_and_bind_fn)
+                        ),
 
                     error = function(e) {
                         message(crayon::cyan(
@@ -179,7 +185,7 @@ y_draft_results <- memoise::memoise(
 
 
         } else {
-            message(crayon::cyan("Can't parse unknown resource. Returning debug list."))
+            message(crayon::cyan("Can't determine resource. Returning debug list."))
         }
     } # Close debug.
 
@@ -190,10 +196,10 @@ y_draft_results <- memoise::memoise(
         data_list <-
             structure(
                 list(
+                    uri = uri,
                     resource = resource,
                     response = r,
-                    content = r_parsed,
-                    uri = uri
+                    r_parsed = r_parsed
                 ),
                 class = "yahoo_fantasy_api"
             )

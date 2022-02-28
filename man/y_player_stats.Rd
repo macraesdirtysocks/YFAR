@@ -26,13 +26,13 @@ Default NULL will return aggregate stats for current season.  Accepts a vector o
 \item{quiet}{Print function activity.}
 }
 \value{
-A tibble
+A tibble.
 }
 \description{
 Want stats for a player or group of players?  Provide a vector of player keys and ye shall receive.
 }
 \details{
 Want stats for a specific date? Provide a vector of game dates in form YYYY-MM-DD (%Y-%m-%d).
-  Default game date NUll will return aggregate stats for the season.
+  Default game date NULL will return aggregate stats for the season.
   For weekly sports such as nfl you can provide an integer denoting a fantasy week.
 }

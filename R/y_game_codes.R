@@ -79,7 +79,7 @@ y_game_codes <- function(sport = NULL, token_name = NULL, debug = FALSE, quiet =
     ##                                PARSE CONTENT                             ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    r_parsed <- purrr::map(r, .y_parse_response, "fantasy_content", resource)
+    r_parsed <- purrr::map(r, .y_parse_response, "fantasy_content", "games")
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                      DF                                  ----
@@ -90,17 +90,17 @@ y_game_codes <- function(sport = NULL, token_name = NULL, debug = FALSE, quiet =
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::keep(purrr::is_list)
+            list_pre_process_fn()
 
         df <-
             tryCatch(
                 expr =
                     preprocess %>%
-                    purrr::map_df(.game_meta_parse_fn),
+                    purrr::map_df(.game_resource_parse_fn),
 
                 error = function(e) {
                     message(crayon::cyan(
-                        "Function failed while parsing games resource with .game_metaparse_fn. Returning debug list."))
+                        "Function failed while parsing games resource with .game_resource_parse_fn. Returning debug list."))
                 }
             )
 
@@ -115,10 +115,10 @@ y_game_codes <- function(sport = NULL, token_name = NULL, debug = FALSE, quiet =
     data_list <-
         structure(
             list(
+                uri = uri,
                 resource = resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api"
         )

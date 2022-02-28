@@ -4,12 +4,17 @@
 \alias{.team_resource_parse_fn}
 \title{Parse return from team resource}
 \usage{
-.team_resource_parse_fn(x, ...)
+.team_resource_parse_fn(x, pluck_args = NULL, fn)
 }
 \arguments{
 \item{x}{Team resource.}
 
-\item{...}{Additional parse function passed to purrr::map_df.}
+\item{pluck_args}{List of arguments passed to purrr::pluck.}
+
+\item{fn}{Function to run on subresource.}
+}
+\value{
+A tibble.
 }
 \description{
 This function parses the teams resource as well as the attached teams sub-resource.

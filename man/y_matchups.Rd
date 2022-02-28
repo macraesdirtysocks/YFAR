@@ -28,6 +28,9 @@ A tibble
 }
 \description{
 Returns match-up stats and results for a given teams and weeks.
+  Option to provide a week agrument which will return data for that week.
+  Default NULL will return all past and current weeks of season.
+  Vector of weeks also accepted.
 }
 \details{
 Only past or current match-ups will be returned.

@@ -85,28 +85,86 @@ y_draft_adp <- memoise::memoise(function(key = NULL, token_name = NULL, debug = 
     "players" = "player_keys="
   )
 
+
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ##                            IF RESOURCE == GAMES                          ----
+  ##                                FUNCTION DEFS                             ----
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  # Parse function dependant on resource.
+  parse_fn <-
+    switch(resource,
+      "games" = {
+        function(x) {
+          .game_resource_parse_fn(x,
+            pluck_args = list("game", 2, 1),
+            fn = function(x) {
+              purrr::map_df(x,
+                .player_resource_parse_fn,
+                pluck_args = list("player", 2),
+                fn = function(x) .unlist_and_bind_fn(x)
+              )
+            }
+          )
+        }
+      },
+      "leagues" = {
+        function(x) {
+          .league_resource_parse_fn(x,
+            pluck_args = list("league", 2, 1),
+            fn = function(x) {
+              purrr::map_df(x,
+                .player_resource_parse_fn,
+                pluck_args = list("player", 2),
+                fn = function(x) .unlist_and_bind_fn(x)
+              )
+            }
+          )
+        }
+      },
+      "players" = {
+        function(x) {
+          .player_resource_parse_fn(x,
+            pluck_args = list("player", 2),
+            fn = function(x) .unlist_and_bind_fn(x)
+          )
+        }
+      }
+    )
+
+
+  # Create a progress bar tick wrapper for parse function.
+  parse_fn_tick <- function(x) {
+    pb$tick()
+    parse_fn(x)
+  }
+
+
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                      IF RESOURCE %IN% c(GAMES, LEAGUES                   ----
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   if (resource %in% c("games", "leagues")) {
 
-    # Initialize empty list to store responses.
+    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                  WHILE LOOP                              ----
+    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # The Yahoo! api will return a max of 25 players per request and total number of
+    # players in the full player slate is not known.  This loop will continue to get
+    # the next 25 players as long as the the previous response contained 25 players.
+
+    # Initialize an empty list to append responses.
     r_list <- list()
 
-    # while loop arguments
+    # Initial while loop conditions.
     page_start <- 0
     count <- 25
 
-
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##  ~ WHILE LOOP OPEN  ----
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    cat(crayon::cyan(resource, "key provided, entering while loop...\n"), sep = " ")
-
-    # while loop
+    # While loop.  Continues until reponse contains less than 25 players which is assumed to be end player resource.
     while (count == 25) {
+
+      message(crayon::cyan("Entering while loop..."))
 
       # Build uri - increment page_start by 25.
       uri <- stringr::str_glue(
@@ -114,111 +172,51 @@ y_draft_adp <- memoise::memoise(function(key = NULL, token_name = NULL, debug = 
       )
 
       if (!quiet) {
-        print(uri)
+        message(crayon::cyan(uri))
+        cat(crayon::cyan("Page start =", page_start, "\n", sep = " "))
       }
 
-      r <- .y_get_response(uri, api_token)
+      ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ##                                GET RESPONSE                              ----
+      ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      r_parsed <- .y_parse_response(r, "fantasy_content", resource, "0")
+      r <-
+        .y_get_response(uri, api_token)
 
-      # Append r_parsed to end of r_list
-      r_list <- append(r_list, r_parsed, after = length(r_list))
+      ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ##                                   CONTENT                                ----
+      ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      # Update count.  Loop continues until this value changes hopefully indicating the end of the players resource.
-      count <- purrr::pluck(r_parsed, "game", 2, subresource, "count")
+      # Parse content.
+      # unname list so appending to r_list won't overwrite itself.
+      # The content will all be in a list with name "0" so each append duplicates itself and
+      # without unnaming you end up with a list of the same 25 players.
+      r_parsed <-
+        .y_parse_response(r, "fantasy_content", resource) %>%
+        unname()
 
-      # Update page start to get the next 25 players in the players resource.
-      page_start <- page_start + count
+      # Update while loop count.
+      count <-
+        purrr::pluck(r_parsed, 1, 1, 2, 1, "count")
 
       if (!quiet) {
-        cat(crayon::cyan("player count =", page_start, "\n", sep = " "))
+        cat(crayon::cyan("Content length =", count, "\n", sep = " "))
       }
+
+      # Update page start.
+      page_start <- page_start + count
+
+      # Append response to r_list for later parsing.
+      r_list <- append(r_list, r_parsed, after = length(r_list))
     } # End while loop
 
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##  ~ WHILE LOOP CLOSE  ----
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # General list pre-processing.
+    # Preprocess aggined here which is outside the usual flow of the function to avoid ahving to do another switch
+    # below before parsing.  IE. if resource == leagues r_parsed = r_list.
 
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##  ~ RESOURCE %in% c(GAMES, LEAGUES) RETURN  ----
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-    # if debug argument set to FALSE (default)
-    if (!debug) {
-      # Games meta.  This only operates on the first list because the game meta
-      # should be the same for all list elements.
-      game_meta <-
-        r_list %>%
-        purrr::pluck(1, 1) %>%
-        dplyr::bind_cols() %>%
-        dplyr::rename_with(~ paste(resource, .x, sep = "_"),
-          .cols = !tidyselect::matches(glue::glue("^{resource}_"))
-        )
-
-      # Preprocess the list
-      preprocess <-
-        r_list %>%
-        purrr::map(purrr::pluck, 2, subresource) %>%
-        purrr::flatten() %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact() %>%
-        purrr::set_names(nm = seq_along(.))
-
-      # Print Pretty message about how many players we are getting.
-      cat(crayon::cyan("Parsing", page_start, "player resources...\n", sep = " "))
-
-      pb <- progress::progress_bar$new(total = length(preprocess))
-
-      .draft_analysis_fn_tick <- function(x) {
-        pb$tick()
-        df <- .draft_analysis_fn(x)
-        return(df)
-      }
-
-      # Create df by mapping over preprocess with function defined above.
-      df <- tryCatch(
-        expr =
-          purrr::map_df(preprocess, .draft_analysis_fn_tick),
-        error = function(e) {
-          message(
-            crayon::cyan(
-              "Function failed while parsing games resource with .player_resource_parse_fn. Returning debug list."
-            )
-          )
-                data_list <-
-                        structure(list(
-                                resource = resource,
-                                content = r_list,
-                                uri = uri,
-                                total_players = page_start
-                        ),
-                        class = "yahoo_fantasy_api"
-                        )
-          return(data_list)
-        }
-      )
-
-      # Return df
-      if (tibble::is_tibble(df)) {
-        return(df)
-      }
-    } else {
-            data_list <-
-                    structure(list(
-                            resource = resource,
-                            content = r_list,
-                            uri = uri,
-                            total_players = page_start
-                    ),
-                    class = "yahoo_fantasy_api"
-                    )
-      return(data_list)
-    }
-
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##  ~ RESOURCE %in% c(GAMES, LEAGUES) RETURN  ----
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    preprocess <-
+      r_list %>%
+      list_pre_process_fn()
 
     ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                            IF RESOURCE == PLAYERS                        ----
@@ -238,12 +236,14 @@ y_draft_adp <- memoise::memoise(function(key = NULL, token_name = NULL, debug = 
       class = "url"
     )
 
+    # Pack player keys into uri paths of length 25.
     key_path <-
       .uri_path_packer(key, 25)
 
+    # Message
     if (!quiet) {
-      cat("The keys provided were packed as following:\n")
-      print(key_path)
+      cat(crayon::cyan("The keys provided were packed as following:\n"))
+      message(crayon::cyan(key_path))
     }
 
     # Create paths using .uri_path_package(key) to pack player keys into groups of 25.
@@ -251,13 +251,16 @@ y_draft_adp <- memoise::memoise(function(key = NULL, token_name = NULL, debug = 
       stringr::str_c(uri_out, key_path, "/", subresource)
 
     # Build uris.
-    uri <- httr::build_url(uri_parsed)
+    uri <-
+      httr::build_url(uri_parsed)
 
-    # Map over uris with GET function.
-    r <- purrr::map(uri, .y_get_response, api_token)
+    # Map over uris with .y_get_response.
+    r <-
+      purrr::map(uri, .y_get_response, yahoo_token)
 
-    # Check for bad responses
-    r_errors <- purrr::map_lgl(r, httr::http_error)
+    # Check for bad responses.
+    r_errors <-
+      purrr::map_lgl(r, httr::http_error)
 
     # If there are errors in the responses then remove errors.
     if (sum(!purrr::map_lgl(r, httr::http_error)) <= 0) {
@@ -270,60 +273,63 @@ y_draft_adp <- memoise::memoise(function(key = NULL, token_name = NULL, debug = 
     if (!vctrs::vec_is_empty(r)) {
       r_parsed <-
         purrr::map(r, .y_parse_response, "fantasy_content", resource)
+
+      preprocess <-
+        r_parsed %>%
+        purrr::map(unname) %>%
+        purrr::flatten() %>%
+        list_pre_process_fn()
     } else {
       stop(message(crayon::cyan("No valid responses to parse.")), call. = FALSE)
     }
-
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##  ~ PLAYERS RESOURCE RETURN  ----
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    if (!debug) {
-      preprocess <-
-        r_parsed %>%
-        purrr::map(purrr::keep, purrr::is_list) %>%
-        purrr::flatten()
-
-      df <-
-              tryCatch(
-                      expr = purrr::map_df(preprocess, .draft_analysis_func),
-                      error = function(e) {
-                              message(
-                                      crayon::cyan(
-                                              "Function failed while parsing games resource with .player_resource_parse_fn. Returning debug list."
-                                      )
-                              )
-                              data_list <-
-                                      structure(list(
-                                              resource = resource,
-                                              content = r_list,
-                                              uri = uri,
-                                              total_players = page_start
-                                      ),
-                                      class = "yahoo_fantasy_api"
-                                      )
-                              return(data_list)
-                      })
-
-      if(tibble::is_tibble(df)){return(df)}
-
-    } else {
-      data_list <-
-        structure(
-          list(
-            response = r,
-            content = r_parsed,
-            uri = uri
-          ),
-          class = "yahoo_fantasy_api"
-        )
-
-      return(data_list)
-    }
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ##  ~ END RESOURCE == PLAYERS  ----
-    ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   } else {
-    cat(crayon::cyan("Can't determine what type of key was provided.\n"))
+    stop(message(crayon::cyan("Can't determine resource.")), call. = FALSE)
   }
+
+  if (!debug) {
+    cat(crayon::cyan("Parsing", length(preprocess), "responses...\n"))
+
+    # Set progress bar length.
+    pb <- progress::progress_bar$new(total = length(preprocess))
+
+    # map parse function.
+    df <-
+      tryCatch(
+        expr =
+          preprocess %>%
+            purrr::map_df(parse_fn_tick),
+        error = function(e) {
+          cat(
+            crayon::cyan(
+              "Function failed while parsing",
+              resource,
+              "resource.  Returning debug list.",
+              sep = " "
+            )
+          )
+        }
+      )
+
+    # Return df.
+    if (tibble::is_tibble(df)) {
+      return(df)
+    }
+  }
+
+  # ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ##                                DEBUG RETURN                              ----
+  # ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+  data_list <-
+    structure(list(
+      uri = uri,
+      resource = resource,
+      response = r,
+      r_parsed = r_list
+    ),
+    class = "yahoo_fantasy_api"
+    )
+
+  return(data_list)
 })

@@ -106,13 +106,24 @@ y_standings <- function(team_key = NULL, token_name = NULL, debug = FALSE, quiet
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::keep(purrr::is_list)
+            purrr::keep(purrr::is_list) %>%
+            purrr::map(list_pre_process_fn)
 
-        subresource_parse_fn <- function(x) {
-            x %>%
-                unlist() %>%
-                dplyr::bind_rows() %>%
-                janitor::clean_names()
+        subresource_parse_fn <- function(x){
+
+            atomic <-
+                x %>%
+                purrr::keep(purrr::is_atomic) %>%
+                dplyr::bind_cols()
+
+            the_lists <-
+                x %>%
+                purrr::keep(purrr::is_list) %>%
+                purrr::imap_dfc(~purrr::set_names(.x, nm = paste(.y, names(.x), sep = "_")) %>% purrr::flatten_dfr())
+
+            df <- dplyr::bind_cols(atomic, the_lists)
+
+            return(df)
         }
 
         df <-
@@ -121,7 +132,8 @@ y_standings <- function(team_key = NULL, token_name = NULL, debug = FALSE, quiet
                     purrr::map_df(
                         preprocess,
                         .team_resource_parse_fn,
-                        subresource_parse_fn
+                        list("team", 2),
+                        function(x) purrr::map_df(x, subresource_parse_fn)
                     ),
 
                 error = function(e) {

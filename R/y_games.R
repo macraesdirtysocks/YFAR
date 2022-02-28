@@ -56,7 +56,7 @@ y_games <-
                 ),
                 class = "url"))
 
-        if(!quiet){cat(crayon::cyan("uri is...\n", uri, "\n"))}
+        if(!quiet){cat(crayon::cyan("Uri generated...\n", uri, "\n"))}
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                GET RESPONSE                              ----
@@ -76,6 +76,17 @@ y_games <-
         r_parsed <-
             .y_parse_response(r, "fantasy_content", resource)
 
+        ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                          CHECK RESPONSE FOR ERRORS                       ----
+        ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+        if (sum(!purrr::map_lgl(r, httr::http_error)) <= 0) {
+            stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
+        }
+
+        r <- r[!purrr::map_lgl(r, httr::http_error)]
+
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                PARSE CONTENT                             ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,24 +100,33 @@ y_games <-
             preprocess <-
                 r_parsed %>%
                 purrr::pluck("0", "user", 2, "games") %>%
-                purrr::keep(purrr::is_list) %>%
-                purrr::compact()
+                list_pre_process_fn()
 
             # Subset out special tournaments and promotional leagues i.e. free NFL money leagues and golf.
             preprocess <- preprocess[purrr::map_depth(preprocess, 2, purrr::every, purrr::is_list) %>% purrr::map_lgl(1)]
+            preprocess <- preprocess %>% purrr::keep(.p = purrr::negate(function(x) names(x) == "exceptions"))
 
             if(!quiet){cat(crayon::cyan("Parsing content with .y_games_parse\n"))}
 
             df <-
                 tryCatch(
                     expr =
-                        purrr::map_df(preprocess, .game_resource_parse_fn, .league_meta_parse_fn),
+                        preprocess %>%
+                        purrr::map_df(
+                            .game_resource_parse_fn,
+                            pluck_args = list("game", 2, 1),
+                            fn = function(x)
+                                purrr::map_df(x, .league_resource_parse_fn)
+                        ),
 
                     error = function(e) {
-                        message(crayon::cyan(
-                            "Function failed while parsing games resource with .game_resource_parse_fn. Returning debug list."))
+                        message(
+                            crayon::cyan(
+                                "Function failed while parsing games resource with .game_resource_parse_fn. Returning debug list."
+                            )
+                        )
                     }
-                    )
+                )
 
             if(tibble::is_tibble(df)){return(df)}
         }
@@ -117,10 +137,10 @@ y_games <-
 
         data_list <-
             structure(list(
+                uri = uri,
                 resource = resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 

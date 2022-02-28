@@ -99,19 +99,28 @@ y_teams <- memoise::memoise(function(league_key = NULL, token_name = NULL, debug
 
         preprocess <-
             r_parsed %>%
-            purrr::flatten()
+            purrr::flatten() %>%
+            purrr::map(list_pre_process_fn)
 
         df <-
             tryCatch(
                 expr =
                     preprocess %>%
-                    purrr::map_df(.league_resource_parse_fn, .team_meta_parse_fn
+                    purrr::map_df(
+                        .league_resource_parse_fn,
+                        pluck_args = list("league", 2, 1),
+                        fn = function(x)
+                            purrr::map_df(x, .team_resource_parse_fn)
                     ),
+
                 error = function(e) {
-                    message(crayon::cyan(
-                        "Function failed while parsing with .league_resource_parse_fn. Returning debug list."))
+                    message(
+                        crayon::cyan(
+                            "Function failed while parsing with .league_resource_parse_fn. Returning debug list."
+                        )
+                    )
                 }
-                )
+            )
 
         if(tibble::is_tibble(df)){return(df)}
 
@@ -125,7 +134,7 @@ y_teams <- memoise::memoise(function(league_key = NULL, token_name = NULL, debug
         structure(
             list(
                 resource = resource,
-                response = r,
+                r_parsed = r,
                 content = r_parsed,
                 uri = uri
             ),

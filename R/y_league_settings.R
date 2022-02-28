@@ -104,16 +104,17 @@ y_league_settings <- function(league_key = NULL, token_name = NULL, debug = FALS
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::keep(purrr::is_list)
+            list_pre_process_fn()
+
 
         df <-
             tryCatch(
                 expr =
-                    purrr::map_df(preprocess, .settings_subresource_parse_fn, .league_settings_parse_fn),
+                    purrr::map_df(preprocess, .league_settings_parse_fn),
 
                 error = function(e) {
                     message(crayon::cyan(
-                        "Function failed while parsing games resource with settings_parse_fn. Returning debug list."))
+                        "Function failed while parsing leagues resource with settings_parse_fn. Returning debug list."))
                 }
             )
 
@@ -127,10 +128,10 @@ y_league_settings <- function(league_key = NULL, token_name = NULL, debug = FALS
 
     data_list <-
         structure(list(
+            uri = uri,
             resource = resource,
             response = r,
-            content = r_parsed,
-            uri = uri
+            r_parsed = r_parsed
         ),
         class = "yahoo_fantasy_api")
 

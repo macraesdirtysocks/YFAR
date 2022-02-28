@@ -55,7 +55,7 @@ y_rosters <- memoise::memoise(
         subresource <- switch(resource, "leagues" = "teams", "teams" = NULL)
         collection = "roster"
         uri_out <- switch(resource,"leagues" = "league_keys=", "teams" = "team_keys=")
-        game_key <- .game_key_assign_fn(key)
+        # game_key <- .game_key_assign_fn(key)
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                     URI                                  ----
@@ -148,7 +148,7 @@ y_rosters <- memoise::memoise(
             preprocess <-
                 r_parsed %>%
                 purrr::flatten() %>%
-                purrr::keep(purrr::is_list)
+                purrr::map(list_pre_process_fn)
 
             # If resource equal to "leagues" .league_resource_parse_fn needed.
             # Otherwise only .team_resource_parse_fn is needed.
@@ -157,11 +157,14 @@ y_rosters <- memoise::memoise(
                 df <-
                     tryCatch(
                         expr =
-                purrr::map_df(
+                    purrr::map_df(
                         preprocess,
                         .league_resource_parse_fn,
-                        .team_resource_parse_fn,
-                        .roster_resource_parse_fn
+                        pluck_args = list("league", 2, 1),
+                        fn = function(x) purrr::map_df(x, .team_resource_parse_fn,
+                        pluck_args = list("team", 2, 1),
+                        fn = .roster_resource_parse_fn
+                    )
                     ),
 
                 error = function(e) {
@@ -177,7 +180,11 @@ y_rosters <- memoise::memoise(
                 df <-
                     tryCatch(
                         expr =
-                            purrr::map_df(preprocess, .team_resource_parse_fn, .roster_resource_parse_fn),
+                            purrr::map_df(
+                                preprocess,
+                                .team_resource_parse_fn,
+                                pluck_args = list("team", 2, 1),
+                                fn = .roster_resource_parse_fn),
 
                         error = function(e) {
                             message(crayon::cyan(
@@ -188,7 +195,7 @@ y_rosters <- memoise::memoise(
                 if(tibble::is_tibble(df)) {return(df)}
 
             } else{
-                message(crayon::cyan("Bad resource, can't parse.  Returning debug list."))
+                message(crayon::cyan("Can't determine resource.  Returning debug list."))
             }
 
         }
@@ -200,10 +207,10 @@ y_rosters <- memoise::memoise(
         data_list <-
             structure(
                 list(
+                    uri = uri,
                     resource = resource,
                     response = r,
-                    content = r_parsed,
-                    uri = uri
+                    r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 

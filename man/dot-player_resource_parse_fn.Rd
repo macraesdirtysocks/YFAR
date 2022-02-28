@@ -4,12 +4,17 @@
 \alias{.player_resource_parse_fn}
 \title{Parse player resource.}
 \usage{
-.player_resource_parse_fn(x, ...)
+.player_resource_parse_fn(x, pluck_args = NULL, fn)
 }
 \arguments{
 \item{x}{Player resource.}
 
-\item{...}{Additional parse function passed to purrr::map_df.}
+\item{pluck_args}{List of arguments passed to purrr::pluck.}
+
+\item{fn}{Function to run on subresource.}
+}
+\value{
+A tibble.
 }
 \description{
 Parse player resource.

@@ -166,30 +166,33 @@ y_players <-
                                .league_resource_parse_fn
                            })
 
+                initial_pluck <-
+                    switch(resource,
+                           "games" = list("game", 2, 1),
+                           "leagues" = list("league", 2, 1)
+                           )
+
                 preprocess <-
                     r_parsed %>%
                     purrr::flatten() %>%
-                    purrr::keep(purrr::is_list)
+                    purrr::map(list_pre_process_fn)
 
                 df <-
                     tryCatch(
                         expr =
                             preprocess %>%
-                            purrr::map_df(resource_parse_fn, .player_meta_parse_fn) %>%
-                            tibble::add_column("rank" = seq_len(nrow(.)), .before = 1),
+                            purrr::map_df(resource_parse_fn, pluck_args = initial_pluck, fn = function(x) purrr::map_df(x, .player_resource_parse_fn)),
 
                         error = function(e) {
                             message(
                                 crayon::cyan(
-                                    "Function failed while parsing games resource with .game_resource_parse_fn. Returning debug list."
+                                    "Function failed while parsing games resource with resource_parse_fn. Returning debug list."
                                 )
                             )
                         }
                     )
 
-                if (tibble::is_tibble(df)) {
-                    return(df)
-                }
+                if (tibble::is_tibble(df)) {return(df)}
 
             }
 
@@ -201,10 +204,10 @@ y_players <-
 
             data_list <-
                 structure(list(
+                    uri = uri,
                     resource = resource,
                     response = r,
-                    content = r_parsed,
-                    uri = uri
+                    r_parsed = r_parsed
                 ),
                 class = "yahoo_fantasy_api")
 

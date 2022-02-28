@@ -1,6 +1,9 @@
 #' Get match-up stats and results data from Yahoo! Fantasy API
 #'
 #' Returns match-up stats and results for a given teams and weeks.
+#'   Option to provide a week agrument which will return data for that week.
+#'   Default NULL will return all past and current weeks of season.
+#'   Vector of weeks also accepted.
 #'
 #' Only past or current match-ups will be returned.
 #'
@@ -119,17 +122,40 @@ y_matchups <-
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if(!debug) {
+
+            # General preprocess steps that most functions use.
             preprocess <-
-                # General preprocess steps that most functions use.
                 r_parsed %>%
                 purrr::flatten() %>%
                 purrr::keep(purrr::is_list) %>%
-                # Pluck out match-up element to avoid redundant team resource.
-                purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-                # Discard weeks that havent
-                purrr::map_depth(2, function(x) {purrr::discard(x, purrr::has_element, "preevent")}) %>%
-                # Remove empty lists created by discard.
-                purrr::map_depth(1, function(x) {purrr::compact(x) %>% purrr::keep(purrr::is_list)})
+                list_pre_process_fn()
+
+            # If response is form a non H2H league the mathcup elements will contain an error message.
+            # Extract error elements and create a message for printing.
+            error_elements <-
+                preprocess %>%
+                rrapply::rrapply(
+                    classes = "list",
+                    condition = function(x, .xname) .xname == "exception",
+                    f = function(x) purrr::pluck(x, "message"),
+                    how = "melt"
+                ) %>%
+                dplyr::select("L1", "value") %>%
+                dplyr::mutate(message = stringr::str_c("Error in", L1, "with message:", value, sep = " "))
+
+            # If errors exist print.
+            if(nrow(error_elements) > 0){
+            message(crayon::cyan$bold("Matchups removed:\n", paste0(error_elements$message, "\n")))
+            }
+
+            # Non error list elelments.
+           good_elements <- dplyr::setdiff(names(preprocess), error_elements %>% dplyr::pull("L1"))
+
+           # Subset good elements and pluck matchup data.
+           preprocess <-
+               preprocess[good_elements] %>%
+               purrr::map(purrr::pluck, "team", 2, "matchups")
+
 
             df <-
                 tryCatch(
@@ -140,7 +166,7 @@ y_matchups <-
 
                     error = function(e) {
                         message(crayon::cyan(
-                            "Function failed while parsing games resource with .team_resource_parse_fn. Returning debug list."))
+                            "Function failed while parsing games resource with .matchup_parse_fn. Returning debug list."))
                     }
                 )
 
@@ -154,10 +180,10 @@ y_matchups <-
 
         data_list <-
             structure(list(
+                uri = uri,
                 resource = resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 
