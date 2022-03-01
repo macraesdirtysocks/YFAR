@@ -110,7 +110,11 @@ y_league_settings <- function(league_key = NULL, token_name = NULL, debug = FALS
         df <-
             tryCatch(
                 expr =
-                    purrr::map_df(preprocess, .league_settings_parse_fn),
+                    preprocess %>%
+                    purrr::map_df(
+                                  .league_resource_parse_fn,
+                                  pluck_args = list("league", 2, 1),
+                                  fn = function(x) .league_settings_parse_fn(x)),
 
                 error = function(e) {
                     message(crayon::cyan(

@@ -22,6 +22,7 @@ utils::globalVariables(
         "game_key",
         "resource",
         "key",
-        "count"
+        "count",
+        "L1"
     )
 )

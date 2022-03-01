@@ -443,86 +443,43 @@ list_pre_process_fn <- function(x){
 #' @keywords internal
 .league_settings_parse_fn <- function(x){
 
-  league_meta <-
-    x %>%
-    purrr::pluck("league", 1) %>%
-    purrr::lmap(.unlist_and_bind_fn) %>%
-    dplyr::bind_cols() %>%
-    dplyr::rename_with(
-      ~ paste("league", .x, sep = "_"), .cols = !tidyselect::matches("^league_")
-      ) %>%
-    tidyr::nest(league_meta = !c("league_key"))
+df <-
+  x %>%
+  purrr::flatten() %>%
+  purrr::modify_at("waiver_days", dplyr::bind_rows) %>%
+  purrr::modify_at("roster_positions", purrr::flatten_df) %>%
+  purrr::modify_at(
+    "stat_categories",
+    purrr::compose(
+      .dir = "forward",
+      ~ purrr::pluck(.x, 1),
+      ~ purrr::modify_depth(.x, 2, purrr::modify_at, "stat_position_types", purrr::flatten_df),
+      ~ purrr::map_df(.x, purrr::flatten_df)
+    )
+  ) %>%
+  purrr::modify_at(
+    "stat_modifiers",
+    ~purrr::map_df(.x, purrr::flatten_df)
+    ) %>%
+  purrr::modify_at(
+    "divisions",
+    purrr::flatten_df
+    ) %>%
+  purrr::modify_at(
+    "week_has_enough_qualifying_days",
+    ~ dplyr::bind_rows(.x) %>%
+      tidyr::pivot_longer(cols = tidyselect::everything(), names_to = "week", values_to = "value")
+  ) %>%
+  purrr::modify_if(
+    purrr::is_list,
+    ~ tidyr::nest(.x, data = tidyselect::everything())
+  ) %>%
+  purrr::imap(~ purrr::set_names(.x, nm = .y)) %>%
+  dplyr::bind_cols()
 
-    league_settings <-
-      x %>%
-      purrr::pluck("league", 2, "settings") %>%
-      purrr::flatten() %>%
-      purrr::keep(purrr::is_atomic) %>%
-      dplyr::bind_rows() %>%
-      tidyr::nest(league_settings = tidyselect::everything())
-
-    other_league_settings <-
-      x %>%
-      purrr::pluck("league", 2, "settings") %>%
-      purrr::flatten() %>%
-      purrr::keep(purrr::is_list) %>%
-      purrr::map_if(is_pluckable, purrr::pluck, 1) %>%
-      purrr::map_at("stat_categories",
-                    purrr::map_depth, 2,
-                    purrr::modify_at, "stat_position_types", purrr::map_df, .unlist_and_bind_fn) %>%
-      purrr::map(purrr::flatten_df) %>%
-      purrr::imap_dfc(~tidyr::nest(.x, !!.y := tidyselect::everything()))
-
-    df <-
-      dplyr::bind_cols(league_meta, league_settings, other_league_settings)
-
-    return(df)
+return(df)
 
   }
-
-#........................STANDINGS PARSE.........................
-
-
-#' Parse standings sub-resource
-#'
-#' @param x List element containing standings resource.
-#'
-#' @keywords internal
-.standings_parse_fn <- function(x) {
-
-    team_meta <-
-        x %>%
-        .team_meta_parse_fn()
-
-    team_stats <-
-        x %>%
-        purrr::pluck("team", 2, "team_stats", "stats") %>%
-        purrr::flatten_df() %>%
-        # dplyr::left_join(., .yahoo_hockey_stat_categories(), by = "stat_id") %>%
-        # dplyr::select("display_name", "value") %>%
-        tidyr::pivot_wider(
-            id_cols = stat_id,
-            names_from = stat_id,
-            values_from = value,
-            names_prefix = "stat_id_")
-
-    team_points <-
-        x %>%
-        purrr::pluck("team", 2, "team_points") %>%
-        purrr::flatten_df()
-
-    standings <-
-        x %>%
-        purrr::pluck("team", 3, "team_standings") %>%
-        unlist(recursive = TRUE) %>%
-        dplyr::bind_rows() %>%
-        janitor::clean_names()
-
-    df <- dplyr::bind_cols(team_meta, team_points, standings, team_stats)
-
-    return(df)
-
-}
 
 
 #........................TRANSACTION PARSE.......................
@@ -657,71 +614,6 @@ list_pre_process_fn <- function(x){
 
 }
 
-
-#...................SETTINGS SUBRESOURCE PARSE...................
-
-#' Parse settings sub-resource
-#'
-#' This function parses the settings sub-resource.
-#'
-#' Called by `y_league_settings()`.
-#'
-#' @param x List containing a matchup element.
-#' @param ... Takes a function and is passed on to do.call.
-#'
-#' @return A tibble
-#' @keywords internal
-.settings_subresource_parse_fn <- function(x, ...) {
-
-    sport_type <- purrr::pluck(x, "league", 1, "game_code")
-
-    league_info <-
-        x %>%
-        .league_meta_parse_fn() %>%
-        tidyr::nest(league_meta = !c(league_key))
-
-    subresource <-
-        do.call(..., list(purrr::pluck(x, "league", 2, 1)))
-
-    df <-
-        dplyr::bind_cols("sport" = sport_type,
-                         league_info,
-                         subresource,
-                         .name_repair = janitor::make_clean_names) %>%
-        dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
-
-    return(df)
-
-}
-
-
-#......................DRAFT ANALYSIS PARSE......................
-
-
-#' Parse draft analysis sub-resource
-#'
-#' @param x List containing a draft analysis element.
-#' @keywords internal
-.draft_analysis_fn <- function(x) {
-
-    # Parse player meta data with internal function.
-    player_meta <-
-        .player_meta_parse_fn(x)
-
-    # Parse draft analysis.
-    draft_analysis <-
-        x %>%
-        purrr::pluck("player", 2, "draft_analysis") %>%
-        dplyr::bind_cols()
-
-    # Bind cols
-    df <-
-        dplyr::bind_cols(player_meta, draft_analysis)
-
-    # Return df
-    return(df)
-
-}
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  ~ STATS PARSE FUNCTIONS  ----

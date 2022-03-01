@@ -84,25 +84,16 @@ testthat::test_that("One game resource is parsed to a tibble",{
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-    resource_parse_fn <-
-        switch(resource,
-               "games" = {
-                   .game_resource_parse_fn
-               },
-               "leagues" = {
-                   .league_resource_parse_fn
-               })
     # Preprocess list.  This step is verbatim from y_matchups.
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        list_pre_process_fn()
 
     # DF
     df <-
         preprocess %>%
-        purrr::map_df(.game_meta_parse_fn)
+        purrr::map_df(.game_resource_parse_fn)
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
@@ -164,25 +155,16 @@ testthat::test_that("Two game resources are parsed to a tibble",{
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-    resource_parse_fn <-
-        switch(resource,
-               "games" = {
-                   .game_resource_parse_fn
-               },
-               "leagues" = {
-                   .league_resource_parse_fn
-               })
     # Preprocess list.  This step is verbatim from y_matchups.
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        list_pre_process_fn()
 
     # DF
     df <-
         preprocess %>%
-        purrr::map_df(.game_meta_parse_fn)
+        purrr::map_df(.game_resource_parse_fn)
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)

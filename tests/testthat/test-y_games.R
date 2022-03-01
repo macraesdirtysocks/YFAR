@@ -29,13 +29,12 @@ testthat::test_that("uri is generated properly", {
             "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json")
     })
 
-with_mock_api({
-
-    test_that("Response parses correctly.",{
+test_that("Response parses correctly.",{
 
     resource <- "users"
     uri <- "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games/leagues?format=json"
-    r <- .y_get_response(uri = uri)
+    r <- with_mock_api({.y_get_response(uri = uri)})
+
 
     # Test that response uri and uri are equal.
     test_that("Response uri is equal to input uri.",{
@@ -57,11 +56,11 @@ with_mock_api({
     preprocess <-
         r_parsed %>%
         purrr::pluck("0", "user", 2, "games") %>%
-        purrr::keep(purrr::is_list) %>%
-        purrr::compact()
+        list_pre_process_fn()
 
     # Subset out special tournaments and promotional leagues i.e. free NFL money leagues and golf.
     preprocess <- preprocess[purrr::map_depth(preprocess, 2, purrr::every, purrr::is_list) %>% purrr::map_lgl(1)]
+    preprocess <- preprocess %>% purrr::keep(.p = purrr::negate(function(x) names(x) == "exceptions"))
 
     # Test that all elements of r_parsed are named leagues
     test_that("All game elements contain a leagues list", {
@@ -76,7 +75,13 @@ with_mock_api({
     })
 
     df <-
-        purrr::map_df(preprocess, .game_resource_parse_fn, .league_meta_parse_fn)
+        preprocess %>%
+        purrr::map_df(
+            .game_resource_parse_fn,
+            pluck_args = list("game", 2, 1),
+            fn = function(x)
+                purrr::map_df(x, .league_resource_parse_fn)
+        )
 
     # Test that df is a tibble
     test_that("A tibble is returned after parsing",{
@@ -102,5 +107,4 @@ with_mock_api({
     # Test colnames sare s expected.
     expect_named(df, expected_df_colnames, ignore.order = TRUE, ignore.case = TRUE)
 
-})
 })

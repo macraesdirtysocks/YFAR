@@ -172,8 +172,6 @@ testthat::test_that("Response for a head with waivers league is parsed to a tibb
                             purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
 
-
-
                         # Test that response uri and uri are equal.
                         expect_equal(mock_uri,
                                      purrr::map_chr(r, purrr::pluck, "url"))
@@ -185,12 +183,13 @@ testthat::test_that("Response for a head with waivers league is parsed to a tibb
                         preprocess <-
                             r_parsed %>%
                             purrr::flatten() %>%
-                            purrr::keep(purrr::is_list)
+                            list_pre_process_fn()
 
                         df <-
                             purrr::map_df(preprocess,
-                                          .settings_subresource_parse_fn,
-                                          .league_settings_parse_fn)
+                                          .league_resource_parse_fn,
+                                          pluck_args = list("league", 2, 1),
+                                          fn = function(x) .league_settings_parse_fn(x))
 
 
                         expect_true(tibble::is_tibble(df), TRUE)
@@ -198,14 +197,22 @@ testthat::test_that("Response for a head with waivers league is parsed to a tibb
 
                         # Expected colnames.
                         expected_colnames <-
-                            c(
-                                "sport",
-                                "league_key",
-                                "league_meta",
-                                "league_settings",
-                                "roster_positions",
-                                "stat_categories",
-                                "waiver_days"
+                            c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+                              "league_draft_status", "league_num_teams", "league_edit_key",
+                              "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+                              "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+                              "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+                              "league_current_week", "league_start_week", "league_start_date",
+                              "league_end_week", "league_end_date", "league_game_code", "league_season",
+                              "draft_type", "is_auction_draft", "scoring_type", "uses_playoff",
+                              "has_playoff_consolation_games", "playoff_start_week", "uses_playoff_reseeding",
+                              "uses_lock_eliminated_teams", "num_playoff_teams", "num_playoff_consolation_teams",
+                              "has_multiweek_championship", "waiver_type", "waiver_rule", "waiver_days",
+                              "uses_faab", "draft_time", "draft_pick_time", "post_draft_players",
+                              "max_teams", "waiver_time", "trade_end_date", "trade_ratify_type",
+                              "trade_reject_time", "player_pool", "cant_cut_list", "draft_together",
+                              "sendbird_channel_url", "roster_positions", "stat_categories",
+                              "max_weekly_adds", "min_games_played", "week_has_enough_qualifying_days"
                             )
 
                         # Test df colnames
@@ -253,12 +260,13 @@ testthat::test_that("Response for a points league is parsed to a tibble",
                         preprocess <-
                             r_parsed %>%
                             purrr::flatten() %>%
-                            purrr::keep(purrr::is_list)
+                            list_pre_process_fn()
 
                         df <-
                             purrr::map_df(preprocess,
-                                          .settings_subresource_parse_fn,
-                                          .league_settings_parse_fn)
+                                          .league_resource_parse_fn,
+                                          pluck_args = list("league", 2, 1),
+                                          fn = function(x) .league_settings_parse_fn(x))
 
 
                         expect_true(tibble::is_tibble(df), TRUE)
@@ -266,15 +274,23 @@ testthat::test_that("Response for a points league is parsed to a tibble",
 
                         # Expected colnames.
                         expected_colnames <-
-                            c(
-                                "sport",
-                                "league_key",
-                                "league_meta",
-                                "league_settings",
-                                "roster_positions",
-                                "stat_categories",
-                                "stat_modifiers"
-                            )
+                            c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+                              "league_draft_status", "league_num_teams", "league_edit_key",
+                              "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+                              "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+                              "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+                              "league_current_week", "league_start_week", "league_start_date",
+                              "league_end_week", "league_end_date", "league_is_finished", "league_game_code",
+                              "league_season", "draft_type", "is_auction_draft", "scoring_type",
+                              "uses_playoff", "has_playoff_consolation_games", "playoff_start_week",
+                              "uses_playoff_reseeding", "uses_lock_eliminated_teams", "num_playoff_teams",
+                              "num_playoff_consolation_teams", "has_multiweek_championship",
+                              "waiver_type", "waiver_rule", "uses_faab", "draft_time", "draft_pick_time",
+                              "post_draft_players", "max_teams", "waiver_time", "trade_end_date",
+                              "trade_ratify_type", "trade_reject_time", "player_pool", "cant_cut_list",
+                              "draft_together", "can_trade_draft_picks", "sendbird_channel_url",
+                              "roster_positions", "stat_categories", "stat_modifiers", "min_games_played",
+                              "week_has_enough_qualifying_days")
 
                         # Test df colnames
                         expect_named(df,
@@ -322,12 +338,13 @@ testthat::test_that("Response for a head points league is parsed to a tibble",
                         preprocess <-
                             r_parsed %>%
                             purrr::flatten() %>%
-                            purrr::keep(purrr::is_list)
+                            list_pre_process_fn()
 
                         df <-
                             purrr::map_df(preprocess,
-                                          .settings_subresource_parse_fn,
-                                          .league_settings_parse_fn)
+                                          .league_resource_parse_fn,
+                                          pluck_args = list("league", 2, 1),
+                                          fn = function(x) .league_settings_parse_fn(x))
 
 
                         expect_true(tibble::is_tibble(df), TRUE)
@@ -335,14 +352,23 @@ testthat::test_that("Response for a head points league is parsed to a tibble",
 
                         # Expected colnames.
                         expected_colnames <-
-                            c(
-                                "sport",
-                                "league_key",
-                                "league_meta",
-                                "league_settings",
-                                "roster_positions",
-                                "stat_categories"
-                            )
+                            c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+                              "league_draft_status", "league_num_teams", "league_edit_key",
+                              "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+                              "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+                              "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+                              "league_current_week", "league_start_week", "league_start_date",
+                              "league_end_week", "league_end_date", "league_is_finished", "league_game_code",
+                              "league_season", "draft_type", "is_auction_draft", "scoring_type",
+                              "uses_playoff", "has_playoff_consolation_games", "playoff_start_week",
+                              "uses_playoff_reseeding", "uses_lock_eliminated_teams", "num_playoff_teams",
+                              "num_playoff_consolation_teams", "has_multiweek_championship",
+                              "waiver_type", "waiver_rule", "uses_faab", "draft_time", "draft_pick_time",
+                              "post_draft_players", "max_teams", "waiver_time", "trade_end_date",
+                              "trade_ratify_type", "trade_reject_time", "player_pool", "cant_cut_list",
+                              "draft_together", "can_trade_draft_picks", "sendbird_channel_url",
+                              "roster_positions", "stat_categories", "stat_modifiers", "min_games_played",
+                              "week_has_enough_qualifying_days")
 
                         # Test df colnames
                         expect_named(df,
@@ -389,12 +415,13 @@ testthat::test_that("Response for a roto league is parsed to a tibble",
                         preprocess <-
                             r_parsed %>%
                             purrr::flatten() %>%
-                            purrr::keep(purrr::is_list)
+                            list_pre_process_fn()
 
                         df <-
                             purrr::map_df(preprocess,
-                                          .settings_subresource_parse_fn,
-                                          .league_settings_parse_fn)
+                                          .league_resource_parse_fn,
+                                          pluck_args = list("league", 2, 1),
+                                          fn = function(x) .league_settings_parse_fn(x))
 
 
                         expect_true(tibble::is_tibble(df), TRUE)
@@ -402,15 +429,18 @@ testthat::test_that("Response for a roto league is parsed to a tibble",
 
                         # Expected colnames.
                         expected_colnames <-
-                            c(
-                                "sport",
-                                "league_key",
-                                "league_meta",
-                                "league_settings",
-                                "roster_positions",
-                                "stat_categories",
-                                "waiver_days"
-                            )
+                            c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+                              "league_draft_status", "league_num_teams", "league_edit_key",
+                              "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+                              "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+                              "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+                              "league_start_date", "league_end_date", "league_game_code", "league_season",
+                              "draft_type", "is_auction_draft", "scoring_type", "uses_playoff",
+                              "waiver_type", "waiver_rule", "waiver_days", "uses_faab", "draft_time",
+                              "draft_pick_time", "post_draft_players", "max_teams", "waiver_time",
+                              "trade_end_date", "trade_ratify_type", "trade_reject_time", "player_pool",
+                              "cant_cut_list", "draft_together", "is_publicly_viewable", "sendbird_channel_url",
+                              "roster_positions", "stat_categories", "max_adds")
 
                         # Test df colnames
                         expect_named(df,
@@ -459,12 +489,13 @@ testthat::test_that("Response for a head one league is parsed to a tibble",
                         preprocess <-
                             r_parsed %>%
                             purrr::flatten() %>%
-                            purrr::keep(purrr::is_list)
+                            list_pre_process_fn()
 
                         df <-
                             purrr::map_df(preprocess,
-                                          .settings_subresource_parse_fn,
-                                          .league_settings_parse_fn)
+                                          .league_resource_parse_fn,
+                                          pluck_args = list("league", 2, 1),
+                                          fn = function(x) .league_settings_parse_fn(x))
 
 
                         expect_true(tibble::is_tibble(df), TRUE)
@@ -472,13 +503,24 @@ testthat::test_that("Response for a head one league is parsed to a tibble",
 
                         # Expected colnames.
                         expected_colnames <-
-                            c("sport",
-                              "league_key",
-                              "league_meta",
-                              "league_settings",
-                              "roster_positions",
-                              "stat_categories",
-                              "divisions")
+                            c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+                              "league_password", "league_draft_status", "league_num_teams",
+                              "league_edit_key", "league_weekly_deadline", "league_update_timestamp",
+                              "league_scoring_type", "league_type", "league_renew", "league_renewed",
+                              "league_iris_group_chat_id", "league_short_invitation_url", "league_allow_add_to_dl_extra_pos",
+                              "league_is_pro_league", "league_is_cash_league", "league_current_week",
+                              "league_start_week", "league_start_date", "league_end_week",
+                              "league_end_date", "league_game_code", "league_season", "draft_type",
+                              "is_auction_draft", "scoring_type", "uses_playoff", "has_playoff_consolation_games",
+                              "playoff_start_week", "uses_playoff_reseeding", "uses_lock_eliminated_teams",
+                              "num_playoff_teams", "num_playoff_consolation_teams", "has_multiweek_championship",
+                              "uses_roster_import", "roster_import_deadline", "waiver_type",
+                              "waiver_rule", "uses_faab", "draft_time", "draft_pick_time",
+                              "post_draft_players", "max_teams", "waiver_time", "trade_end_date",
+                              "trade_ratify_type", "trade_reject_time", "player_pool", "cant_cut_list",
+                              "draft_together", "sendbird_channel_url", "roster_positions",
+                              "stat_categories", "divisions", "max_weekly_adds", "min_games_played",
+                              "week_has_enough_qualifying_days")
 
                         # Test df colnames
                         expect_named(df,
@@ -487,3 +529,4 @@ testthat::test_that("Response for a head one league is parsed to a tibble",
                                      ignore.case = TRUE)
 
                     })
+

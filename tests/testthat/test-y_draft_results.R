@@ -142,15 +142,18 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        list_pre_process_fn()
 
     # DF
     df <-
+        preprocess %>%
         purrr::map_df(
-            preprocess,
             .league_resource_parse_fn,
-            .team_resource_parse_fn,
-            .two_deep_subresource_parse
+            pluck_args = list("league", 2, 1),
+            fn = function(x) purrr:::map_df(x,
+                                            .team_resource_parse_fn,
+                                            pluck_args = list("team", 2, 1),
+                                            fn = function(x) purrr::map_df(x, .unlist_and_bind_fn))
         )
 
     # Test that a tibble was returned from parsing.
@@ -165,13 +168,14 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
           "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
           "league_current_week", "league_start_week", "league_start_date",
           "league_end_week", "league_end_date", "league_game_code", "league_season",
-          "team_key", "team_id", "team_name", "team_url", "team_logo_size",
-          "team_logo_url", "team_waiver_priority", "team_faab_balance",
-          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-          "team_coverage_value", "team_value", "team_league_scoring_type",
-          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-          "team_manager_felo_tier", "draft_result_pick", "draft_result_round",
+          "team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+          "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+          "team_roster_adds_coverage_value", "team_roster_adds_value",
+          "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+          "team_managers_manager_manager_id", "team_managers_manager_nickname",
+          "team_managers_manager_guid", "team_managers_manager_felo_score",
+          "team_managers_manager_felo_tier", "draft_result_pick", "draft_result_round",
           "draft_result_team_key", "draft_result_player_key")
 
     # Test df colnames
@@ -228,26 +232,30 @@ testthat::test_that("Teams uri returns valid response and is parsed to a tibble"
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        list_pre_process_fn()
 
     # DF
     df <-
-        purrr::map_df(preprocess,
-                       .team_resource_parse_fn,
-                       .two_deep_subresource_parse)
+        preprocess %>%
+        purrr::map_df(
+            .team_resource_parse_fn,
+            list("team", 2, 1),
+            fn = function(x) purrr::map_df(x, .unlist_and_bind_fn)
+        )
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
 
     # Expected colnames.
     expected_colnames <-
-        c("team_key", "team_id", "team_name", "team_url", "team_logo_size",
-          "team_logo_url", "team_waiver_priority", "team_faab_balance",
-          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-          "team_coverage_value", "team_value", "team_league_scoring_type",
-          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-          "team_manager_felo_tier", "draft_result_pick", "draft_result_round",
+        c("team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+          "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+          "team_roster_adds_coverage_value", "team_roster_adds_value",
+          "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+          "team_managers_manager_manager_id", "team_managers_manager_nickname",
+          "team_managers_manager_guid", "team_managers_manager_felo_score",
+          "team_managers_manager_felo_tier", "draft_result_pick", "draft_result_round",
           "draft_result_team_key", "draft_result_player_key", "team_division_id"
         )
 

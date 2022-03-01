@@ -483,6 +483,10 @@
 #'
 #' Usually combined with `rlang::flatten_if` or `YFAR::.unlist_and_bind`
 #'
+#' This function is from `dplyr::bind_rows` so all credit to those cats and none
+#' to me what-so-ever.  I hope this is placeholder credit until I learn how to cite this
+#' properly.
+#'
 #' @param List to test.
 #'
 #' @return A boolean.
