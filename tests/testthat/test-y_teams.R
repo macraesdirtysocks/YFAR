@@ -129,13 +129,18 @@ testthat::test_that("Single league resource is parsed to a tibble",{
 
     # Preprocess list.
     preprocess <-
-        r_parsed %>%
-        purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+      r_parsed %>%
+      purrr::flatten() %>%
+      list_pre_process_fn()
 
     df <-
-        preprocess %>%
-        purrr::map_df(.league_resource_parse_fn, .team_meta_parse_fn)
+      preprocess %>%
+      purrr::map_df(
+        .league_resource_parse_fn,
+        pluck_args = list("league", 2, 1),
+        fn = function(x)
+          purrr::map_df(x, .team_resource_parse_fn)
+      )
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
@@ -143,20 +148,21 @@ testthat::test_that("Single league resource is parsed to a tibble",{
 
     # Expected colnames.
     expected_colnames <-
-        c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
-          "league_draft_status", "league_num_teams", "league_edit_key",
-          "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
-          "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
-          "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
-          "league_current_week", "league_start_week", "league_start_date",
-          "league_end_week", "league_end_date", "league_game_code", "league_season",
-          "team_key", "team_id", "team_name", "team_url", "team_logo_size",
-          "team_logo_url", "team_waiver_priority", "team_faab_balance",
-          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-          "team_coverage_value", "team_value", "team_league_scoring_type",
-          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-          "team_manager_felo_tier")
+      c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+        "league_draft_status", "league_num_teams", "league_edit_key",
+        "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+        "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+        "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+        "league_current_week", "league_start_week", "league_start_date",
+        "league_end_week", "league_end_date", "league_game_code", "league_season",
+        "team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+        "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+        "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+        "team_roster_adds_coverage_value", "team_roster_adds_value",
+        "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+        "team_managers_manager_manager_id", "team_managers_manager_nickname",
+        "team_managers_manager_guid", "team_managers_manager_felo_score",
+        "team_managers_manager_felo_tier")
 
     # Test df colnames
     expect_named(df,
@@ -207,13 +213,18 @@ expect_true(!purrr::is_empty(r_parsed))
 
 # Preprocess list.
 preprocess <-
-    r_parsed %>%
-    purrr::flatten() %>%
-    purrr::keep(purrr::is_list)
+  r_parsed %>%
+  purrr::flatten() %>%
+  list_pre_process_fn()
 
 df <-
-    preprocess %>%
-    purrr::map_df(.league_resource_parse_fn, .team_meta_parse_fn)
+  preprocess %>%
+  purrr::map_df(
+    .league_resource_parse_fn,
+    pluck_args = list("league", 2, 1),
+    fn = function(x)
+      purrr::map_df(x, .team_resource_parse_fn)
+  )
 
 # Test that a tibble was returned from parsing.
 expect_true(tibble::is_tibble(df), TRUE)
@@ -221,21 +232,25 @@ expect_true(tibble::is_tibble(df), TRUE)
 
 # Expected colnames.
 expected_colnames <-
-    c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
-      "league_draft_status", "league_num_teams", "league_edit_key",
-      "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
-      "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
-      "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
-      "league_current_week", "league_start_week", "league_start_date",
-      "league_end_week", "league_end_date", "league_game_code", "league_season",
-      "team_key", "team_id", "team_name", "team_url", "team_logo_size",
-      "team_logo_url", "team_waiver_priority", "team_faab_balance",
-      "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-      "team_coverage_value", "team_value", "team_league_scoring_type",
-      "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-      "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-      "team_manager_felo_tier", "team_division_id", "team_manager_is_commissioner",
-      "team_manager_is_comanager")
+  c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+    "league_draft_status", "league_num_teams", "league_edit_key",
+    "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+    "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+    "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+    "league_current_week", "league_start_week", "league_start_date",
+    "league_end_week", "league_end_date", "league_game_code", "league_season",
+    "team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+    "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+    "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+    "team_roster_adds_coverage_value", "team_roster_adds_value",
+    "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+    "team_managers_manager_manager_id", "team_managers_manager_nickname",
+    "team_managers_manager_guid", "team_managers_manager_felo_score",
+    "team_managers_manager_felo_tier", "team_division_id", "team_managers_manager_is_commissioner",
+    "team_managers_manager_manager_id_2", "team_managers_manager_nickname_2",
+    "team_managers_manager_guid_2", "team_managers_manager_is_commissioner_2",
+    "team_managers_manager_is_comanager", "team_managers_manager_felo_score_2",
+    "team_managers_manager_felo_tier_2")
 
 # Test df colnames
 expect_named(df,

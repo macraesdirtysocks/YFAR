@@ -112,22 +112,21 @@ test_that("y_weeks response is valid and parsed to a tibble",{
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-
-    # Resource parse function dependent on resource.
-    subresource_parse_fn <- function(x){
-        x %>%
-            purrr::pluck("game_week") %>%
-            dplyr::bind_cols()
-    }
-
+    # General list pre-processing
     preprocess <-
         r_parsed %>%
-        purrr::flatten()
+        purrr::flatten() %>%
+        list_pre_process_fn()
 
-    # DF
+    # df
     df <-
-        purrr::map_df(preprocess, .game_resource_parse_fn, subresource_parse_fn) %>%
+        preprocess %>%
+        purrr::map_df(
+            .game_resource_parse_fn,
+            pluck_args = list("game", 2, 1),
+            fn = function(x)
+                purrr::map_df(x, purrr::flatten_df)
+        ) %>%
         dplyr::mutate(matchup_length = difftime(end, start))
 
     # Test that a tibble was returned from parsing.
@@ -135,9 +134,9 @@ test_that("y_weeks response is valid and parsed to a tibble",{
 
     # Expected colnames.
     expected_colnames <-
-        c("game_key", "game_id", "game_name", "game_code", "game_type",
-          "game_url", "game_season", "game_is_registration_over", "game_is_game_over",
-          "game_is_offseason", "week", "display_name", "start", "end",
+        c("week", "display_name", "start", "end", "game_key", "game_id",
+          "game_name", "game_code", "game_type", "game_url", "game_season",
+          "game_is_registration_over", "game_is_game_over", "game_is_offseason",
           "matchup_length")
 
     # Test df colnames

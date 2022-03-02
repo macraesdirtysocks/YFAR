@@ -100,7 +100,7 @@ y_teams <- memoise::memoise(function(league_key = NULL, token_name = NULL, debug
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::map(list_pre_process_fn)
+            list_pre_process_fn()
 
         df <-
             tryCatch(

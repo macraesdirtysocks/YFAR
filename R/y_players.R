@@ -175,7 +175,7 @@ y_players <-
                 preprocess <-
                     r_parsed %>%
                     purrr::flatten() %>%
-                    purrr::map(list_pre_process_fn)
+                    list_pre_process_fn()
 
                 df <-
                     tryCatch(

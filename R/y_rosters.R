@@ -148,7 +148,7 @@ y_rosters <- memoise::memoise(
             preprocess <-
                 r_parsed %>%
                 purrr::flatten() %>%
-                purrr::map(list_pre_process_fn)
+                list_pre_process_fn()
 
             # If resource equal to "leagues" .league_resource_parse_fn needed.
             # Otherwise only .team_resource_parse_fn is needed.
@@ -162,7 +162,7 @@ y_rosters <- memoise::memoise(
                         .league_resource_parse_fn,
                         pluck_args = list("league", 2, 1),
                         fn = function(x) purrr::map_df(x, .team_resource_parse_fn,
-                        pluck_args = list("team", 2, 1),
+                        pluck_args = list("team", 2),
                         fn = .roster_resource_parse_fn
                     )
                     ),
@@ -183,7 +183,7 @@ y_rosters <- memoise::memoise(
                             purrr::map_df(
                                 preprocess,
                                 .team_resource_parse_fn,
-                                pluck_args = list("team", 2, 1),
+                                pluck_args = list("team", 2),
                                 fn = .roster_resource_parse_fn),
 
                         error = function(e) {

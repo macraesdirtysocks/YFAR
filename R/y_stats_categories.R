@@ -13,37 +13,6 @@ y_stats_categories <- function(game_key = NULL, token_name = NULL, debug = FALSE
 
 
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ##                                FUNCTION DEFS                             ----
-  ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  # Parse the stats sub-resource of the game resource.
-  subresource_parse_fn <- function(x) {
-
-    # Remove top level stat list from in the list of stats
-    x <- purrr::flatten(x)
-
-    # Bind atomic elements.
-    atomic <-
-      x %>%
-      purrr::keep(purrr::is_atomic) %>%
-      dplyr::bind_cols()
-
-    # Unlist and bind the list elements.
-    the_lists <-
-      x %>%
-      purrr::keep(purrr::is_list) %>%
-      purrr::map_dfc(.unlist_and_bind_fn)
-
-    # Bind df.
-    df <-
-      dplyr::bind_cols(atomic, the_lists)
-
-    # Return
-    return(df)
-  }
-
-
-  ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ##                                    TOKEN                                 ----
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -120,6 +89,36 @@ y_stats_categories <- function(game_key = NULL, token_name = NULL, debug = FALSE
     purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##                                FUNCTION DEFS                             ----
+  ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  # Parse the stats sub-resource of the game resource.
+  subresource_parse_fn <- function(x) {
+
+    # Remove top level stat list from in the list of stats
+    x <- purrr::flatten(x)
+
+    # Bind atomic elements.
+    atomic <-
+      x %>%
+      purrr::keep(purrr::is_atomic) %>%
+      dplyr::bind_cols()
+
+    # Unlist and bind the list elements.
+    the_lists <-
+      x %>%
+      purrr::keep(purrr::is_list) %>%
+      purrr::map_dfc(.unlist_and_bind_fn)
+
+    # Bind df.
+    df <-
+      dplyr::bind_cols(atomic, the_lists)
+
+    # Return
+    return(df)
+  }
+
+  ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ##                                      DF                                  ----
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -132,7 +131,7 @@ y_stats_categories <- function(game_key = NULL, token_name = NULL, debug = FALSE
     # General pre-processing.
     preprocess <-
       r_parsed %>%
-      purrr::map(list_pre_process_fn)
+      list_pre_process_fn()
 
     # Parse the standard stats.
     standard_stats <-

@@ -341,34 +341,65 @@ list_pre_process_fn <- function(x){
 #' @keywords internal
 .roster_resource_parse_fn <- function(x, pluck_args, fn) {
 
-  roster_meta <-
-    x %>%
-    purrr::keep(purrr::is_bare_atomic) %>%
-    dplyr::bind_cols() %>%
-    dplyr::rename_with( ~ paste("roster", .x, sep = "_"),
-                        .cols = !tidyselect::matches("^roster_"))
-
-  player_data <-
-    x %>%
-    purrr::pluck("0", "players") %>%
-    # purrr::keep(purrr::is_list) %>%
-    purrr::compact() %>%
-    purrr::map_df(.player_resource_parse_fn,
-                  pluck_args = list("player", 2),
-                  fn = function(x) purrr::lmap(x, ~.unlist_and_bind_fn(.x) %>% dplyr::bind_cols()))
-
-  other_elements <-
-    x %>%
-    purrr::keep(purrr::is_list) %>%
-    purrr::discard(names(.) == "0") %>%
-    purrr::lmap(.unlist_and_bind_fn) %>%
-    dplyr::bind_cols()
-
   df <-
-    dplyr::bind_cols(purrr::compact(list(
-      roster_meta, player_data, other_elements)),
-    .name_repair = janitor::make_clean_names) %>%
-    dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
+  x %>%
+    purrr::flatten() %>%
+    purrr::set_names(nm = ~ paste("roster", .x, sep = "_")) %>%
+    purrr::modify_at("roster_0",
+                     purrr::compose(
+                       .dir = "forward",
+                       ~ purrr::pluck(.x, "players"),
+                       ~ purrr::map_df(
+                         .x,
+                         .player_resource_parse_fn,
+                         pluck_args = list("player", 2),
+                         fn = function(x)
+                           purrr::lmap(x, .unlist_and_bind_fn) %>% dplyr::bind_rows()
+                       )
+                     )) %>%
+    purrr::modify_at("roster_minimum_games",
+                     purrr::compose(~ purrr::set_names(
+                       .x, nm = ~ paste("minimum_games", .x, sep = "_")
+                     ),
+                     ~ dplyr::bind_cols(.x))) %>%
+    purrr::modify_at(
+      "roster_outs_pitched",
+      purrr::compose(
+        .dir = "forward",
+        ~ purrr::set_names(.x, nm = ~ paste("outs_pitched", .x, sep = "_")),
+        ~ dplyr::bind_cols(.x)
+      )
+
+    ) %>%
+    dplyr::bind_cols()
+  # roster_meta <-
+  #   x %>%
+  #   purrr::keep(purrr::is_bare_atomic) %>%
+  #   dplyr::bind_cols() %>%
+  #   dplyr::rename_with( ~ paste("roster", .x, sep = "_"),
+  #                       .cols = !tidyselect::matches("^roster_"))
+  #
+  # player_data <-
+  #   x %>%
+  #   purrr::pluck("0", "players") %>%
+  #   # purrr::keep(purrr::is_list) %>%
+  #   purrr::compact() %>%
+  #   purrr::map_df(.player_resource_parse_fn,
+  #                 pluck_args = list("player", 2),
+  #                 fn = function(x) purrr::lmap(x, ~.unlist_and_bind_fn(.x) %>% dplyr::bind_cols()))
+  #
+  # other_elements <-
+  #   x %>%
+  #   purrr::keep(purrr::is_list) %>%
+  #   purrr::discard(names(.) == "0") %>%
+  #   purrr::lmap(.unlist_and_bind_fn) %>%
+  #   dplyr::bind_cols()
+  #
+  # df <-
+  #   dplyr::bind_cols(purrr::compact(list(
+  #     roster_meta, player_data, other_elements)),
+  #   .name_repair = janitor::make_clean_names) %>%
+  #   dplyr::select(!tidyselect::matches("_[[:digit:]]$"))
 
 
   return(df)
@@ -567,48 +598,21 @@ return(df)
     ~ purrr::flatten_df(.x) %>%
       tidyr::nest(stat_winners = tidyselect::everything())
   ) %>%
-  purrr::map_at(
+  purrr::modify_at(
     "0",
-    ~ purrr::pluck(.x, "teams") %>%
-      purrr::map_df(
+    purrr::compose(.dir = "forward",
+    ~ purrr::pluck(.x, "teams"),
+      function(x) purrr::map_df(
+        x,
         .team_resource_parse_fn,
         pluck_args = list("team", 2),
-        fn = function(x)
-          .team_stats_parse_fn(x)
-      )
+        fn = function(x) .team_stats_parse_fn(x)
+      ))
   ) %>%
   dplyr::bind_cols() %>%
   dplyr::rename_with( ~ paste("matchup", .x, sep = "_"),
                       .cols = !tidyselect::matches("^matchup_"))
 
-  # data_list <- list(
-  #   matchup_meta = NULL,
-  #   stat_winners = NULL,
-  #   other_elements = NULL)
-  #
-  # data_list$matchup_meta <-
-  #   x %>%
-  #   purrr::pluck("matchup") %>%
-  #   purrr::keep(purrr::is_atomic) %>%
-  #   dplyr::bind_rows() %>%
-  #   dplyr::rename_with(~ paste("matchup", .x, sep = "_"),
-  #                      .cols = !tidyselect::matches("^matchup_"))
-  #
-  # data_list$stat_winners <-
-  #   x %>%
-  #   purrr::pluck("matchup", "stat_winners") %>%
-  #   purrr::flatten_df() %>%
-  #   tidyr::nest(stat_winners = tidyselect::everything()) %>%
-  #   dplyr::rename_with(~ paste("matchup", .x, sep = "_"),
-  #                      .cols = !tidyselect::matches("^matchup_"))
-  #
-  # data_list$other_elements <-
-  #  x %>%
-  #   purrr::pluck("matchup", "0", "teams") %>%
-  #   purrr::map_df(
-  #     .team_resource_parse_fn,
-  #     pluck_args = list("team", 2),
-  #     fn = function(x) .team_stats_parse_fn(x))
 
   return(df)
 
@@ -630,36 +634,55 @@ return(df)
 #' @keywords internal
 .team_stats_parse_fn <- function(x) {
 
-  team_stats <-
-    x %>%
-    magrittr::extract2("team_stats") %>%
-    purrr::modify_if(is.list,
-                     ~ purrr::flatten_df(.x) %>% tidyr::nest(data = tidyselect::everything())) %>%
-    dplyr::bind_cols() %>%
-    dplyr::rename_with(~ paste("team_stats", .x, sep = "_"),
-                       .cols = !tidyselect::matches("^team_stats_"))
-
-  team_points <-
-    x %>%
-    magrittr::extract2("team_points") %>%
-    purrr::modify_if(is.list,
-                     ~ purrr::flatten_df(.x) %>% tidyr::nest(data = tidyselect::everything())) %>%
-    dplyr::bind_cols() %>%
-    dplyr::rename_with( ~ paste("team_points", .x, sep = "_"),
-                        .cols = !tidyselect::matches("^team_points_"))
-
-  team_remaining_games <-
-    x %>%
-    magrittr::extract2("team_remaining_games") %>%
-    purrr::modify_if(is.list, ~ purrr::set_names(.x, nm = ~ paste("total", .x, sep = "_"))) %>%
-    dplyr::bind_cols() %>%
-    dplyr::rename_with( ~ paste("remaining_games", .x, sep = "_"),
-                        .cols = !tidyselect::matches("^total_"))
-
   df <-
-    list(team_stats, team_points, team_remaining_games) %>%
-    purrr::compact() %>%
-    purrr::reduce(dplyr::bind_cols)
+  x %>%
+    purrr::imap(purrr::set_names, nm = ~ paste(.y, .x, sep = "_")) %>%
+    purrr::flatten() %>%
+    purrr::modify_at(
+      "team_stats_stats",
+      purrr::compose(
+        .dir = "forward",
+        ~ purrr::flatten_df(.x),
+        ~ tidyr::nest(.x, team_stats = tidyselect::everything())
+      )
+    ) %>%
+    purrr::modify_at(
+      "team_remaining_games_total",
+      purrr::compose(.dir = "forward",
+                     function(x) purrr::set_names(x, ~ paste("team", .x, sep = "_")),
+                     ~ purrr::flatten_df(.x))
+    ) %>% dplyr::bind_cols()
+
+  # team_stats <-
+  #   x %>%
+  #   magrittr::extract2("team_stats") %>%
+  #   purrr::modify_if(is.list,
+  #                    ~ purrr::flatten_df(.x) %>% tidyr::nest(data = tidyselect::everything())) %>%
+  #   dplyr::bind_cols() %>%
+  #   dplyr::rename_with(~ paste("team_stats", .x, sep = "_"),
+  #                      .cols = !tidyselect::matches("^team_stats_"))
+  #
+  # team_points <-
+  #   x %>%
+  #   magrittr::extract2("team_points") %>%
+  #   purrr::modify_if(is.list,
+  #                    ~ purrr::flatten_df(.x) %>% tidyr::nest(data = tidyselect::everything())) %>%
+  #   dplyr::bind_cols() %>%
+  #   dplyr::rename_with( ~ paste("team_points", .x, sep = "_"),
+  #                       .cols = !tidyselect::matches("^team_points_"))
+  #
+  # team_remaining_games <-
+  #   x %>%
+  #   magrittr::extract2("team_remaining_games") %>%
+  #   purrr::modify_if(is.list, ~ purrr::set_names(.x, nm = ~ paste("total", .x, sep = "_"))) %>%
+  #   dplyr::bind_cols() %>%
+  #   dplyr::rename_with( ~ paste("remaining_games", .x, sep = "_"),
+  #                       .cols = !tidyselect::matches("^total_"))
+  #
+  # df <-
+  #   list(team_stats, team_points, team_remaining_games) %>%
+  #   purrr::compact() %>%
+  #   purrr::reduce(dplyr::bind_cols)
 
   return(df)
 
@@ -677,22 +700,22 @@ return(df)
 #'
 #' @return a tibble
 #' @keywords internal
-.player_stats_parse <- function(x){
+.player_stats_parse <- function(x) {
 
-    coverage <-
-        x %>%
-        purrr::pluck("0") %>%
-        dplyr::bind_cols()
+  coverage <-
+    x %>%
+    purrr::pluck("0") %>%
+    dplyr::bind_cols()
 
 
-    player_stats <-
-        x %>%
-        purrr::pluck("stats") %>%
-      purrr::map_df(purrr::flatten_df)
+  player_stats <-
+    x %>%
+    purrr::pluck("stats") %>%
+    purrr::map_df(purrr::flatten_df)
 
-    stats <-
-        dplyr::bind_cols(coverage, player_stats)
+  stats <-
+    dplyr::bind_cols(coverage, player_stats)
 
-    return(stats)
+  return(stats)
 
 }

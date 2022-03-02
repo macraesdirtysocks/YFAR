@@ -97,6 +97,29 @@ y_standings <- function(team_key = NULL, token_name = NULL, debug = FALSE, quiet
     r_parsed <-
         purrr::map(r, .y_parse_response, "fantasy_content", resource)
 
+
+
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ##                                FUNCTION DEFS                             ----
+    ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    subresource_parse_fn <- function(x){
+
+        atomic <-
+            x %>%
+            purrr::keep(purrr::is_atomic) %>%
+            dplyr::bind_cols()
+
+        the_lists <-
+            x %>%
+            purrr::keep(purrr::is_list) %>%
+            purrr::imap_dfc(~purrr::set_names(.x, nm = paste(.y, names(.x), sep = "_")) %>% purrr::flatten_dfr())
+
+        df <- dplyr::bind_cols(atomic, the_lists)
+
+        return(df)
+    }
+
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                      DF                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,25 +129,8 @@ y_standings <- function(team_key = NULL, token_name = NULL, debug = FALSE, quiet
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::keep(purrr::is_list) %>%
-            purrr::map(list_pre_process_fn)
+            list_pre_process_fn()
 
-        subresource_parse_fn <- function(x){
-
-            atomic <-
-                x %>%
-                purrr::keep(purrr::is_atomic) %>%
-                dplyr::bind_cols()
-
-            the_lists <-
-                x %>%
-                purrr::keep(purrr::is_list) %>%
-                purrr::imap_dfc(~purrr::set_names(.x, nm = paste(.y, names(.x), sep = "_")) %>% purrr::flatten_dfr())
-
-            df <- dplyr::bind_cols(atomic, the_lists)
-
-            return(df)
-        }
 
         df <-
             tryCatch(
@@ -155,10 +161,10 @@ y_standings <- function(team_key = NULL, token_name = NULL, debug = FALSE, quiet
     data_list <-
         structure(
             list(
+                uri = uri,
                 resource = resource,
                 response = r,
-                content = r_parsed,
-                uri = uri
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 

@@ -169,21 +169,27 @@ test_that("League key is parsed to tibble",{
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-
-
     # Preprocess list.  This step is verbatim from y_matchups.
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        purrr::map(list_pre_process_fn)
+
+    # If resource equal to "leagues" .league_resource_parse_fn needed.
+    # Otherwise only .team_resource_parse_fn is needed.
 
     df <-
+        preprocess %>%
         purrr::map_df(
-            preprocess,
             .league_resource_parse_fn,
-            .team_resource_parse_fn,
-            .roster_resource_parse_fn
+            pluck_args = list("league", 2, 1),
+            fn = function(x)
+                purrr::map_df(
+                    x,
+                    .team_resource_parse_fn,
+                    pluck_args = list("team", 2),
+                    fn = .roster_resource_parse_fn
+                )
         )
 
     # Test that a tibble was returned from parsing.
@@ -199,25 +205,28 @@ test_that("League key is parsed to tibble",{
           "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
           "league_current_week", "league_start_week", "league_start_date",
           "league_end_week", "league_end_date", "league_game_code", "league_season",
-          "team_key", "team_id", "team_name", "team_url", "team_logo_size",
-          "team_logo_url", "team_waiver_priority", "team_faab_balance",
-          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-          "team_coverage_value", "team_value", "team_league_scoring_type",
-          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-          "team_manager_felo_tier", "roster_coverage_type", "roster_date",
-          "roster_is_editable", "player_key", "player_id", "player_full",
-          "player_first", "player_last", "player_ascii_first", "player_ascii_last",
-          "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
-          "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
-          "player_url", "player_size", "player_image_url", "player_is_undroppable",
-          "player_position_type", "player_primary_position", "player_position",
+          "team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+          "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+          "team_roster_adds_coverage_value", "team_roster_adds_value",
+          "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+          "team_managers_manager_manager_id", "team_managers_manager_nickname",
+          "team_managers_manager_guid", "team_managers_manager_felo_score",
+          "team_managers_manager_felo_tier", "roster_coverage_type", "roster_date",
+          "roster_is_editable", "player_key", "player_id", "player_name_full",
+          "player_name_first", "player_name_last", "player_name_ascii_first",
+          "player_name_ascii_last", "player_editorial_player_key", "player_editorial_team_key",
+          "player_editorial_team_full_name", "player_editorial_team_abbr",
+          "player_uniform_number", "player_display_position", "player_headshot_url",
+          "player_headshot_size", "player_image_url", "player_is_undroppable",
+          "player_position_type", "player_primary_position", "player_eligible_positions_position",
           "player_has_player_notes", "player_notes_last_timestamp", "selected_position_coverage_type",
           "selected_position_date", "selected_position_position", "selected_position_is_flex",
-          "player_has_recent_player_notes", "player_status", "player_status_full",
-          "player_injury_note", "player_on_disabled_list", "coverage_type_coverage_type",
-          "coverage_value_coverage_value", "value_value", "starting_status_coverage_type",
-          "starting_status_date", "starting_status_is_starting")
+          "player_eligible_positions_position_2", "player_has_recent_player_notes",
+          "player_status", "player_status_full", "player_injury_note",
+          "player_on_disabled_list", "minimum_games_coverage_type", "minimum_games_coverage_value",
+          "minimum_games_value", "player_eligible_positions_position_3"
+        )
 
 
     # Test df colnames
@@ -267,20 +276,19 @@ test_that("Teamkey is parsed to tibble",{
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-
 
     # Preprocess list.  This step is verbatim from y_matchups.
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        purrr::map(list_pre_process_fn)
 
     df <-
         purrr::map_df(
             preprocess,
             .team_resource_parse_fn,
-            .roster_resource_parse_fn
+            pluck_args = list("team", 2),
+            fn = .roster_resource_parse_fn
         )
 
     # Test that a tibble was returned from parsing.
@@ -289,24 +297,27 @@ test_that("Teamkey is parsed to tibble",{
 
     # Expected colnames.
     expected_colnames <-
-        c("team_key", "team_id", "team_name", "team_url", "team_logo_size",
-          "team_logo_url", "team_waiver_priority", "team_faab_balance",
-          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-          "team_coverage_value", "team_value", "team_league_scoring_type",
-          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-          "team_manager_felo_tier", "roster_coverage_type", "roster_date",
-          "roster_is_editable", "player_key", "player_id", "player_full",
-          "player_first", "player_last", "player_ascii_first", "player_ascii_last",
-          "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
-          "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
-          "player_url", "player_size", "player_image_url", "player_is_undroppable",
-          "player_position_type", "player_primary_position", "player_position",
+        c("team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+          "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+          "team_roster_adds_coverage_value", "team_roster_adds_value",
+          "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+          "team_managers_manager_manager_id", "team_managers_manager_nickname",
+          "team_managers_manager_guid", "team_managers_manager_felo_score",
+          "team_managers_manager_felo_tier", "roster_coverage_type", "roster_date",
+          "roster_is_editable", "player_key", "player_id", "player_name_full",
+          "player_name_first", "player_name_last", "player_name_ascii_first",
+          "player_name_ascii_last", "player_editorial_player_key", "player_editorial_team_key",
+          "player_editorial_team_full_name", "player_editorial_team_abbr",
+          "player_uniform_number", "player_display_position", "player_headshot_url",
+          "player_headshot_size", "player_image_url", "player_is_undroppable",
+          "player_position_type", "player_primary_position", "player_eligible_positions_position",
           "player_has_player_notes", "player_notes_last_timestamp", "selected_position_coverage_type",
           "selected_position_date", "selected_position_position", "selected_position_is_flex",
-          "player_has_recent_player_notes", "player_status", "player_status_full",
-          "player_injury_note", "player_on_disabled_list", "coverage_type_coverage_type",
-          "coverage_value_coverage_value", "value_value")
+          "player_eligible_positions_position_2", "player_has_recent_player_notes",
+          "player_status", "player_status_full", "player_injury_note",
+          "player_on_disabled_list", "minimum_games_coverage_type", "minimum_games_coverage_value",
+          "minimum_games_value")
 
 
     # Test df colnames

@@ -258,64 +258,29 @@ testthat::test_that("Single plaeyr response for a is valid and parsed to a tibbl
   preprocess <-
     r_parsed %>%
     purrr::flatten() %>%
-    purrr::keep(purrr::is_list)
+    list_pre_process_fn()
 
-  # Parse response to tibble.
+  # Parse to DF
   df <-
-    preprocess %>%
-    purrr::map_df(.player_resource_parse_fn, .player_stats_parse)
+        preprocess %>%
+        purrr::map_df(
+          .player_resource_parse_fn,
+          pluck_args = list("player", 2),
+          fn = function(x) purrr::imap_dfc(x, ~.player_stats_parse(.x) %>% tidyr::nest(!!.y := tidyselect::everything())))
 
   # Test that a tibble was returned from parsing.
   expect_true(tibble::is_tibble(df), TRUE)
 
   # Expected colnames.
   expected_colnames <-
-    c(
-      "player_key",
-      "player_id",
-      "player_full",
-      "player_first",
-      "player_last",
-      "player_ascii_first",
-      "player_ascii_last",
-      "player_editorial_player_key",
-      "player_editorial_team_key",
-      "player_editorial_team_full_name",
-      "player_editorial_team_abbr",
-      "player_uniform_number",
-      "player_display_position",
-      "player_url",
-      "player_size",
-      "player_image_url",
-      "player_is_undroppable",
-      "player_position_type",
-      "player_position",
-      "player_position_2",
-      "player_has_player_notes",
-      "player_notes_last_timestamp",
-      "coverage_type",
-      "season",
-      "gp",
-      "gp_2",
-      "g",
-      "a",
-      "p",
-      "x",
-      "pim",
-      "ppg",
-      "ppa",
-      "ppp",
-      "shg",
-      "sha",
-      "shp",
-      "gwg",
-      "gtg",
-      "sog",
-      "sh_percent",
-      "fw",
-      "fl",
-      "hit",
-      "blk"
+    c("player_key", "player_id", "player_name_full", "player_name_first",
+      "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
+      "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
+      "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
+      "player_headshot_url", "player_headshot_size", "player_image_url",
+      "player_is_undroppable", "player_position_type", "player_eligible_positions_position",
+      "player_eligible_positions_position_2", "player_has_player_notes",
+      "player_notes_last_timestamp", "player_stats", "player_advanced_stats"
     )
 
   # Test df colnames
@@ -371,65 +336,29 @@ testthat::test_that("Single player with date response for a is valid and parsed 
   preprocess <-
     r_parsed %>%
     purrr::flatten() %>%
-    purrr::keep(purrr::is_list)
+    list_pre_process_fn()
 
-  # Parse response to tibble.
+  # Parse to DF
   df <-
     preprocess %>%
-    purrr::map_df(.player_resource_parse_fn, .player_stats_parse)
+    purrr::map_df(
+      .player_resource_parse_fn,
+      pluck_args = list("player", 2),
+      fn = function(x) purrr::imap_dfc(x, ~.player_stats_parse(.x) %>% tidyr::nest(!!.y := tidyselect::everything())))
 
   # Test that a tibble was returned from parsing.
   expect_true(tibble::is_tibble(df), TRUE)
 
   # Expected colnames.
   expected_colnames <-
-    c(
-      "player_key",
-      "player_id",
-      "player_full",
-      "player_first",
-      "player_last",
-      "player_ascii_first",
-      "player_ascii_last",
-      "player_editorial_player_key",
-      "player_editorial_team_key",
-      "player_editorial_team_full_name",
-      "player_editorial_team_abbr",
-      "player_uniform_number",
-      "player_display_position",
-      "player_url",
-      "player_size",
-      "player_image_url",
-      "player_is_undroppable",
-      "player_position_type",
-      "player_position",
-      "player_position_2",
-      "player_has_player_notes",
-      "player_notes_last_timestamp",
-      "coverage_type",
-      "date",
-      "gp",
-      "gp_2",
-      "g",
-      "a",
-      "p",
-      "x",
-      "pim",
-      "ppg",
-      "ppa",
-      "ppp",
-      "shg",
-      "sha",
-      "shp",
-      "gwg",
-      "gtg",
-      "sog",
-      "sh_percent",
-      "fw",
-      "fl",
-      "hit",
-      "blk"
-    )
+    c("player_key", "player_id", "player_name_full", "player_name_first",
+      "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
+      "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
+      "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
+      "player_headshot_url", "player_headshot_size", "player_image_url",
+      "player_is_undroppable", "player_position_type", "player_eligible_positions_position",
+      "player_eligible_positions_position_2", "player_has_player_notes",
+      "player_notes_last_timestamp", "player_stats")
 
   # Test df colnames
   expect_named(df,
@@ -483,29 +412,28 @@ testthat::test_that("Two player response for a is valid and parsed to a tibble."
   preprocess <-
     r_parsed %>%
     purrr::flatten() %>%
-    purrr::keep(purrr::is_list)
+    list_pre_process_fn()
 
-  # Parse response to tibble.
   df <-
-    preprocess %>%
-    purrr::map_df(.player_resource_parse_fn, .player_stats_parse)
+        preprocess %>%
+        purrr::map_df(
+          .player_resource_parse_fn,
+          pluck_args = list("player", 2),
+          fn = function(x) purrr::imap_dfc(x, ~.player_stats_parse(.x) %>% tidyr::nest(!!.y := tidyselect::everything())))
 
   # Test that a tibble was returned from parsing.
   expect_true(tibble::is_tibble(df), TRUE)
 
   # Expected colnames.
   expected_colnames <-
-    c(
-      "player_key", "player_id", "player_full", "player_first", "player_last",
-      "player_ascii_first", "player_ascii_last", "player_editorial_player_key",
-      "player_editorial_team_key", "player_editorial_team_full_name",
+    c("player_key", "player_id", "player_name_full", "player_name_first",
+      "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
+      "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
       "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
-      "player_url", "player_size", "player_image_url", "player_is_undroppable",
-      "player_position_type", "player_position", "player_position_2",
-      "player_has_player_notes", "player_notes_last_timestamp", "coverage_type",
-      "season", "gp", "gp_2", "g", "a", "p", "x", "pim", "ppg", "ppa",
-      "ppp", "shg", "sha", "shp", "gwg", "gtg", "sog", "sh_percent",
-      "fw", "fl", "hit", "blk"
+      "player_headshot_url", "player_headshot_size", "player_image_url",
+      "player_is_undroppable", "player_position_type", "player_eligible_positions_position",
+      "player_eligible_positions_position_2", "player_has_player_notes",
+      "player_notes_last_timestamp", "player_stats", "player_advanced_stats"
     )
 
   # Test df colnames

@@ -275,22 +275,18 @@ testthat::test_that("Response for a points league is parsed to a tibble",
                         # Expected colnames.
                         expected_colnames <-
                             c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
-                              "league_draft_status", "league_num_teams", "league_edit_key",
-                              "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
-                              "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
-                              "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
-                              "league_current_week", "league_start_week", "league_start_date",
-                              "league_end_week", "league_end_date", "league_is_finished", "league_game_code",
+                              "league_password", "league_draft_status", "league_num_teams",
+                              "league_edit_key", "league_weekly_deadline", "league_update_timestamp",
+                              "league_scoring_type", "league_type", "league_renew", "league_renewed",
+                              "league_iris_group_chat_id", "league_short_invitation_url", "league_allow_add_to_dl_extra_pos",
+                              "league_is_pro_league", "league_is_cash_league", "league_start_date",
+                              "league_end_date", "league_is_finished", "league_game_code",
                               "league_season", "draft_type", "is_auction_draft", "scoring_type",
-                              "uses_playoff", "has_playoff_consolation_games", "playoff_start_week",
-                              "uses_playoff_reseeding", "uses_lock_eliminated_teams", "num_playoff_teams",
-                              "num_playoff_consolation_teams", "has_multiweek_championship",
-                              "waiver_type", "waiver_rule", "uses_faab", "draft_time", "draft_pick_time",
-                              "post_draft_players", "max_teams", "waiver_time", "trade_end_date",
-                              "trade_ratify_type", "trade_reject_time", "player_pool", "cant_cut_list",
-                              "draft_together", "can_trade_draft_picks", "sendbird_channel_url",
-                              "roster_positions", "stat_categories", "stat_modifiers", "min_games_played",
-                              "week_has_enough_qualifying_days")
+                              "uses_playoff", "waiver_type", "waiver_rule", "uses_faab", "draft_time",
+                              "draft_pick_time", "post_draft_players", "max_teams", "waiver_time",
+                              "trade_end_date", "trade_ratify_type", "trade_reject_time", "player_pool",
+                              "cant_cut_list", "draft_together", "sendbird_channel_url", "roster_positions",
+                              "stat_categories", "stat_modifiers")
 
                         # Test df colnames
                         expect_named(df,

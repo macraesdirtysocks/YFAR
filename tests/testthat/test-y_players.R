@@ -230,16 +230,21 @@ testthat::test_that("One game resource is parsed to a tibble",{
                "leagues" = {
                    .league_resource_parse_fn
                })
-    # Preprocess list.  This step is verbatim from y_matchups.
+
+    initial_pluck <-
+        switch(resource,
+               "games" = list("game", 2, 1),
+               "leagues" = list("league", 2, 1)
+        )
+
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        list_pre_process_fn()
 
     df <-
         preprocess %>%
-        purrr::map_df(resource_parse_fn, .player_meta_parse_fn) %>%
-        tibble::add_column("rank" = seq_len(nrow(.)), .before = 1)
+        purrr::map_df(resource_parse_fn, pluck_args = initial_pluck, fn = function(x) purrr::map_df(x, .player_resource_parse_fn))
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
@@ -247,16 +252,18 @@ testthat::test_that("One game resource is parsed to a tibble",{
 
     # Expected colnames.
     expected_colnames <-
-        c("rank", "game_key", "game_id", "game_name", "game_code", "game_type",
-          "game_url", "game_season", "game_is_registration_over", "game_is_game_over",
-          "game_is_offseason", "player_key", "player_id", "player_full",
-          "player_first", "player_last", "player_ascii_first", "player_ascii_last",
+        c("player_key", "player_id", "player_name_full", "player_name_first",
+          "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
           "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
           "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
-          "player_url", "player_size", "player_image_url", "player_is_undroppable",
-          "player_position_type", "player_position", "player_has_player_notes",
-          "player_notes_last_timestamp", "player_has_recent_player_notes",
-          "player_status", "player_status_full", "player_injury_note")
+          "player_headshot_url", "player_headshot_size", "player_image_url",
+          "player_is_undroppable", "player_position_type", "player_eligible_positions_position",
+          "player_has_player_notes", "player_notes_last_timestamp", "player_eligible_positions_position_2",
+          "player_has_recent_player_notes", "player_eligible_positions_position_3",
+          "player_status", "player_status_full", "player_injury_note",
+          "game_key", "game_id", "game_name", "game_code", "game_type",
+          "game_url", "game_season", "game_is_registration_over", "game_is_game_over",
+          "game_is_offseason")
 
     # Test df colnames
     expect_named(df,
@@ -306,6 +313,7 @@ testthat::test_that("Two leagues resources is parsed to a tibble",{
     expect_true(!purrr::is_empty(r_parsed))
 
     # Define parse function relative to resource value.
+    # Define parse function relative to resource value.
     resource_parse_fn <-
         switch(resource,
                "games" = {
@@ -314,16 +322,21 @@ testthat::test_that("Two leagues resources is parsed to a tibble",{
                "leagues" = {
                    .league_resource_parse_fn
                })
-    # Preprocess list.  This step is verbatim from y_matchups.
+
+    initial_pluck <-
+        switch(resource,
+               "games" = list("game", 2, 1),
+               "leagues" = list("league", 2, 1)
+        )
+
     preprocess <-
         r_parsed %>%
         purrr::flatten() %>%
-        purrr::keep(purrr::is_list)
+        list_pre_process_fn()
 
     df <-
         preprocess %>%
-        purrr::map_df(resource_parse_fn, .player_meta_parse_fn) %>%
-        tibble::add_column("rank" = seq_len(nrow(.)), .before = 1)
+        purrr::map_df(resource_parse_fn, pluck_args = initial_pluck, fn = function(x) purrr::map_df(x, .player_resource_parse_fn))
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
@@ -331,23 +344,23 @@ testthat::test_that("Two leagues resources is parsed to a tibble",{
 
     # Expected colnames.
     expected_colnames <-
-        c("rank", "league_key", "league_id", "league_name", "league_url",
-          "league_logo_url", "league_draft_status", "league_num_teams",
-          "league_edit_key", "league_weekly_deadline", "league_update_timestamp",
-          "league_scoring_type", "league_type", "league_renew", "league_renewed",
-          "league_iris_group_chat_id", "league_allow_add_to_dl_extra_pos",
-          "league_is_pro_league", "league_is_cash_league", "league_current_week",
-          "league_start_week", "league_start_date", "league_end_week",
-          "league_end_date", "league_game_code", "league_season", "player_key",
-          "player_id", "player_full", "player_first", "player_last", "player_ascii_first",
-          "player_ascii_last", "player_editorial_player_key", "player_editorial_team_key",
-          "player_editorial_team_full_name", "player_editorial_team_abbr",
-          "player_uniform_number", "player_display_position", "player_url",
-          "player_size", "player_image_url", "player_is_undroppable", "player_position_type",
-          "player_primary_position", "player_position", "player_has_player_notes",
-          "player_notes_last_timestamp", "player_has_recent_player_notes",
-          "player_status", "player_status_full", "player_injury_note",
-          "player_on_disabled_list")
+        c("league_key", "league_id", "league_name", "league_url", "league_logo_url",
+          "league_draft_status", "league_num_teams", "league_edit_key",
+          "league_weekly_deadline", "league_update_timestamp", "league_scoring_type",
+          "league_type", "league_renew", "league_renewed", "league_iris_group_chat_id",
+          "league_allow_add_to_dl_extra_pos", "league_is_pro_league", "league_is_cash_league",
+          "league_current_week", "league_start_week", "league_start_date",
+          "league_end_week", "league_end_date", "league_game_code", "league_season",
+          "player_key", "player_id", "player_name_full", "player_name_first",
+          "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
+          "player_editorial_player_key", "player_editorial_team_key", "player_editorial_team_full_name",
+          "player_editorial_team_abbr", "player_uniform_number", "player_display_position",
+          "player_headshot_url", "player_headshot_size", "player_image_url",
+          "player_is_undroppable", "player_position_type", "player_primary_position",
+          "player_eligible_positions_position", "player_has_player_notes",
+          "player_notes_last_timestamp", "player_eligible_positions_position_2",
+          "player_has_recent_player_notes", "player_status", "player_status_full",
+          "player_injury_note", "player_on_disabled_list")
 
     # Test df colnames
     expect_named(df,

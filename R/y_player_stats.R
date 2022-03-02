@@ -142,7 +142,7 @@ y_player_stats <-
             preprocess <-
                 r_parsed %>%
                 purrr::flatten() %>%
-                purrr::map(list_pre_process_fn)
+                list_pre_process_fn()
 
             df <-
                 tryCatch(
@@ -176,7 +176,7 @@ y_player_stats <-
                 uri = uri,
                 resource= resource,
                 response = r,
-                r_parsed = r_parsed,
+                r_parsed = r_parsed
             ),
             class = "yahoo_fantasy_api")
 

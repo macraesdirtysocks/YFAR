@@ -67,6 +67,15 @@ y_games <-
         r <-
             .y_get_response(uri, api_token)
 
+        ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ##                          CHECK RESPONSE FOR ERRORS                       ----
+        ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+        if (httr::http_error(r)) {
+            stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
+        }
+
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                   CONTENT                                ----
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,18 +83,7 @@ y_games <-
         if(!quiet){cat(crayon::cyan("Getting content from response\n"))}
 
         r_parsed <-
-            .y_parse_response(r, "fantasy_content", resource)
-
-        ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        ##                          CHECK RESPONSE FOR ERRORS                       ----
-        ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-        if (sum(!purrr::map_lgl(r, httr::http_error)) <= 0) {
-            stop(message(crayon::cyan("All requests returned errors. You may need a token refresh.")), call. = FALSE)
-        }
-
-        r <- r[!purrr::map_lgl(r, httr::http_error)]
+            .y_parse_response(r, "fantasy_content", resource, "0", "user", 2, "games")
 
         ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         ##                                PARSE CONTENT                             ----
@@ -99,7 +97,6 @@ y_games <-
 
             preprocess <-
                 r_parsed %>%
-                purrr::pluck("0", "user", 2, "games") %>%
                 list_pre_process_fn()
 
             # Subset out special tournaments and promotional leagues i.e. free NFL money leagues and golf.

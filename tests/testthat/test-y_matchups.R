@@ -157,26 +157,42 @@ testthat::test_that("Response for a single team is parsed to a tibble", {
 
   # Preprocess list.  This step is verbatim from y_matchups.
   preprocess <-
-    # General preprocess steps that most functions use.
     r_parsed %>%
     purrr::flatten() %>%
     purrr::keep(purrr::is_list) %>%
-    # Pluck out matchup element.
-    purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-    # Discard weeks that havent
-    purrr::map_depth(2, function(x) {
-      purrr::discard(x, purrr::has_element, "preevent")
-    }) %>%
-    # Remove empty lists created by discard.
-    purrr::map_depth(1, function(x) {
-      purrr::compact(x) %>% purrr::keep(purrr::is_list)
-    })
+    list_pre_process_fn()
 
-  # Parse response to tibble.
-  df <-
+  # If response is form a non H2H league the mathcup elements will contain an error message.
+  # Extract error elements and create a message for printing.
+  error_elements <-
     preprocess %>%
-    purrr::map_depth(2, .matchup_parse_fn) %>%
-    purrr::map_df(dplyr::bind_rows)
+    rrapply::rrapply(
+      classes = "list",
+      condition = function(x, .xname) .xname == "exception",
+      f = function(x) purrr::pluck(x, "message"),
+      how = "melt"
+    ) %>%
+    dplyr::select("L1", "value") %>%
+    dplyr::mutate(message = stringr::str_c("Error in", L1, "with message:", value, sep = " "))
+
+  # If errors exist print.
+  if(nrow(error_elements) > 0){
+    message(crayon::cyan$bold("Matchups removed:\n", paste0(error_elements$message, "\n")))
+  }
+
+  # Non error list elelments.
+  good_elements <- dplyr::setdiff(names(preprocess), error_elements %>% dplyr::pull("L1"))
+
+  # Subset good elements and pluck matchup data.
+  preprocess <-
+    preprocess[good_elements] %>%
+    purrr::map(purrr::pluck, "team", 2, "matchups")
+
+
+  df <-
+        preprocess %>%
+        purrr::map_depth(2, .matchup_parse_fn) %>%
+        purrr::map_df(dplyr::bind_rows)
 
   # Test that a tibble was returned from parsing.
   expect_true(tibble::is_tibble(df), TRUE)
@@ -184,66 +200,23 @@ testthat::test_that("Response for a single team is parsed to a tibble", {
 
   # Expected colnames.
   expected_colnames <-
-    c(
-      "week",
-      "week_start",
-      "week_end",
-      "status",
-      "is_playoffs",
-      "is_consolation",
-      "is_tied",
-      "winner_team_key",
-      "team_key",
-      "team_id",
-      "team_name",
-      "team_url",
-      "team_logo_size",
-      "team_logo_url",
-      "team_waiver_priority",
-      "team_faab_balance",
-      "team_number_of_moves",
-      "team_number_of_trades",
-      "team_coverage_type",
-      "team_coverage_value",
-      "team_value",
-      "team_league_scoring_type",
-      "team_draft_position",
-      "team_has_draft_grade",
-      "team_manager_manager_id",
-      "team_manager_nickname",
-      "team_manager_guid",
-      "team_manager_felo_score",
-      "team_manager_felo_tier",
-      "count_g",
-      "count_a",
-      "count_x",
-      "count_ppp",
-      "count_sog",
-      "count_hit",
-      "count_w",
-      "count_ga",
-      "count_gaa",
-      "count_sv",
-      "count_sa",
-      "count_sv_percent",
-      "count_sho",
-      "coverage_type",
-      "week_2",
-      "total",
-      "total_remaining_games",
-      "total_live_games",
-      "total_completed_games",
-      "g_winner",
-      "a_winner",
-      "x_winner",
-      "ppp_winner",
-      "sog_winner",
-      "hit_winner",
-      "w_winner",
-      "gaa_winner",
-      "sv_percent_winner",
-      "sho_winner"
-    )
+    c("matchup_week", "matchup_week_start", "matchup_week_end", "matchup_status",
+      "matchup_is_playoffs", "matchup_is_consolation", "matchup_is_tied",
+      "matchup_winner_team_key", "matchup_stat_winners", "matchup_team_key",
+      "matchup_team_id", "matchup_team_name", "matchup_team_url", "matchup_team_logos_team_logo_size",
+      "matchup_team_logos_team_logo_url", "matchup_team_waiver_priority",
+      "matchup_team_faab_balance", "matchup_team_number_of_moves",
+      "matchup_team_number_of_trades", "matchup_team_roster_adds_coverage_type",
+      "matchup_team_roster_adds_coverage_value", "matchup_team_roster_adds_value",
+      "matchup_team_league_scoring_type", "matchup_team_draft_position",
+      "matchup_team_has_draft_grade", "matchup_team_managers_manager_manager_id",
+      "matchup_team_managers_manager_nickname", "matchup_team_managers_manager_guid",
+      "matchup_team_managers_manager_felo_score", "matchup_team_managers_manager_felo_tier",
+      "matchup_team_stats_coverage_type", "matchup_team_stats_week",
+      "matchup_team_stats", "matchup_team_points_coverage_type", "matchup_team_points_week",
+      "matchup_team_points_total", "matchup_team_remaining_games_coverage_type",
+      "matchup_team_remaining_games_week", "matchup_team_remaining_games",
+      "matchup_team_live_games", "matchup_team_completed_games")
 
   # Test df colnames
   expect_named(df,
@@ -295,27 +268,38 @@ testthat::test_that("Response for two teams is parsed to a tibble", {
   expect_true(!purrr::is_empty(r_parsed))
 
   # Preprocess list.  This step is verbatim from y_matchups.
+  # General preprocess steps that most functions use.
   preprocess <-
-    # General preprocess steps that most functions use.
     r_parsed %>%
     purrr::flatten() %>%
-    purrr::keep(purrr::is_list) %>%
-    # Pluck out matchup element.
-    purrr::map(purrr::pluck, "team", 2, "matchups") %>%
-    # Discard weeks that havent
-    purrr::map_depth(2, function(x) {
-      purrr::discard(x, purrr::has_element, "preevent")
-    }) %>%
-    # Remove empty lists created by discard.
-    purrr::map_depth(1, function(x) {
-      purrr::compact(x) %>% purrr::keep(purrr::is_list)
-    })
+    list_pre_process_fn()
 
-
-  df <-
+  # If response is form a non H2H league the mathcup elements will contain an error message.
+  # Extract error elements and create a message for printing.
+  error_elements <-
     preprocess %>%
-    purrr::map_depth(2, .matchup_parse_fn) %>%
-    purrr::map_df(dplyr::bind_rows)
+    rrapply::rrapply(
+      classes = "list",
+      condition = function(x, .xname) .xname == "exception",
+      f = function(x) purrr::pluck(x, "message"),
+      how = "melt"
+    ) %>%
+    dplyr::select("L1", "value") %>%
+    dplyr::mutate(message = stringr::str_c("Error in", L1, "with message:", value, sep = " "))
+
+  # If errors exist print.
+  if(nrow(error_elements) > 0){
+    message(crayon::cyan$bold("Matchups removed:\n", paste0(error_elements$message, "\n")))
+  }
+
+  # Non error list elelments.
+  good_elements <- dplyr::setdiff(names(preprocess), error_elements %>% dplyr::pull("L1"))
+
+  # Subset good elements and pluck matchup data.
+  preprocess <-
+    preprocess[good_elements] %>%
+    purrr::map(purrr::pluck, "team", 2, "matchups")
+
 
   # Parse response to df.
   df <-
@@ -329,80 +313,27 @@ testthat::test_that("Response for two teams is parsed to a tibble", {
 
   # Expected colnames.
   expected_colnames <-
-    c(
-      "week",
-      "week_start",
-      "week_end",
-      "status",
-      "is_playoffs",
-      "is_consolation",
-      "is_tied",
-      "winner_team_key",
-      "team_key",
-      "team_id",
-      "team_name",
-      "team_url",
-      "team_logo_size",
-      "team_logo_url",
-      "team_waiver_priority",
-      "team_faab_balance",
-      "team_number_of_moves",
-      "team_number_of_trades",
-      "team_coverage_type",
-      "team_coverage_value",
-      "team_value",
-      "team_league_scoring_type",
-      "team_draft_position",
-      "team_has_draft_grade",
-      "team_manager_manager_id",
-      "team_manager_nickname",
-      "team_manager_guid",
-      "team_manager_felo_score",
-      "team_manager_felo_tier",
-      "count_g",
-      "count_a",
-      "count_x",
-      "count_ppp",
-      "count_sog",
-      "count_hit",
-      "count_w",
-      "count_ga",
-      "count_gaa",
-      "count_sv",
-      "count_sa",
-      "count_sv_percent",
-      "count_sho",
-      "coverage_type",
-      "week_2",
-      "total",
-      "total_remaining_games",
-      "total_live_games",
-      "total_completed_games",
-      "g_winner",
-      "a_winner",
-      "x_winner",
-      "ppp_winner",
-      "sog_winner",
-      "hit_winner",
-      "w_winner",
-      "gaa_winner",
-      "sv_percent_winner",
-      "sho_winner",
-      "team_division_id",
-      "count_p",
-      "count_pim",
-      "count_blk",
-      "p_winner",
-      "pim_winner",
-      "blk_winner",
-      "team_manager_manager_id_2",
-      "team_manager_nickname_2",
-      "team_manager_guid_2",
-      "team_manager_is_comanager",
-      "team_manager_felo_score_2",
-      "team_manager_felo_tier_2",
-      "team_manager_is_commissioner",
-      "team_manager_is_commissioner_2"
+    c("matchup_week", "matchup_week_start", "matchup_week_end", "matchup_status",
+      "matchup_is_playoffs", "matchup_is_consolation", "matchup_is_tied",
+      "matchup_winner_team_key", "matchup_stat_winners", "matchup_team_key",
+      "matchup_team_id", "matchup_team_name", "matchup_team_url", "matchup_team_logos_team_logo_size",
+      "matchup_team_logos_team_logo_url", "matchup_team_waiver_priority",
+      "matchup_team_faab_balance", "matchup_team_number_of_moves",
+      "matchup_team_number_of_trades", "matchup_team_roster_adds_coverage_type",
+      "matchup_team_roster_adds_coverage_value", "matchup_team_roster_adds_value",
+      "matchup_team_league_scoring_type", "matchup_team_draft_position",
+      "matchup_team_has_draft_grade", "matchup_team_managers_manager_manager_id",
+      "matchup_team_managers_manager_nickname", "matchup_team_managers_manager_guid",
+      "matchup_team_managers_manager_felo_score", "matchup_team_managers_manager_felo_tier",
+      "matchup_team_stats_coverage_type", "matchup_team_stats_week",
+      "matchup_team_stats", "matchup_team_points_coverage_type", "matchup_team_points_week",
+      "matchup_team_points_total", "matchup_team_remaining_games_coverage_type",
+      "matchup_team_remaining_games_week", "matchup_team_remaining_games",
+      "matchup_team_live_games", "matchup_team_completed_games", "matchup_team_division_id",
+      "matchup_team_managers_manager_manager_id_2", "matchup_team_managers_manager_nickname_2",
+      "matchup_team_managers_manager_guid_2", "matchup_team_managers_manager_is_comanager",
+      "matchup_team_managers_manager_felo_score_2", "matchup_team_managers_manager_felo_tier_2",
+      "matchup_team_managers_manager_is_commissioner", "matchup_team_managers_manager_is_commissioner_2"
     )
 
   # Test df colnames

@@ -168,7 +168,7 @@ y_transactions <- function(key = NULL, token_name = NULL, count = NULL, transact
     preprocess <-
       r_parsed %>%
       purrr::flatten() %>%
-      purrr::map(list_pre_process_fn)
+      list_pre_process_fn()
 
     # df
     df <-

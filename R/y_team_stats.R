@@ -136,8 +136,7 @@ y_team_stats <-
             preprocess <-
                 r_parsed %>%
                 purrr::flatten() %>%
-                purrr::keep(purrr::is_list) %>%
-                purrr::map(list_pre_process_fn)
+                list_pre_process_fn()
 
 
 

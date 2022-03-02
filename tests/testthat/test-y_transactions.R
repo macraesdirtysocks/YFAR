@@ -156,25 +156,46 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
                "teams" = {.team_resource_parse_fn}
         )
 
+    # Initial pluck dependent on resource,
+    initial_pluck <-
+        switch(resource,
+               "leagues" = list("league", 2, 1),
+               "teams" = list("team", 2, 1)
+        )
+
     # Preprocess parsed content.
     preprocess <-
         r_parsed %>%
-        purrr::flatten()
+        purrr::flatten() %>%
+        list_pre_process_fn()
 
     # df
     df <-
+        preprocess %>%
+        # Parse inital resource league or team.
         purrr::map_df(
-            preprocess,
             resource_parse_fn,
-            .transaction_parse_fn,
-            .player_resource_parse_fn,
-            .two_deep_subresource_parse
+            pluck_args = initial_pluck,
+            # Parse transaction resource,
+            fn = function(x)
+                purrr::map_df(
+                    x,
+                    .transaction_parse_fn,
+                    pluck_args = list("transaction", 2, 1),
+                    # Parse player resource.
+                    fn = function(x)
+                        purrr::map_df(
+                            x,
+                            .player_resource_parse_fn,
+                            pluck_args = list("player", 2),
+                            fn = function(x)
+                                purrr::map_df(x, purrr::flatten_df)
+                        )
+                )
         ) %>%
-        # Mutate time stamp from seconds to date.
-        dplyr::mutate(
-            transaction_timestamp = as.numeric(transaction_timestamp) %>%
-                as.POSIXct(origin = "1970-01-01")
-        )
+        # Mutate time stamp from seconds to datetime.
+        dplyr::mutate(transaction_timestamp = as.numeric(transaction_timestamp) %>%
+                          as.POSIXct(origin = "1970-01-01"))
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
@@ -189,13 +210,12 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
           "league_current_week", "league_start_week", "league_start_date",
           "league_end_week", "league_end_date", "league_game_code", "league_season",
           "transaction_key", "transaction_id", "transaction_type", "transaction_status",
-          "transaction_timestamp", "player_key", "player_id", "player_full",
-          "player_first", "player_last", "player_ascii_first", "player_ascii_last",
-          "player_editorial_team_abbr", "player_display_position", "player_position_type",
-          "transaction_data_type", "transaction_data_source_type", "transaction_data_destination_type",
-          "transaction_data_destination_team_key", "transaction_data_destination_team_name",
-          "transaction_data_source_team_key", "transaction_data_source_team_name",
-          "transaction_faab_bid")
+          "transaction_timestamp", "player_key", "player_id", "player_name_full",
+          "player_name_first", "player_name_last", "player_name_ascii_first",
+          "player_name_ascii_last", "player_editorial_team_abbr", "player_display_position",
+          "player_position_type", "type", "source_type", "destination_type",
+          "destination_team_key", "destination_team_name", "source_team_key",
+          "source_team_name", "transaction_faab_bid")
 
     # Test df colnames
     expect_named(df,
@@ -243,8 +263,6 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-
     # Resource parse function dependent on resource.
     resource_parse_fn <-
         switch(resource,
@@ -252,45 +270,66 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
                "teams" = {.team_resource_parse_fn}
         )
 
+    # Initial pluck dependent on resource,
+    initial_pluck <-
+        switch(resource,
+               "leagues" = list("league", 2, 1),
+               "teams" = list("team", 2, 1)
+        )
+
     # Preprocess parsed content.
     preprocess <-
         r_parsed %>%
-        purrr::flatten()
+        purrr::flatten() %>%
+        list_pre_process_fn()
 
-    # df
+    # DF
     df <-
+        preprocess %>%
+        # Parse inital resource league or team.
         purrr::map_df(
-            preprocess,
             resource_parse_fn,
-            .transaction_parse_fn,
-            .player_resource_parse_fn,
-            .two_deep_subresource_parse
+            pluck_args = initial_pluck,
+            # Parse transaction resource,
+            fn = function(x)
+                purrr::map_df(
+                    x,
+                    .transaction_parse_fn,
+                    pluck_args = list("transaction", 2, 1),
+                    # Parse player resource.
+                    fn = function(x)
+                        purrr::map_df(
+                            x,
+                            .player_resource_parse_fn,
+                            pluck_args = list("player", 2),
+                            fn = function(x)
+                                purrr::map_df(x, purrr::flatten_df)
+                        )
+                )
         ) %>%
-        # Mutate time stamp from seconds to date.
-        dplyr::mutate(
-            transaction_timestamp = as.numeric(transaction_timestamp) %>%
-                as.POSIXct(origin = "1970-01-01")
-        )
+        # Mutate time stamp from seconds to datetime.
+        dplyr::mutate(transaction_timestamp = as.numeric(transaction_timestamp) %>%
+                          as.POSIXct(origin = "1970-01-01"))
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
 
     # Expected colnames.
     expected_colnames <-
-        c("team_key", "team_id", "team_name", "team_url", "team_logo_size",
-          "team_logo_url", "team_waiver_priority", "team_faab_balance",
-          "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-          "team_coverage_value", "team_value", "team_league_scoring_type",
-          "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-          "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-          "team_manager_felo_tier", "transaction_key", "transaction_id",
+        c("team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+          "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+          "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+          "team_roster_adds_coverage_value", "team_roster_adds_value",
+          "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+          "team_managers_manager_manager_id", "team_managers_manager_nickname",
+          "team_managers_manager_guid", "team_managers_manager_felo_score",
+          "team_managers_manager_felo_tier", "transaction_key", "transaction_id",
           "transaction_type", "transaction_status", "transaction_timestamp",
-          "player_key", "player_id", "player_full", "player_first", "player_last",
-          "player_ascii_first", "player_ascii_last", "player_editorial_team_abbr",
-          "player_display_position", "player_position_type", "transaction_data_type",
-          "transaction_data_source_type", "transaction_data_destination_type",
-          "transaction_data_destination_team_key", "transaction_data_destination_team_name",
-          "transaction_data_source_team_key", "transaction_data_source_team_name",
+          "player_key", "player_id", "player_name_full", "player_name_first",
+          "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
+          "player_editorial_team_abbr", "player_display_position", "player_position_type",
+          "type", "source_type", "destination_type", "destination_team_key",
+          "destination_team_name", "source_team_key", "source_team_name",
           "transaction_faab_bid")
 
 
@@ -343,8 +382,6 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
     # Test not empty.
     expect_true(!purrr::is_empty(r_parsed))
 
-    # Define parse function relative to resource value.
-
     # Resource parse function dependent on resource.
     resource_parse_fn <-
         switch(resource,
@@ -352,25 +389,46 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
                "teams" = {.team_resource_parse_fn}
         )
 
+    # Initial pluck dependent on resource,
+    initial_pluck <-
+        switch(resource,
+               "leagues" = list("league", 2, 1),
+               "teams" = list("team", 2, 1)
+        )
+
     # Preprocess parsed content.
     preprocess <-
         r_parsed %>%
-        purrr::flatten()
+        purrr::flatten() %>%
+        list_pre_process_fn()
 
-    # df
+    # DF
     df <-
+        preprocess %>%
+        # Parse inital resource league or team.
         purrr::map_df(
-            preprocess,
             resource_parse_fn,
-            .transaction_parse_fn,
-            .player_resource_parse_fn,
-            .two_deep_subresource_parse
+            pluck_args = initial_pluck,
+            # Parse transaction resource,
+            fn = function(x)
+                purrr::map_df(
+                    x,
+                    .transaction_parse_fn,
+                    pluck_args = list("transaction", 2, 1),
+                    # Parse player resource.
+                    fn = function(x)
+                        purrr::map_df(
+                            x,
+                            .player_resource_parse_fn,
+                            pluck_args = list("player", 2),
+                            fn = function(x)
+                                purrr::map_df(x, purrr::flatten_df)
+                        )
+                )
         ) %>%
-        # Mutate time stamp from seconds to date.
-        dplyr::mutate(
-            transaction_timestamp = as.numeric(transaction_timestamp) %>%
-                as.POSIXct(origin = "1970-01-01")
-        )
+        # Mutate time stamp from seconds to datetime.
+        dplyr::mutate(transaction_timestamp = as.numeric(transaction_timestamp) %>%
+                          as.POSIXct(origin = "1970-01-01"))
 
     # Test that a tibble was returned from parsing.
     expect_true(tibble::is_tibble(df), TRUE)
@@ -387,12 +445,11 @@ testthat::test_that("Leagues uri returns valid response and is parsed to a tibbl
           "transaction_key", "transaction_id", "transaction_type", "transaction_status",
           "transaction_timestamp", "transaction_trader_team_key", "transaction_trader_team_name",
           "transaction_tradee_team_key", "transaction_tradee_team_name",
-          "player_key", "player_id", "player_full", "player_first", "player_last",
-          "player_ascii_first", "player_ascii_last", "player_editorial_team_abbr",
-          "player_display_position", "player_position_type", "transaction_data_type",
-          "transaction_data_source_type", "transaction_data_source_team_key",
-          "transaction_data_source_team_name", "transaction_data_destination_type",
-          "transaction_data_destination_team_key", "transaction_data_destination_team_name"
+          "player_key", "player_id", "player_name_full", "player_name_first",
+          "player_name_last", "player_name_ascii_first", "player_name_ascii_last",
+          "player_editorial_team_abbr", "player_display_position", "player_position_type",
+          "type", "source_type", "source_team_key", "source_team_name",
+          "destination_type", "destination_team_key", "destination_team_name"
         )
 
 

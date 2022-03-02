@@ -95,25 +95,37 @@ with_mock_api({
         # Test not empty.
         expect_true(!purrr::is_empty(r_parsed))
 
-        # Define parse function relative to resource value.
 
 
         # Preprocess list.  This step is verbatim from y_matchups.
         preprocess <-
             r_parsed %>%
             purrr::flatten() %>%
-            purrr::keep(purrr::is_list)
+            list_pre_process_fn()
 
-        subresource_parse_fn <- function(x) {
-            x %>%
-                purrr::flatten_df() %>%
-                janitor::clean_names()
+        subresource_parse_fn <- function(x){
+
+            atomic <-
+                x %>%
+                purrr::keep(purrr::is_atomic) %>%
+                dplyr::bind_cols()
+
+            the_lists <-
+                x %>%
+                purrr::keep(purrr::is_list) %>%
+                purrr::imap_dfc(~purrr::set_names(.x, nm = paste(.y, names(.x), sep = "_")) %>% purrr::flatten_dfr())
+
+            df <- dplyr::bind_cols(atomic, the_lists)
+
+            return(df)
         }
 
         df <-
-            purrr::map_df(preprocess,
-                          .team_resource_parse_fn,
-                          subresource_parse_fn)
+            preprocess %>%
+            purrr::map_df(.team_resource_parse_fn,
+                          list("team", 2),
+                          function(x)
+                              purrr::map_df(x, subresource_parse_fn))
 
         # Test that a tibble was returned from parsing.
         expect_true(tibble::is_tibble(df), TRUE)
@@ -121,14 +133,16 @@ with_mock_api({
 
         # Expected colnames.
         expected_colnames <-
-            c("team_key", "team_id", "team_name", "team_url", "team_logo_size",
-              "team_logo_url", "team_waiver_priority", "team_faab_balance",
-              "team_number_of_moves", "team_number_of_trades", "team_coverage_type",
-              "team_coverage_value", "team_value", "team_league_scoring_type",
-              "team_draft_position", "team_has_draft_grade", "team_manager_manager_id",
-              "team_manager_nickname", "team_manager_guid", "team_manager_felo_score",
-              "team_manager_felo_tier", "rank", "playoff_seed", "wins", "losses",
-              "ties", "percentage")
+            c("team_key", "team_id", "team_name", "team_url", "team_logos_team_logo_size",
+              "team_logos_team_logo_url", "team_waiver_priority", "team_faab_balance",
+              "team_number_of_moves", "team_number_of_trades", "team_roster_adds_coverage_type",
+              "team_roster_adds_coverage_value", "team_roster_adds_value",
+              "team_league_scoring_type", "team_draft_position", "team_has_draft_grade",
+              "team_managers_manager_manager_id", "team_managers_manager_nickname",
+              "team_managers_manager_guid", "team_managers_manager_felo_score",
+              "team_managers_manager_felo_tier", "rank", "playoff_seed", "outcome_totals_wins",
+              "outcome_totals_losses", "outcome_totals_ties", "outcome_totals_percentage"
+            )
 
         # Test df colnames
         expect_named(df,

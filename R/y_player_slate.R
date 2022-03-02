@@ -50,8 +50,10 @@ y_player_slate <- memoise::memoise(function(key = NULL, token_name = NULL, debug
 
   # Subset out player_keys belonging to game_key.
   # Function can't call multiple game resources.
+  # vec_slice accounts for multiple leagues in the same game.
   key <-
-    stringr::str_subset(string = key, pattern = game_key)
+    stringr::str_subset(string = key, pattern = game_key) %>%
+    vctrs::vec_slice(1)
 
 
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,7 +141,6 @@ y_player_slate <- memoise::memoise(function(key = NULL, token_name = NULL, debug
     # Append response to r_list for later parsing.
     r_list <- append(r_list, r_parsed, after = length(r_list))
   }
-
 
   ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ##                                      DF                                  ----
