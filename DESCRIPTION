@@ -1,7 +1,7 @@
 Package: YFAR
 Type: Package
 Title: Retrieve Data From Yahoo! Fantasy Sports API
-Version: 0.1.0
+Version: 0.2.0
 Author: William O'Leary
 Maintainer: William O'Leary <wolearygit@gmail.com>
 Description: YAHOO! Fantasy API R (YFAR) is a collection of functions for retrieving league, team, player
