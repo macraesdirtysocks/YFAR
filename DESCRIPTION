@@ -40,7 +40,8 @@ Imports:
     sjmisc,
     zeallot,
     rrapply
-URL: https://github.com/macraesdirtysocks/YFAR
+URL: https://github.com/macraesdirtysocks/YFAR,
+    https://macraesdirtysocks.github.io/YFAR/
 BugReports: https://github.com/macraesdirtysocks/YFAR/issues
 Remotes: 
     tidyverse/glue

@@ -1,6 +1,12 @@
-url: ~
+url: https://macraesdirtysocks.github.io/YFAR/
 template:
   bootstrap: 5
+  bootswatch: zephyr
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+  bg: primary
 
 reference:
 
@@ -11,6 +17,7 @@ reference:
 - title: Auxilary Functions
   contents:
   - y_games
+  - y_game_codes
   - y_weeks
   - y_teams
   - y_stats_categories
@@ -19,6 +26,7 @@ reference:
 - title: Mains
   contents:
   - y_draft_results
+  - y_draft_adp
   - y_standings
   - y_rosters
   - y_players

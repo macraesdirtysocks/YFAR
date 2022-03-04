@@ -1,7 +1,13 @@
 #' Get league settings data from Yahoo! Fantasy API.
 #'
 #' Each Yahoo! Fantasy league can have unique settings.  Given a valid league key this
-#'   function and this function will get those settings for you.
+#'   function returns those settings for you.
+#'
+#'   Function returns a row of data for each league key provided.
+#'
+#'   Returns upwards of 60 columns of data with some nested tibbles.
+#'
+#'   Learn more in vignette.
 #'
 #' @param league_key League key as a string or vector of strings in the form "000.l.0000".
 #'    League key can be found with `y_games()`.
@@ -9,7 +15,7 @@
 #' @param debug Returns a list of data such as uri call and content.  Useful for debugging.
 #' @param quiet Print function activity.
 #' @importFrom zeallot `%<-%`
-#' @return A tibble
+#' @return A tibble.
 #' @export
 y_league_settings <- function(league_key = NULL, token_name = NULL, debug = FALSE, quiet = TRUE){
 
@@ -38,13 +44,14 @@ y_league_settings <- function(league_key = NULL, token_name = NULL, debug = FALS
     key <- .single_resource_key_check(league_key, .league_key_check)
 
     # quiet
-    if(!quiet){cat(crayon::cyan("Resource is", resource, "\n"), sep = "")}
-    if(!quiet){cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")}
+    if(!quiet){
+        cat(crayon::cyan("Resource is", resource, "\n"), sep = " ")
+        cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")
+        }
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                     URI                                  ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
     # Initial uri components
     uri_parsed <- structure(

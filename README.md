@@ -96,7 +96,7 @@ functions.
 
     y_games(my_token)
 
-### Mains
+### The Beef
 
 > Some functions accept a team\_key or league\_key. Any function with an
 > key argument as opposed to the more explicit league\_key or team\_key
@@ -117,10 +117,3 @@ And much more. See the vignette for more info.
 ## Other notes
 
 If you have suggestions or want to colab shoot me an email.
-
-In order to keep the scope of this project manageable and myself
-motivated by interest I’ve restricted the scope to hockey. However I
-have tried to write the functions as broadly as possible and some of
-them undoubtedly will work.
-
-I hope to get to the point where all type of leagues are supported.

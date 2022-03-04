@@ -211,8 +211,8 @@ Accepts a league or team key.
 
 The week param pertains to a particular week of the fantasy season.
 
--Accepts 3 arguments:
-   - Default is NULL returns aggregated season stats.
+- Accepts 3 arguments:
+   - Default is `NULL` returns aggregated season stats.
    - `current` returns current week of season.
    - An integer corresponding to a week of season.
    

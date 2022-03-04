@@ -22,9 +22,16 @@ League key can be found with `y_games()`.}
 \item{quiet}{Print function activity.}
 }
 \value{
-A tibble
+A tibble.
 }
 \description{
 Each Yahoo! Fantasy league can have unique settings.  Given a valid league key this
-  function and this function will get those settings for you.
+  function returns those settings for you.
+}
+\details{
+Function returns a row of data for each league key provided.
+
+  Returns upwards of 60 columns of data with some nested tibbles.
+
+  Learn more in vignette.
 }

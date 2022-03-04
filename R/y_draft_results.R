@@ -46,8 +46,11 @@ y_draft_results <- memoise::memoise(
     # Function then selects most frequently occurring resource and assigns value to resource.
     c(resource, key, .) %<-% .multiple_resource_key_check(key, e_key_types = e_key_types)
 
-    if(!quiet){cat(crayon::cyan("Resource is", resource, "\n"), sep = "")}
-    if(!quiet){cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")}
+    # quiet
+    if(!quiet){
+        cat(crayon::cyan("Resource is", resource, "\n"), sep = " ")
+        cat(crayon::cyan("Keys are...\n", stringr::str_flatten(key, collapse = "\n")), sep = "\n")
+    }
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ##                                  ARGUMENTS                               ----
