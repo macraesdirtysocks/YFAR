@@ -1,0 +1,12 @@
+pandoc: 2.7.3
+pkgdown: 2.0.2
+pkgdown_sha: ~
+articles:
+  YFAR: YFAR.html
+  Yahoo_API_Guide: Yahoo_API_Guide.html
+  for_developers: for_developers.html
+last_built: 2022-03-04T01:04Z
+urls:
+  reference: https://macraesdirtysocks.github.io/YFAR/reference
+  article: https://macraesdirtysocks.github.io/YFAR/articles
+
