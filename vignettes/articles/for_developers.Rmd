@@ -9,7 +9,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(YFAR)
-```
+### .uri_path_packer
 
+What is going on here, why is it necessary?
+
+When I originally wrote the functions they one accepted one key so you the user would need to map over a vector or arguments.
+
+This is fine but it sent multiple requests to the API.  I read some SO that it is better for the API to make a large request because there is a level of compression done on the data by the API.  So I learned about a new way to construct the uris to make fewer but larger requests.
+
+For example if you have 5 players you want stats for, player_1, player_2, player_3, player_4, player_5.  Originally this

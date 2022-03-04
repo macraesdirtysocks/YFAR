@@ -1,0 +1,64 @@
+---
+title: "Future Works"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The following article will be documentation of my plans for the YFAR package.  It will include known issues that need to be addressed and ideas for additions.  These could be interpreted as either personal musings or collaboration opportunities.
+
+
+### Known Issues
+
+- Some functions are slow.  The main culprits are `y_player_slate()` and `y_draft_adp()`.  Granted they parse a lot of lists and return upwards of 3000 players but there must be ways to speed things up a bit.
+    - Ideas:
+    
+        - Switch to a different package for working with lists, rlist?
+        
+        - Find a way to parse the league resource only once, parsing it everytime is redundant.
+        
+        - In `y_draft_adp()` if there is a way to sort by ADP and return only the top 300.  ADP usually only goes 200-300 players.  So after parsing if ADP data is empty the function stops.  Or maybe a player count argument.  Parsing 2000 players when only 200 have the data is dumb but unavoidable.
+        
+        - Double check the implementation of `janitor::clean_names()` because it can slow things down quite a bit.
+
+- Replace some house functions with functions pros have written because they do it better.  This was actually a major time suck in this project.  I would need a function and didn't know how to find it in the wild so I would spend days f-ing around making my own.  That's probably what we call learning so yay for that.
+\
+    - `.seq_pages_fn()` can be replaced with `rlang::seq2_along()`.
+    - .uri_path_packer can be reimplmented with s`jmisc::split_var()` I think?  I have already forgotten where I seen a replacement.
+\
+\
+- Re-write the key check functions and consolidate them into one all nice like.
+
+- Revisit token_check functions.  This was one of my first brain waves and I honestly haven't looked at it in months.  I'd be surprised if I even know how it works.  The idea was to stop a request from being sent without a token in the environment.
+
+- Revisit the presentation of the data.  The return can be a lot, 100's of columns which I'm fine with.  I didn't want to get into deciding what data to return to the user.  Return it all and let them decide.  However I'm curius if there's a better presentation with chop or nesting etc.
+
+- There's probably a way to consolidate some more of the parse functions.  I've done well, I initially had many many functions and have whittled it down substantially.
+
+- Figure out how to elimiate the use of if statements to choose parse functions.  The are wordy and I'm sure theres a way to use a switch.
+
+Example:
+    
+```
+parse_fn <- switch(
+    resource, 
+        "leagues" = function(x) .league_resource_parse(x, pluck_args = list("team", 2, 1), fn = funtion(x) .team_resource_parse, pluck_args(..., fn = some function)),
+        "teams = funtion(x) .team_resource_parse, pluck_args("players", 2), some function)
+        )`
+```
+
+### Future Works
+
+- Customize the progress bar or find a nicer implementation.
+- Add a function for PUT/POST so YFAR can add/drop players. 
+- Look into including game codes and stat info as package data.
+- Learn how to do proper citations.
+- Credit people who helped you.
+- Create a fantasy app as good as sleeper for fantasy hockey, steal all yahoo's users, become a fantasy mogul, cash fat cheques.
+    
+
+    

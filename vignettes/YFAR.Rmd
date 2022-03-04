@@ -36,7 +36,7 @@ devtools::load_all()
 
 This is intended to be read like the opening crawl from Star Wars.
 
-In a world dominated by python where no R tools existed for getting fantasy sports data out of the Yahoo! API.  A world where Googling "Yahoo fantasy sports R" or "yahoo in R" or "please not more python stuff, just an R package for getting fantasy data from yahoo" would just return more python packages.  But not anymore!  Now because of one man - still in his 30's with enough hair he decided he could afford to sacrifice half - if you Google "yahoo fantasy R", scroll down to more results, and then more results and probably more results a couple more times.... At last!  DAAA DAAA:
+In a world dominated by python where no R tools existed for getting fantasy sports data out of the Yahoo! API.  A world where Googling "Yahoo fantasy sports R" or "yahoo in R" or "please not more python stuff, just an R package for getting fantasy data from yahoo" would just return more python libraries.  But not anymore!  If you Google "yahoo fantasy R", scroll down to more results, and then more results and probably more results a couple more times.... At last!  DAAA DAAA:
 
 **YFAR - Yahoo Fantasy API w R**
 

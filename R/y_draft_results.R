@@ -56,7 +56,7 @@ y_draft_results <- memoise::memoise(
     ##                                  ARGUMENTS                               ----
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    # resource assigned in if statement above.
+    # resource assigned above.
     subresource <- switch(resource, "leagues" = "teams", "teams" = NULL)
     collection <- "draftresults"
     uri_out <- switch(resource, "leagues" = "league_keys=", "teams" = "team_keys=")
@@ -96,6 +96,7 @@ y_draft_results <- memoise::memoise(
     # Build uris.
     uri <- httr::build_url(uri_parsed)
 
+    # quiet
     if(!quiet){cat(crayon::cyan("uri generated...\n", uri, "\n"))}
 
     ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
